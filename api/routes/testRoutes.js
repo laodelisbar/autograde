@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const Controller = require('../controllers/testController');
+const testController = require('../controllers/testController');
+const authMiddleware = require('../middlewares/authMiddleware');
 
-// Routes
-router.get('/', Controller.getTests); // GET /api/users
-router.post('/', Controller.createTest); // POST /api/users
+router.get('/', authMiddleware, testController.getTests);
+router.get('/:id', authMiddleware, testController.getTestById);
+router.post('/add', authMiddleware, testController.addTestWithQuestions);
 
 module.exports = router;

@@ -1,0 +1,21 @@
+{
+    "name": "Autograde",
+    "dockerComposeFile": "./compose-dev.yaml",
+    "service": "api",
+    "workspaceFolder": "/app",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "mhutchie.git-graph",
+                "zhuangtongfa.material-theme",
+                "github.vscode-github-actions",
+                "cweijan.vscode-mysql-client2",
+                "dbaeumer.vscode-eslint",
+                "liviuschera.noctis"
+            ],
+            "settings": {
+                "workbench.colorTheme": "Noctis Uva"
+            }
+        }
+      }
+}
