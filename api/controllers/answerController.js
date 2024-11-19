@@ -64,7 +64,7 @@ exports.startUserTest = async (req, res) => {
 
 exports.submitAnswer = async (req, res) => {
   try {
-    const { user_test_id, question_id, answer } = req.body;
+    const { user_test_id, questions } = req.body;
 
     // Cari User_test untuk memastikan user memiliki akses
     const userTest = await User_tests.findOne({ where: { user_test_id } });
@@ -73,36 +73,57 @@ exports.submitAnswer = async (req, res) => {
       return res.status(404).json({ message: 'User test tidak ditemukan.' });
     }
 
-    // Cari Question untuk memvalidasi ID pertanyaan
-    const question = await Question.findOne({ where: { id: question_id } });
+    // Validasi setiap pertanyaan dan simpan jawabannya
+    const results = [];
+    for (const question of questions) {
+      const { question_id, answer } = question;
 
-    if (!question) {
-      return res.status(404).json({ message: 'Pertanyaan tidak ditemukan.' });
-    }
+      // Cari pertanyaan untuk memvalidasi ID pertanyaan
+      const existingQuestion = await Question.findOne({ where: { id: question_id } });
 
-    // Periksa apakah jawaban sudah ada sebelumnya
-    let existingAnswer = await Answer.findOne({
-      where: { user_test_id, question_id },
-    });
+      if (!existingQuestion) {
+        results.push({
+          question_id,
+          status: 'error',
+          message: 'Pertanyaan tidak ditemukan.',
+        });
+        continue;
+      }
 
-    if (existingAnswer) {
-      return res.status(200).json({
-        message: 'Jawaban sudah disimpan sebelumnya.',
-        answer_id: existingAnswer.id,
+      // Periksa apakah jawaban sudah ada sebelumnya
+      let existingAnswer = await Answer.findOne({
+        where: { user_test_id, question_id },
+      });
+
+      if (existingAnswer) {
+        results.push({
+          question_id,
+          status: 'skipped',
+          message: 'Jawaban sudah disimpan sebelumnya.',
+          answer_id: existingAnswer.id,
+        });
+        continue;
+      }
+
+      // Simpan jawaban baru
+      const newAnswer = await Answer.create({
+        user_test_id,
+        question_id,
+        answer: answer || null, // Jawaban bisa null jika tidak diisi
+        grade: 0, // Default grade 0, akan di-update saat penilaian
+      });
+
+      results.push({
+        question_id,
+        status: 'success',
+        message: 'Jawaban berhasil disimpan.',
+        answer_id: newAnswer.id,
       });
     }
 
-    // Simpan jawaban baru
-    const newAnswer = await Answer.create({
-      user_test_id,
-      question_id,
-      answer: answer || null, // Jawaban bisa null jika tidak diisi
-      grade: 0, // Default grade 0, akan di-update saat penilaian
-    });
-
-    return res.status(201).json({
-      message: 'Jawaban berhasil disimpan.',
-      answer_id: newAnswer.id,
+    return res.status(200).json({
+      message: 'Proses pengiriman jawaban selesai.',
+      results,
     });
   } catch (err) {
     return res.status(500).json({ message: err.message });

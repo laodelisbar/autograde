@@ -6,7 +6,7 @@ services:
     working_dir: /app
     entrypoint: ["tail", "-f", "/dev/null"]
     ports:
-      - "8080:8181"
+      - "5000:5000"
     depends_on:
       - db
   db:
