@@ -1,0 +1,397 @@
+{
+	"info": {
+		"_postman_id": "d7666126-7a25-4f22-a748-00a87cf1836c",
+		"name": "Autograde",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39454505"
+	},
+	"item": [
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"your@example.com\",\r\n    \"password\": \"password123\",\r\n    \"username\": \"username\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}:{{port}}/api/register",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"test@example.com\",\r\n  \"password\": \"password123\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}:{{port}}/api/login",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login Google",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}:{{port}}/api/auth/google",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"auth",
+						"google"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Profile",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}:{{port}}/api/users/profile",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"users",
+						"profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Test",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"test_title\": \"Sample Test\",\r\n  \"test_duration\": 45,\r\n  \"questions\": [\r\n    {\r\n      \"question_text\": \"What is the capital of France?\",\r\n      \"answer_text\": \"Paris\"\r\n    },\r\n    {\r\n      \"question_text\": \"What is 2 + 2?\",\r\n      \"answer_text\": \"4\"\r\n    },\r\n    {\r\n      \"question_text\": \"What is the color of the sky?\",\r\n      \"answer_text\": \"Blue\"\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}:{{port}}/api/tests/store",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"tests",
+						"store"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Created Test",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}:{{port}}/api/tests/",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"tests",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test Get By Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}:{{port}}/api/tests/93ad9380-3439-484c-bf18-f42060bef2f8",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"tests",
+						"93ad9380-3439-484c-bf18-f42060bef2f8"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Start Test",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"test_id\": \"1eef3d50-f281-45c4-9a54-274f8c1622a1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}:{{port}}/api/tests/start",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"tests",
+						"start"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Submit Test",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"user_test_id\": \"a7e7eae1-349d-4369-a03a-8fd22cf5b13e\",\r\n  \"questions\": [\r\n    {\r\n      \"question_id\": \"6ae6ef64-5ba8-4343-8c5b-6a7992521744\",\r\n      \"answer\": \"Jawaban pertama\"\r\n    },\r\n    {\r\n      \"question_id\": \"fdcb8418-bd2c-41be-9fe4-650e8d74daa5\",\r\n      \"answer\": \"Jawaban kedua\"\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}:{{port}}/api/tests/submit",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"tests",
+						"submit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test Overview",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}:{{port}}/api/tests/show/93ad9380-3439-484c-bf18-f42060bef2f8",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"tests",
+						"show",
+						"93ad9380-3439-484c-bf18-f42060bef2f8"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Allow Response",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"dd6e1fb1-9932-4b3d-9335-d1d867c95dc8\",\r\n    \"allowResponse\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}:{{port}}/api/tests/allowresponse",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"tests",
+						"allowresponse"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Show User Test Details",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"user_test_id\": \"a7e7eae1-349d-4369-a03a-8fd22cf5b13e\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}:{{port}}/api/tests/show-user-test-details",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"tests",
+						"show-user-test-details"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Answer Grade",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"answer_id\": \"460cee85-382e-4271-ac41-89c4c8158a59\",\r\n  \"grade\": 5\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}:{{port}}/api/tests/update-answer-grade",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"tests",
+						"update-answer-grade"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZmZDUyOTVjLTgzZjgtNDQzMS04NDg3LTkwZjQ2M2I2YWFlNSIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsImlhdCI6MTczMjIwMjAxNywiZXhwIjoxNzMyMjg4NDE3fQ.0rDn8bwBeOjSUpVQHAqUjOtnkW2PgTr6K37AjuvJh9Y",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "localhost",
+			"type": "string"
+		},
+		{
+			"key": "port",
+			"value": "5000",
+			"type": "string"
+		}
+	]
+}
