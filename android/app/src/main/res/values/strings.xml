@@ -27,5 +27,12 @@
     <string name="button_login">Login</string>
     <string name="profil_button">Profil</string>
     <string name="desc_action_profil">Profil Button</string>
+    <string name="create_test">Create test</string>
+    <string name="enter_title_test">Enter test title</string>
+    <string name="enter_duration">Enter duration</string>
+    <string name="question">Question</string>
+    <string name="add_question">Add question</string>
+    <string name="enter_answer_key">Enter answer key</string>
+    <string name="enter_question">Enter question </string>
 
 </resources>
