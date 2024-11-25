@@ -18,5 +18,14 @@
     <string name="do_not_have_an_account_yet_register_here">Do not have an account yet? Register here!</string>
     <string name="upload">upload</string>
     <string name="confirm_password">Confirm password</string>
+    <string name="button_join">Join</string>
+    <string name="button_join_with_qr">Join With QR</string>
+    <string name="auto_grade">AutoGrade</string>
+    <string name="text_or">Or</string>
+    <string name="fill_code">Enter a join code</string>
+    <string name="button_make_test">Make Test</string>
+    <string name="button_login">Login</string>
+    <string name="profil_button">Profil</string>
+    <string name="desc_action_profil">Profil Button</string>
 
 </resources>
