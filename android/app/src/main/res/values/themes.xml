@@ -6,4 +6,9 @@
     </style>
 
     <style name="Theme.AutoGrade" parent="Base.Theme.AutoGrade" />
+
+    <style name="ShapeAppearance">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">5dp</item>
+    </style>
 </resources>
