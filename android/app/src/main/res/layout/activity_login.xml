@@ -166,7 +166,9 @@
         android:layout_marginStart="52dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="52dp"
-        android:background="@drawable/button_border"
+        android:backgroundTint="@android:color/transparent"
+        app:strokeWidth="2dp"
+        app:strokeColor="@color/primary"
         android:fontFamily="@font/roboto_bold"
         android:text="@string/login_with_google"
         android:textColor="@color/primary"
@@ -175,7 +177,8 @@
         app:iconPadding="1dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_or" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_or"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceParticularButton"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

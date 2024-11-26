@@ -57,5 +57,6 @@ dependencies {
     implementation(libs.datastore.preferences)
     implementation(libs.lifecycle.livedata.ktx)
     implementation(libs.glide)
+    implementation(libs.androidx.viewpager2)
 
 }

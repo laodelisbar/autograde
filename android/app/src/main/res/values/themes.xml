@@ -16,4 +16,9 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">10dp</item>
     </style>
+
+    <style name="ShapeAppearanceParticularButtonChecked">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">10dp</item>
+    </style>
 </resources>

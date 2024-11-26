@@ -17,6 +17,7 @@ lifecycle = "2.6.1"
 datastore = "1.0.0"
 lifecycle-livedata-ktx = "2.8.6"
 glide = "4.16.0"
+viewpager2 = "1.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -35,6 +36,7 @@ lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycle-livedata-ktx" }
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+androidx-viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "viewpager2" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
