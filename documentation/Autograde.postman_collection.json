@@ -1,27 +1,29 @@
 {
 	"info": {
-		"_postman_id": "d7666126-7a25-4f22-a748-00a87cf1836c",
-		"name": "Autograde",
+		"_postman_id": "42483b18-59ea-4225-90e7-e4031b347f16",
+		"name": "API Collection",
+		"description": "Postman Collection for API routes",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "39454505"
 	},
 	"item": [
 		{
-			"name": "Register",
+			"name": "Register User",
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"email\": \"your@example.com\",\r\n    \"password\": \"password123\",\r\n    \"username\": \"username\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
+					"raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password\",\n  \"username\": \"username\"\n}"
 				},
 				"url": {
-					"raw": "{{host}}:{{port}}/api/register",
+					"raw": "http://{{host}}:{{port}}/api/register",
+					"protocol": "http",
 					"host": [
 						"{{host}}"
 					],
@@ -35,21 +37,34 @@
 			"response": []
 		},
 		{
-			"name": "Login",
+			"name": "Login User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"token\", jsonData.token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"email\": \"test@example.com\",\r\n  \"password\": \"password123\"\r\n}\r\n",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
+					"raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password\"\n}"
 				},
 				"url": {
-					"raw": "{{host}}:{{port}}/api/login",
+					"raw": "http://{{host}}:{{port}}/api/login",
+					"protocol": "http",
 					"host": [
 						"{{host}}"
 					],
@@ -63,32 +78,18 @@
 			"response": []
 		},
 		{
-			"name": "Login Google",
+			"name": "User Profile",
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
 				"url": {
-					"raw": "{{host}}:{{port}}/api/auth/google",
-					"host": [
-						"{{host}}"
-					],
-					"port": "{{port}}",
-					"path": [
-						"api",
-						"auth",
-						"google"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Profile",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{host}}:{{port}}/api/users/profile",
+					"raw": "http://{{host}}:{{port}}/api/users/profile",
+					"protocol": "http",
 					"host": [
 						"{{host}}"
 					],
@@ -103,21 +104,38 @@
 			"response": []
 		},
 		{
-			"name": "Add Test",
+			"name": "Store Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"testId\", jsonData.test.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"test_title\": \"Sample Test\",\r\n  \"test_duration\": 45,\r\n  \"questions\": [\r\n    {\r\n      \"question_text\": \"What is the capital of France?\",\r\n      \"answer_text\": \"Paris\"\r\n    },\r\n    {\r\n      \"question_text\": \"What is 2 + 2?\",\r\n      \"answer_text\": \"4\"\r\n    },\r\n    {\r\n      \"question_text\": \"What is the color of the sky?\",\r\n      \"answer_text\": \"Blue\"\r\n    }\r\n  ]\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
+					"raw": "{\n  \"testTitle\": \"test title\",\n  \"testDuration\": 60,\n  \"questions\": [\n    {\n      \"questionText\": \"question text\",\n      \"answerText\": \"answer text\"\n    }\n  ]\n}"
 				},
 				"url": {
-					"raw": "{{host}}:{{port}}/api/tests/store",
+					"raw": "http://{{host}}:{{port}}/api/tests/store",
+					"protocol": "http",
 					"host": [
 						"{{host}}"
 					],
@@ -132,12 +150,26 @@
 			"response": []
 		},
 		{
-			"name": "Created Test",
+			"name": "Accept Responses",
 			"request": {
-				"method": "GET",
-				"header": [],
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": \"{{testId}}\",\n  \"acceptResponses\": true\n}"
+				},
 				"url": {
-					"raw": "{{host}}:{{port}}/api/tests/",
+					"raw": "http://{{host}}:{{port}}/api/tests/accept-responses",
+					"protocol": "http",
 					"host": [
 						"{{host}}"
 					],
@@ -145,19 +177,25 @@
 					"path": [
 						"api",
 						"tests",
-						""
+						"accept-responses"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Test Get By Id",
+			"name": "Get Test by ID",
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
 				"url": {
-					"raw": "{{host}}:{{port}}/api/tests/93ad9380-3439-484c-bf18-f42060bef2f8",
+					"raw": "http://{{host}}:{{port}}/api/tests/{{testId}}",
+					"protocol": "http",
 					"host": [
 						"{{host}}"
 					],
@@ -165,7 +203,7 @@
 					"path": [
 						"api",
 						"tests",
-						"93ad9380-3439-484c-bf18-f42060bef2f8"
+						"{{testId}}"
 					]
 				}
 			},
@@ -173,20 +211,38 @@
 		},
 		{
 			"name": "Start Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"questionId\", jsonData.test.questions[0].id);",
+							"pm.environment.set(\"userTestId\", jsonData.userTestId);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"test_id\": \"1eef3d50-f281-45c4-9a54-274f8c1622a1\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
+					"raw": "{\n  \"testId\": \"{{testId}}\"\n}"
 				},
 				"url": {
-					"raw": "{{host}}:{{port}}/api/tests/start",
+					"raw": "http://{{host}}:{{port}}/api/tests/start",
+					"protocol": "http",
 					"host": [
 						"{{host}}"
 					],
@@ -204,18 +260,23 @@
 			"name": "Submit Test",
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"user_test_id\": \"a7e7eae1-349d-4369-a03a-8fd22cf5b13e\",\r\n  \"questions\": [\r\n    {\r\n      \"question_id\": \"6ae6ef64-5ba8-4343-8c5b-6a7992521744\",\r\n      \"answer\": \"Jawaban pertama\"\r\n    },\r\n    {\r\n      \"question_id\": \"fdcb8418-bd2c-41be-9fe4-650e8d74daa5\",\r\n      \"answer\": \"Jawaban kedua\"\r\n    }\r\n  ]\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
+					"raw": "{\n  \"userTestId\": \"{{userTestId}}\",\n  \"questions\": [\n    {\n      \"questionId\": \"{{questionId}}\",\n      \"answer\": \"answer\"\n    }\n  ]\n}"
 				},
 				"url": {
-					"raw": "{{host}}:{{port}}/api/tests/submit",
+					"raw": "http://{{host}}:{{port}}/api/tests/submit",
+					"protocol": "http",
 					"host": [
 						"{{host}}"
 					],
@@ -230,7 +291,19 @@
 			"response": []
 		},
 		{
-			"name": "Test Overview",
+			"name": "Logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"token\", \"\");"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -239,7 +312,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "",
+					"raw": "// Logout hanya akan menghapus jwt token dari client",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -247,7 +320,123 @@
 					}
 				},
 				"url": {
-					"raw": "{{host}}:{{port}}/api/tests/show/93ad9380-3439-484c-bf18-f42060bef2f8",
+					"raw": "http://{{host}}:{{port}}/",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Start Test Without User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"questionId\", jsonData.test.questions[0].id);",
+							"pm.environment.set(\"userTestId\", jsonData.userTestId);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"testId\": \"{{testId}}\",\n  \"username\": \"notlogged\"\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/api/tests/start",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"tests",
+						"start"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Google Login",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:{{port}}/api/auth/google",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"auth",
+						"google"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Google Callback",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:{{port}}/api/auth/google/callback",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"auth",
+						"google",
+						"callback"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Show Test",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "http://{{host}}:{{port}}/api/tests/show/{{testId}}",
+					"protocol": "http",
 					"host": [
 						"{{host}}"
 					],
@@ -256,65 +445,32 @@
 						"api",
 						"tests",
 						"show",
-						"93ad9380-3439-484c-bf18-f42060bef2f8"
+						"{{testId}}"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Allow Response",
+			"name": "Get All Tests",
 			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"id\": \"dd6e1fb1-9932-4b3d-9335-d1d867c95dc8\",\r\n    \"allowResponse\": true\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
 					}
-				},
+				],
 				"url": {
-					"raw": "{{host}}:{{port}}/api/tests/allowresponse",
+					"raw": "http://{{host}}:{{port}}/api/tests",
+					"protocol": "http",
 					"host": [
 						"{{host}}"
 					],
 					"port": "{{port}}",
 					"path": [
 						"api",
-						"tests",
-						"allowresponse"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Show User Test Details",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"user_test_id\": \"a7e7eae1-349d-4369-a03a-8fd22cf5b13e\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{host}}:{{port}}/api/tests/show-user-test-details",
-					"host": [
-						"{{host}}"
-					],
-					"port": "{{port}}",
-					"path": [
-						"api",
-						"tests",
-						"show-user-test-details"
+						"tests"
 					]
 				}
 			},
@@ -324,18 +480,23 @@
 			"name": "Update Answer Grade",
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"answer_id\": \"460cee85-382e-4271-ac41-89c4c8158a59\",\r\n  \"grade\": 5\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
+					"raw": "{\n  \"answerId\": \"{{answerId}}\",\n  \"grade\": 90\n}"
 				},
 				"url": {
-					"raw": "{{host}}:{{port}}/api/tests/update-answer-grade",
+					"raw": "http://{{host}}:{{port}}/api/tests/update-answer-grade",
+					"protocol": "http",
 					"host": [
 						"{{host}}"
 					],
@@ -348,6 +509,40 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Show User Test Details",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"userTestId\": \"{{userTestId}}\"\n}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/api/tests/show-user-test-details",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"tests",
+						"show-user-test-details"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"auth": {
@@ -355,7 +550,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZmZDUyOTVjLTgzZjgtNDQzMS04NDg3LTkwZjQ2M2I2YWFlNSIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsImlhdCI6MTczMjIwMjAxNywiZXhwIjoxNzMyMjg4NDE3fQ.0rDn8bwBeOjSUpVQHAqUjOtnkW2PgTr6K37AjuvJh9Y",
+				"value": "{{token}}",
 				"type": "string"
 			}
 		]
@@ -365,7 +560,6 @@
 			"listen": "prerequest",
 			"script": {
 				"type": "text/javascript",
-				"packages": {},
 				"exec": [
 					""
 				]
@@ -375,7 +569,6 @@
 			"listen": "test",
 			"script": {
 				"type": "text/javascript",
-				"packages": {},
 				"exec": [
 					""
 				]
@@ -385,13 +578,31 @@
 	"variable": [
 		{
 			"key": "host",
-			"value": "localhost",
-			"type": "string"
+			"value": "localhost"
 		},
 		{
 			"key": "port",
-			"value": "5000",
-			"type": "string"
+			"value": "5000"
+		},
+		{
+			"key": "testId",
+			"value": "test-id"
+		},
+		{
+			"key": "userTestId",
+			"value": "user-test-id"
+		},
+		{
+			"key": "answerId",
+			"value": "answer-id"
+		},
+		{
+			"key": "questionId",
+			"value": "question-id"
+		},
+		{
+			"key": "token",
+			"value": ""
 		}
 	]
 }
