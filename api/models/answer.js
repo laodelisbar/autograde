@@ -10,16 +10,16 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    user_test_id: {
+    userTestId: {
       type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: 'User_tests', // Mengacu pada tabel User_tests
-        key: 'user_test_id', // Kolom yang mengacu
+        model: 'UserTests', // Mengacu pada tabel User_tests
+        key: 'userTestId', // Kolom yang mengacu
       },
       onDelete: 'CASCADE', // Hapus jawaban jika user_test dihapus
     },
-    question_id: {
+    questionId: {
       type: DataTypes.UUID,
       allowNull: false,
       references: {
@@ -40,12 +40,12 @@ module.exports = (sequelize, DataTypes) => {
 
   // Relasi dengan User_tests dan Question
   Answer.associate = (models) => {
-    Answer.belongsTo(models.User_tests, {
-      foreignKey: 'user_test_id',
-      as: 'user_test',
+    Answer.belongsTo(models.UserTests, {
+      foreignKey: 'userTestId',
+      as: 'userTest',
     });
     Answer.belongsTo(models.Question, {
-      foreignKey: 'question_id',
+      foreignKey: 'questionId',
       as: 'question',
     });
   };

@@ -2,15 +2,15 @@
 const {
   Model
 } = require('sequelize');
-// models/user_tests.js
+// models/userTests.js
 module.exports = (sequelize, DataTypes) => {
-  const User_tests = sequelize.define('User_tests', {
-    user_test_id: {
+  const UserTests = sequelize.define('UserTests', {
+    id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    user_id: {
+    userId: {
       type: DataTypes.UUID,
       allowNull: true,
       references: {
@@ -23,40 +23,43 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    test_id: {
+    testId: {
       type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: 'Tests', // Mengacu pada tabel Tests
+        model: 'Test', // Mengacu pada tabel Tests
         key: 'id', // Kolom yang mengacu
       },
-      onDelete: 'CASCADE', // Hapus user_test jika test dihapus
+      onDelete: 'CASCADE',
     },
-    time_left: {
+    timeLeft: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    total_grade: {
+    totalGrade: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    test_date: {
+    testDate: {
       type: DataTypes.DATE,
       allowNull: false,
     },
   });
 
-  // Relasi dengan User dan Test
-  User_tests.associate = (models) => {
-    User_tests.belongsTo(models.User, {
-      foreignKey: 'user_id',
+  UserTests.associate = (models) => {
+    UserTests.belongsTo(models.User, {
+      foreignKey: 'userId',
       as: 'user',
     });
-    User_tests.belongsTo(models.Test, {
-      foreignKey: 'test_id',
+    UserTests.belongsTo(models.Test, {
+      foreignKey: 'testId',
       as: 'test',
+    });
+    UserTests.hasMany(models.Answer, {
+      foreignKey: 'userTestId',
+      as: 'answers',
     });
   };
 
-  return User_tests;
+  return UserTests;
 };

@@ -10,7 +10,7 @@ module.exports = {
         allowNull: false,
         primaryKey: true,
       },
-      test_id: {
+      testId: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
@@ -19,11 +19,11 @@ module.exports = {
         },
         onDelete: 'CASCADE', // Menghapus pertanyaan jika test dihapus
       },
-      question_text: {
+      questionText: {
         type: Sequelize.TEXT, // Menggunakan tipe data TEXT
         allowNull: false,
       },
-      answer_text: {
+      answerText: {
         type: Sequelize.TEXT, // Menggunakan tipe data TEXT
         allowNull: false,
       },

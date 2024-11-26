@@ -10,7 +10,7 @@ module.exports = {
         allowNull: false,
         primaryKey: true,
       },
-      creator_id: {
+      creatorId: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
@@ -19,16 +19,16 @@ module.exports = {
         },
         onDelete: 'CASCADE', // Menghapus test jika pengguna dihapus
       },
-      accept_responses : {
+      acceptResponses : {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false,
       },
-      test_title: {
+      testTitle: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      test_duration: {
+      testDuration: {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
