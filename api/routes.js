@@ -14,6 +14,10 @@ const router = express.Router();
 router.use(bodyParser.json());
 router.use(passport.initialize()); // Inisialisasi Passport
 
+router.get('/', (req, res) => {
+  res.json({ message: 'Welcome to Autograde API' });
+});
+
 // Route Auth
 router.post('/api/register', authController.register);  // Registrasi User
 router.post('/api/login', authController.login);  // Login User
