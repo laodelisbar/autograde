@@ -24,7 +24,7 @@ module.exports = {
         allowNull: true,
       },
       testId: {
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'Tests',

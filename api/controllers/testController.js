@@ -231,6 +231,16 @@ exports.startTest = async (req, res) => {
       return res.status(400).json({ message: 'User ID atau username harus disediakan.' });
     }
 
+    if (username) {
+      const existingUserTest = await UserTests.findOne({
+        where: { username },
+      });
+
+      if (existingUserTest) {
+        return res.status(400).json({ message: 'Username sudah ada.' });
+      }
+    }
+
     // Cari test berdasarkan test_id
     const test = await Test.findOne({
       where: { id: testId },

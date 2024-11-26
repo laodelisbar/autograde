@@ -5,10 +5,14 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('Tests', {
       id: {
-        type: Sequelize.UUID,
-        defaultValue: Sequelize.UUIDV4,
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
         allowNull: false,
         primaryKey: true,
+        get() {
+          const rawValue = this.getDataValue('id');
+          return rawValue ? rawValue.toString().padStart(6, '0') : null;
+        }
       },
       creatorId: {
         type: Sequelize.UUID,

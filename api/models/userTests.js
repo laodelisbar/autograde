@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     testId: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: 'Test', // Mengacu pada tabel Tests

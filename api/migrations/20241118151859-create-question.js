@@ -11,7 +11,7 @@ module.exports = {
         primaryKey: true,
       },
       testId: {
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'Tests', // Nama tabel yang direferensikan (Tests)
