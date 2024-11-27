@@ -227,10 +227,6 @@ exports.startTest = async (req, res) => {
     let userId = req.user ? req.user.id : null; // Ambil user_id dari middleware atau null jika tidak ada
     let userTestUsername = userId ? req.user.username : username; // Ambil username dari user yang login atau dari body
 
-    console.log('User:', req.user);
-    console.log('userId:', userId);
-    console.log('userTestUsername:', userTestUsername);
-    console.log('reqBody: ', req.body);
     // Jika user_id dan username tidak ada, kembalikan error
     if (!userId && !userTestUsername) {
       return res.status(400).json({ message: 'User ID atau username harus disediakan.' });
@@ -309,6 +305,8 @@ exports.submitTest = async (req, res) => {
     // Cari User_test untuk memastikan user memiliki akses
     const userTest = await UserTests.findOne({ where: { id: userTestId } });
 
+    const test = await Test.findOne({ where: { id: userTest.testId } });
+
     if (!userTest) {
       return res.status(404).json({ message: 'User test tidak ditemukan.' });
     }
@@ -337,9 +335,8 @@ exports.submitTest = async (req, res) => {
 
       if (existingAnswer) {
         results.push({
-          questionId,
-          status: 'skipped',
-          message: 'Jawaban sudah disimpan sebelumnya.',
+          existingQuestion,
+          grade: existingAnswer.grade,
           answer_id: existingAnswer.id,
         });
         continue;
@@ -355,15 +352,15 @@ exports.submitTest = async (req, res) => {
       });
 
       results.push({
-        questionId,
-        status: 'success',
-        message: 'Jawaban berhasil disimpan.',
-        answer_id: newAnswer.id,
+        question: existingQuestion,
+        answer: newAnswer,
       });
     }
 
     return res.status(200).json({
       message: 'Proses pengiriman jawaban selesai.',
+      totalGrade: userTest.totalGrade,
+      testTitle: test.testTitle,
       results,
     });
   } catch (err) {
