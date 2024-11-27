@@ -43,9 +43,9 @@ exports.login = async (req, res) => {
     }
 
     // Buat JWT token
-    const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '24h' });
+    const token = jwt.sign({ id: user.id, email: user.email, username: user.username }, process.env.JWT_SECRET, { expiresIn: '24h' });
     
-    return res.json({ message: 'Login berhasil', token });
+    return res.json({ message: 'Login berhasil', token, username: user.username });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }

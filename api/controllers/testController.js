@@ -225,15 +225,20 @@ exports.startTest = async (req, res) => {
   try {
     const { testId, username } = req.body; // Ambil test_id dan username dari body request
     let userId = req.user ? req.user.id : null; // Ambil user_id dari middleware atau null jika tidak ada
+    let userTestUsername = userId ? req.user.username : username; // Ambil username dari user yang login atau dari body
 
+    console.log('User:', req.user);
+    console.log('userId:', userId);
+    console.log('userTestUsername:', userTestUsername);
+    console.log('reqBody: ', req.body);
     // Jika user_id dan username tidak ada, kembalikan error
-    if (!userId && !username) {
+    if (!userId && !userTestUsername) {
       return res.status(400).json({ message: 'User ID atau username harus disediakan.' });
     }
 
-    if (username) {
+    if (userTestUsername && !userId) {
       const existingUserTest = await UserTests.findOne({
-        where: { username },
+        where: { username: userTestUsername },
       });
 
       if (existingUserTest) {
@@ -281,7 +286,7 @@ exports.startTest = async (req, res) => {
     userTest = await UserTests.create({
       userId: userId || null, // Jika user_id tidak ada, gunakan null
       testId,
-      username: username || req.user.username || null, // Jika username tidak ada di token, gunakan yang dari body
+      username: userTestUsername, // Gunakan username yang sudah ditentukan sebelumnya
       timeLeft: test.testDuration, // Waktu yang diberikan diambil dari durasi tes
       totalGrade: 0,
       testDate: new Date(),
