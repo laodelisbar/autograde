@@ -2,11 +2,17 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const passport = require('./passport');
 const routes = require('./routes');
+const cors = require('cors');
 const app = express();
 
 // Middleware untuk parsing body request
 app.use(bodyParser.json());
 app.use(express.json());
+const corsOptions = {
+  origin: 'http://localhost:5173', // Ganti dengan domain frontend Anda
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
 app.use(passport.initialize()); // Inisialisasi Passport
 
 // Routes
