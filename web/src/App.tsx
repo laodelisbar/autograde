@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './App.css';
 import Register from './Register';
 import Login from './Login';
@@ -36,7 +36,7 @@ function App() {
       case 'getTest':
         return testId ? <GetTest testId={testId} goToHome={() => setCurrentPage('home')} goToLogin={() => setCurrentPage('login')} onTestStart={(Test: any, userTestId: string) => { setTest(Test); setUserTestId(userTestId); setCurrentPage('takeTest'); }} /> : <Home goToGetTest={(id: string) => { setTestId(id); setCurrentPage('getTest'); }} />;
       case 'takeTest':
-        return Test ? <TakeTest Test={Test} userTestId={userTestId} onTestSubmit={(testResult: any) => { setTestResult(testResult); setCurrentPage('testResult'); }} /> : <Home goToGetTest={(id: string) => { setTestId(id); setCurrentPage('getTest'); }} />;
+        return Test && userTestId ? <TakeTest Test={Test} userTestId={userTestId} onTestSubmit={(testResult: any) => { setTestResult(testResult); setCurrentPage('testResult'); }} /> : <Home goToGetTest={(id: string) => { setTestId(id); setCurrentPage('getTest'); }} />;
       case 'testResult':
         return testResult ? <TestResult TestResult={testResult} goToHome={() => setCurrentPage('home')} /> : <Home goToGetTest={(id: string) => { setTestId(id); setCurrentPage('getTest'); }} />;
       default:
@@ -47,7 +47,7 @@ function App() {
   return (
     <div className="min-h-screen flex flex-col">
       {currentPage === 'home' && (
-        <Navbar goToHome={() => setCurrentPage('home')} goToLogin={() => setCurrentPage('login')} goToProfile={() => setCurrentPage('profile')} goToMakeTest={() => setCurrentPage('makeTest')} />
+        <Navbar goToLogin={() => setCurrentPage('login')} goToProfile={() => setCurrentPage('profile')} goToMakeTest={() => setCurrentPage('makeTest')} />
       )}
       <div className="flex-grow flex items-center justify-center">
         {renderPage()}
@@ -56,7 +56,7 @@ function App() {
   );
 }
 
-function Navbar({ goToHome, goToLogin, goToProfile, goToMakeTest }: { goToHome: () => void, goToLogin: () => void, goToProfile: () => void, goToMakeTest: () => void }) {
+function Navbar({ goToLogin, goToProfile, goToMakeTest }: { goToLogin: () => void, goToProfile: () => void, goToMakeTest: () => void }) {
   const token = localStorage.getItem('jwtToken');
 
   return (

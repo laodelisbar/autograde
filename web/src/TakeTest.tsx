@@ -91,7 +91,7 @@ const TakeTest: React.FC<TakeTestProps> = ({ Test, userTestId, onTestSubmit }) =
         </div>
       </div>
       <div className="flex justify-center mb-4 mt-4 gap-2">
-        {questions.map((question, index) => (
+        {questions.map((question: any, index: any) => (
           <Button
             key={question.id}
             variant={

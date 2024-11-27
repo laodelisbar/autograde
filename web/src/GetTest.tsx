@@ -8,8 +8,6 @@ import { Card } from '@/components/ui/card';
 import { BiArrowBack, BiGroup, BiMenuAltLeft, BiTime } from 'react-icons/bi';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Form } from '@/components/ui/form';
 import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 
 interface GetTestProps {
@@ -43,10 +41,8 @@ const GetTest: React.FC<GetTestProps> = ({ testId, goToHome, goToLogin, onTestSt
 
   const handleStartTest = async () => {
     try {
-      const requestData = { testId, username: username || null };
-      console.log(requestData);
+      const requestData = { testId, username: username || undefined };
       const response = await startTest(requestData);
-      console.log(response.data);
       onTestStart(response.data.test, response.data.userTestId);
     } catch (error) {
       console.error(error);
@@ -107,7 +103,6 @@ const GetTest: React.FC<GetTestProps> = ({ testId, goToHome, goToLogin, onTestSt
             )}
         </div>
         <div className="w-full md:w-[50%]">
-            <Form>
                 {!jwtToken && (
                     <div className="mb-4">
                     <Input id="username" type="text" placeholder="Enter your username" value={username} onChange={(e) => setUsername(e.target.value)} />
@@ -128,7 +123,6 @@ const GetTest: React.FC<GetTestProps> = ({ testId, goToHome, goToLogin, onTestSt
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
-            </Form>
         </div>
       </div>
     </div>
