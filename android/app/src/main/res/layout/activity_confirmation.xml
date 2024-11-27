@@ -53,10 +53,6 @@
             app:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toBottomOf="@id/btn_continue"
             app:shapeAppearanceOverlay="@style/ShapeAppearanceParticularButton"/>
-
-
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>
