@@ -129,7 +129,7 @@ const ShowCreatedTest: React.FC<ShowCreatedTestProps> = ({ testId, goToHome, goT
               test.userTests.map((userTest: any) => (
                 <Card key={userTest.id} className="mb-4 p-4 flex justify-between">
                     <div>
-                        <p className='text-primary text-2xl font-bold'>{userTest.userId}</p>
+                        <p className='text-primary text-2xl font-bold'>{userTest.username}</p>
                     </div>
                     <div>
                         <p className='text-primary text-2xl font-bold'>{userTest.totalGrade}</p>
