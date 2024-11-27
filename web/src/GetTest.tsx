@@ -16,9 +16,10 @@ interface GetTestProps {
   testId: string;
   goToHome: () => void;
   goToLogin: () => void;
+  onTestStart: (Test: any, userTestId: string) => void;
 }
 
-const GetTest: React.FC<GetTestProps> = ({ testId, goToHome, goToLogin }) => {
+const GetTest: React.FC<GetTestProps> = ({ testId, goToHome, goToLogin, onTestStart }) => {
   const [test, setTest] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [showDialog, setShowDialog] = useState(false);
@@ -45,8 +46,8 @@ const GetTest: React.FC<GetTestProps> = ({ testId, goToHome, goToLogin }) => {
       const requestData = { testId, username: username || null };
       console.log(requestData);
       const response = await startTest(requestData);
-      //TODO: Redirect to test page
-      alert('Test started successfully');
+      console.log(response.data);
+      onTestStart(response.data.test, response.data.userTestId);
     } catch (error) {
       console.error(error);
       alert('Failed to start test');

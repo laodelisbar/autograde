@@ -1,4 +1,4 @@
-// src/services/api.ts
+// src/api.ts
 import axios from 'axios';
 
 const API_BASE_URL = "http://localhost:5000"; // Sesuaikan dengan host dan port Anda
@@ -80,6 +80,10 @@ export const updateAcceptResponses = (token: string, testId: string, acceptRespo
       Authorization: `Bearer ${token}`,
     },
   });
+};
+
+export const submitTest = (payload: { userTestId: string, questions: { questionId: string, answer: string }[] }) => {
+  return api.post('/api/tests/submit', payload);
 };
 
 export default api;
