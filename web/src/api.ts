@@ -42,4 +42,26 @@ export const createTest = (token: string, test: any) => {
   });
 };
 
+export const getTestById = (token: string, testId: string) => {
+  if (!token) {
+    return api.get(`/api/tests/show/${testId}`);
+  }
+  return api.get(`/api/tests/show/${testId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const updateAcceptResponses = (token: string, testId: string, acceptResponses: boolean) => {
+  return api.post('/api/tests/accept-responses', {
+    id: testId,
+    acceptResponses: acceptResponses,
+  }, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 export default api;

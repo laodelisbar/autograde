@@ -14,7 +14,7 @@ import {
 import { BiArrowBack } from 'react-icons/bi';
 import { FiLogOut } from 'react-icons/fi'; // Import ikon logout dari react-icons
 
-const Profile: React.FC<{ goToHome: () => void }> = ({ goToHome }) => {
+const Profile: React.FC<{ goToHome: () => void, goToShowCreatedTest: (id: string) => void }> = ({ goToHome, goToShowCreatedTest }) => {
   const [profile, setProfile] = useState<any>(null);
   const [createdtestsResponse, setCreatedTests] = useState<any[]>([]);
   const [pasttestsResponse, setPastTests] = useState<any[]>([]);
@@ -92,7 +92,11 @@ const Profile: React.FC<{ goToHome: () => void }> = ({ goToHome }) => {
           <h2 className="text-primary text-xl font-medium text-center">Your Created Tests</h2>
           <div className="mt-4 flex flex-col gap-4">
             {createdtestsResponse.map((test) => (
-              <Card key={test.id} className="w-full max-w-lg p-8">
+              <Card 
+                key={test.id} 
+                className="w-full max-w-lg p-8 cursor-pointer hover:bg-gray-100"
+                onClick={() => goToShowCreatedTest(test.id)}
+              >
                 <p className="text-primary text-xl font-medium">{test.testTitle}</p>
               </Card>
             ))}

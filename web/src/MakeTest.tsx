@@ -12,7 +12,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { BiEraser, BiArrowBack } from 'react-icons/bi';
 import { createTest } from './api';
 import { Card } from './components/ui/card';
@@ -29,7 +29,13 @@ const formSchema = z.object({
   ).min(1, { message: "At least one question is required" }),
 });
 
-const MakeTest: React.FC<{ goToHome: () => void, goToProfile: () => void }> = ({ goToHome, goToProfile }) => {
+interface MakeTestProps {
+  goToHome: () => void;
+  goToProfile: () => void;
+  goToShowCreatedTest: (id: string) => void;
+}
+
+const MakeTest: React.FC<MakeTestProps> = ({ goToHome, goToProfile, goToShowCreatedTest }) => {
   const { control, handleSubmit, reset } = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -56,14 +62,12 @@ const MakeTest: React.FC<{ goToHome: () => void, goToProfile: () => void }> = ({
     try {
       const token = localStorage.getItem('jwtToken');
       if (token) {
-        await createTest(token, formData);
-        alert("Test created successfully!");
+        const response = await createTest(token, formData);
         reset();
-        goToHome();
+        goToShowCreatedTest(response.data.test.id);
       }
     } catch (error) {
       console.error(error);
-      alert("Failed to create test");
     } finally {
       setIsDialogOpen(false);
     }
@@ -121,7 +125,7 @@ const MakeTest: React.FC<{ goToHome: () => void, goToProfile: () => void }> = ({
                 </div>
             </div>
             <div className="w-full">
-                <label className="block text-primary text-lg font-medium">Questions</label>
+                <label className="block text-primary text-lg font-medium mb-4">Questions</label>
                 <div className="flex flex-col justify-start gap-4">
                     {fields.map((item, index) => (
                     <Card key={item.id} className="flex text-primary flex-col justify-center p-4">

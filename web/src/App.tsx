@@ -5,26 +5,30 @@ import Login from './Login';
 import Home from './Home';
 import Profile from './Profile';
 import MakeTest from './MakeTest';
+import ShowCreatedTest from './ShowCreatedTest';
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
+  const [testId, setTestId] = useState<string | null>(null);
 
   const renderPage = () => {
     switch (currentPage) {
       case 'home':
-        return <Home />;
+        return <Home goToShowCreatedTest={(id: string) => { setTestId(id); setCurrentPage('showCreatedTest'); }} />;
       case 'register':
         return <Register goToHome={() => setCurrentPage('home')} goToLogin={() => setCurrentPage('login')} />;
       case 'login':
         return <Login goToHome={() => setCurrentPage('home')} goToRegister={() => setCurrentPage('register')} />;
       case 'profile':
-        return <Profile goToHome={() => setCurrentPage('home')} />;
+        return <Profile goToHome={() => setCurrentPage('home')} goToShowCreatedTest={(id: string) => { setTestId(id); setCurrentPage('showCreatedTest'); }} />;
       case 'makeTest':
-        return <MakeTest goToHome={() => setCurrentPage('home')} goToProfile={() => setCurrentPage('profile')} />;
+        return <MakeTest goToHome={() => setCurrentPage('home')} goToProfile={() => setCurrentPage('profile')} goToShowCreatedTest={(id: string) => { setTestId(id); setCurrentPage('showCreatedTest'); }} />;
+      case 'showCreatedTest':
+        return testId ? <ShowCreatedTest testId={testId} goToHome={() => setCurrentPage('home')} goToProfile={() => setCurrentPage('profile')} /> : <Home goToShowCreatedTest={(id: string) => { setTestId(id); setCurrentPage('showCreatedTest'); }} />;;
       default:
-        return <Home />;
+        return <Home goToShowCreatedTest={(id: string) => { setTestId(id); setCurrentPage('showCreatedTest'); }} />;
     }
   };
 
