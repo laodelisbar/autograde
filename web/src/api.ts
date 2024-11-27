@@ -1,7 +1,7 @@
 // src/services/api.ts
 import axios from 'axios';
 
-const API_BASE_URL = "https://api-dot-autograde-442112.et.r.appspot.com"; // Sesuaikan dengan host dan port Anda
+const API_BASE_URL = "http://localhost:5000"; // Sesuaikan dengan host dan port Anda
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -42,7 +42,25 @@ export const createTest = (token: string, test: any) => {
   });
 };
 
-export const getTestById = (token: string, testId: string) => {
+export const getTestById = (testId: string) => {
+    return api.get(`/api/tests/${testId}`);
+};
+
+export const startTest = (data: { testId: string, username?: string }) => {
+  const token = localStorage.getItem('jwtToken');
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+  // Create the request body
+  const requestBody: { testId: string, username?: string } = { testId: data.testId };
+  if (data.username) {
+    requestBody.username = data.username;
+  }
+  console.log('Request Body: ',requestBody);
+
+  return api.post('/api/tests/start', requestBody, { headers });
+};
+
+export const showCreatedTest = (token: string, testId: string) => {
   if (!token) {
     return api.get(`/api/tests/show/${testId}`);
   }

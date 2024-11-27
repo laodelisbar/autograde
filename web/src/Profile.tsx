@@ -44,6 +44,7 @@ const Profile: React.FC<{ goToHome: () => void, goToShowCreatedTest: (id: string
 
   const handleLogout = () => {
     localStorage.removeItem('jwtToken');
+    localStorage.removeItem('username');
     goToHome();
   };
 

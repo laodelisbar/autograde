@@ -2,14 +2,14 @@
 "use client"
 
 import React, { useEffect, useState } from 'react';
-import { getTestById, updateAcceptResponses } from '@/api';
+import { getTestById, showCreatedTest, updateAcceptResponses } from '@/api';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import QRCode from 'react-qr-code';
 import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle } from "@/components/ui/dialog";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { BiArrowBack } from 'react-icons/bi';
 import { Avatar, AvatarFallback, AvatarImage } from './components/ui/avatar';
 
@@ -30,11 +30,11 @@ const ShowCreatedTest: React.FC<ShowCreatedTestProps> = ({ testId, goToHome, goT
       try {
         const token = localStorage.getItem('jwtToken');
         if (token) {
-          const response = await getTestById(token, testId);
+          const response = await showCreatedTest(token, testId);
           setTest(response.data.message);
           setAcceptResponses(response.data.message.acceptResponses);
         } else {
-          throw new Error("Token is null");
+            console.log("No token found");
         }
       } catch (error) {
         console.error(error);

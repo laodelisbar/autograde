@@ -4,17 +4,17 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
 interface HomeProps {
-  goToShowCreatedTest: (testId: string) => void;
+  goToGetTest: (testId: string) => void;
 }
 
-const Home: React.FC<HomeProps> = ({ goToShowCreatedTest }) => {
+const Home: React.FC<HomeProps> = ({ goToGetTest }) => {
   const [joinCode, setJoinCode] = useState('');
 
   const handleJoinClick = () => {
     if (joinCode.trim()) {
       console.log('Joining with code:', joinCode);
       //TODO: join test jika bukan creator
-      goToShowCreatedTest(joinCode);
+      goToGetTest(joinCode);
     }
   };
 

@@ -6,6 +6,7 @@ import Home from './Home';
 import Profile from './Profile';
 import MakeTest from './MakeTest';
 import ShowCreatedTest from './ShowCreatedTest';
+import GetTest from './GetTest';
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -16,7 +17,7 @@ function App() {
   const renderPage = () => {
     switch (currentPage) {
       case 'home':
-        return <Home goToShowCreatedTest={(id: string) => { setTestId(id); setCurrentPage('showCreatedTest'); }} />;
+        return <Home goToGetTest={(id: string) => { setTestId(id); setCurrentPage('getTest'); }} />;
       case 'register':
         return <Register goToHome={() => setCurrentPage('home')} goToLogin={() => setCurrentPage('login')} />;
       case 'login':
@@ -26,9 +27,11 @@ function App() {
       case 'makeTest':
         return <MakeTest goToHome={() => setCurrentPage('home')} goToProfile={() => setCurrentPage('profile')} goToShowCreatedTest={(id: string) => { setTestId(id); setCurrentPage('showCreatedTest'); }} />;
       case 'showCreatedTest':
-        return testId ? <ShowCreatedTest testId={testId} goToHome={() => setCurrentPage('home')} goToProfile={() => setCurrentPage('profile')} /> : <Home goToShowCreatedTest={(id: string) => { setTestId(id); setCurrentPage('showCreatedTest'); }} />;;
+        return testId ? <ShowCreatedTest testId={testId} goToHome={() => setCurrentPage('home')} goToProfile={() => setCurrentPage('profile')} /> : <Home goToGetTest={(id: string) => { setTestId(id); setCurrentPage('showCreatedTest'); }} />;
+      case 'getTest':
+        return testId ? <GetTest testId={testId} goToHome={() => setCurrentPage('home')} goToLogin={() => setCurrentPage('login')} /> : <Home goToGetTest={(id: string) => { setTestId(id); setCurrentPage('getTest'); }} />;
       default:
-        return <Home goToShowCreatedTest={(id: string) => { setTestId(id); setCurrentPage('showCreatedTest'); }} />;
+        return <Home goToGetTest={(id: string) => { setTestId(id); setCurrentPage('getTest'); }} />;
     }
   };
 

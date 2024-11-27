@@ -41,6 +41,8 @@ const Login: React.FC<{ goToHome: () => void, goToRegister: () => void }> = ({ g
       const response = await loginUser(data.email, data.password);
       setSuccessMessage(response.data.message);
       localStorage.setItem('jwtToken', response.data.token);
+      localStorage.setItem('username', response.data.username);
+      console.log(response.data);
       goToHome();
     } catch (error) {
       console.error(error);
