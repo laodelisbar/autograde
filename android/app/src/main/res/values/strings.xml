@@ -44,5 +44,17 @@
     <string name="grade">Grade</string>
     <string name="timer">25 : 59</string>
     <string name="enter_answer">Enter your answer</string>
+    <string name="username">Username</string>
+    <string name="ex_email">email@example.com</string>
+    <string name="your_created_test">Your created Test</string>
+    <string name="exam_title">Exam Title</string>
+    <string name="exam_title_2">Exam Title 2</string>
+    <string name="your_past_test">Your Past Test</string>
+    <string name="exam_title_a">Exam Title A</string>
+    <string name="minutes">45 Minutes</string>
+    <string name="number">5 Number</string>
+    <string name="users">25 Users</string>
+    <string name="your_username">Your Username</string>
+    <string name="start_test">Start Test</string>
 
 </resources>
