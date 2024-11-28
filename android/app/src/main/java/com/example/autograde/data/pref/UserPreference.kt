@@ -1,4 +1,4 @@
-package com.example.intermediatesubmission1.data.pref
+package com.example.autograde.data.pref
 
 import android.content.Context
 import androidx.datastore.core.DataStore

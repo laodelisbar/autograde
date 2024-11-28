@@ -1,4 +1,4 @@
-package com.example.intermediatesubmission1.data.pref
+package com.example.autograde.data.pref
 
 data class UserModel(
     val email: String,

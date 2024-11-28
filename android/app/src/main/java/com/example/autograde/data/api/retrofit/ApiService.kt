@@ -1,28 +1,24 @@
-package com.example.intermediatesubmission1.data.api.retrofit
+package com.example.autograde.data.api.retrofit
 
-import com.example.intermediatesubmission1.data.api.response.LoginResponse
-import com.example.intermediatesubmission1.data.api.response.RegisterResponse
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
+import com.example.autograde.data.api.response.LoginResponse
+import com.example.autograde.data.api.response.RegisterRequest
+import com.example.autograde.data.api.response.RegisterResponse
+import com.example.autograde.data.api.response.User
+import retrofit2.http.Body
 import retrofit2.http.POST
 
 
 interface ApiService {
 
-    @FormUrlEncoded
-    @POST("register")
+    @POST("/api/register")
     suspend fun register(
-        @Field("name") name: String,
-        @Field("email") email: String,
-        @Field("password") password: String
+        @Body user: RegisterRequest
     ): RegisterResponse
 
 
-    @FormUrlEncoded
-    @POST("login")
+    @POST("/api/login")
     suspend fun login(
-        @Field("email") email: String,
-        @Field("password") password: String
+        @Body  user : User
     ): LoginResponse
 
 }

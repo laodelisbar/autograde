@@ -1,17 +1,19 @@
-package com.example.intermediatesubmission1.view.login
+package com.example.autograde.login
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.asLiveData
-import com.example.intermediatesubmission1.data.api.response.LoginResponse
-import com.example.intermediatesubmission1.data.pref.UserModel
+import com.example.autograde.data.api.response.LoginResponse
+import com.example.autograde.data.api.response.User
+import com.example.autograde.data.repository.MainRepository
+import com.example.autograde.data.pref.UserModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class LoginViewModel (private val loginRepository : LoginRepository) : ViewModel() {
+class LoginViewModel (private val mainRepository: MainRepository ) : ViewModel() {
 
 
     private val _loginResponse = MutableLiveData<LoginResponse>()
@@ -20,46 +22,53 @@ class LoginViewModel (private val loginRepository : LoginRepository) : ViewModel
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
 
     fun loginUser(email: String, password: String) {
         viewModelScope.launch {
             try {
+                _isLoading.value = true
                 val response = withContext(Dispatchers.IO) {
-                    loginRepository.loginUser(email, password)
+                    val loginRequest = User (
+                        email = email,
+                        password = password
+                    )
+                    mainRepository.loginUser(loginRequest)
                 }
-                if (response.error == true) {
-                    _errorMessage.postValue(response.message)
-                } else {
-
-                    response.loginResult?.let { loginResult ->
-                        loginRepository.saveSession(
+                if (response.message !== null ) {
+                    _isLoading.value = false
+                    _loginResponse.postValue(response)
+                    response.token?.let { token ->
+                        mainRepository.saveSession(
                             UserModel(
                                 email = email,
-                                token = loginResult.token ?: "",
+                                token = token ?: "",
                                 isLogin = true
                             )
                         )
                     }
-                    _loginResponse.postValue(response)
+                } else {
+                    _isLoading.value = false
+                    _errorMessage.postValue(response.message ?: "Terjadi kesalahan")
                 }
 
-                _loginResponse.postValue(response)
-
             } catch (e: Exception) {
+                _isLoading.value = false
                 _errorMessage.postValue(e.message ?: "Terjadi kesalahan")
             }
         }
     }
 
     fun getSession(): LiveData<UserModel> {
-        return loginRepository.getSession().asLiveData()
+        return mainRepository.getSession().asLiveData()
     }
 
     fun logout() {
         viewModelScope.launch {
-            loginRepository.logout()
+            mainRepository.logout()
         }
     }
-
 
 }

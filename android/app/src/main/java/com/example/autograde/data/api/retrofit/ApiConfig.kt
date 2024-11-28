@@ -1,4 +1,4 @@
-package com.example.intermediatesubmission1.data.api.retrofit
+package com.example.autograde.data.api.retrofit
 
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -23,7 +23,7 @@ object ApiConfig {
             .addInterceptor(authInterceptor)
             .build()
         val retrofit = Retrofit.Builder()
-            .baseUrl("")
+            .baseUrl("https://api-dot-autograde-442112.et.r.appspot.com")
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()
