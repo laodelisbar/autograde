@@ -6,9 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.asLiveData
 import com.example.autograde.data.api.response.LoginResponse
+import com.example.autograde.data.api.response.RegisterResponse
 import com.example.autograde.data.api.response.User
 import com.example.autograde.data.repository.MainRepository
 import com.example.autograde.data.pref.UserModel
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -37,26 +39,37 @@ class LoginViewModel (private val mainRepository: MainRepository ) : ViewModel()
                     )
                     mainRepository.loginUser(loginRequest)
                 }
-                if (response.message !== null ) {
-                    _isLoading.value = false
-                    _loginResponse.postValue(response)
-                    response.token?.let { token ->
-                        mainRepository.saveSession(
-                            UserModel(
-                                email = email,
-                                token = token ?: "",
-                                isLogin = true
+
+                if (response.isSuccessful) {
+                    response.body()?.let { body ->
+                        _loginResponse.postValue(body)
+                        response.body()?.token?.let { token ->
+                            mainRepository.saveSession(
+                                UserModel(
+                                    email = email,
+                                    token = token ?: "",
+                                    isLogin = true
+                                )
                             )
-                        )
+                        }
+                    } ?: run {
+                        _errorMessage.postValue("Respons dari server kosong")
                     }
                 } else {
-                    _isLoading.value = false
-                    _errorMessage.postValue(response.message ?: "Terjadi kesalahan")
+                    val errorMessage = response.errorBody()?.string()?.let { errorBody ->
+                        try {
+                            val errorResponse = Gson().fromJson(errorBody, LoginResponse::class.java)
+                            errorResponse.message
+                        } catch (e: Exception) {
+                            "Terjadi kesalahan: ${response.message()}"
+                        }
+                    } ?: "Terjadi kesalahan tak dikenal"
+                    _errorMessage.postValue(errorMessage)
                 }
-
             } catch (e: Exception) {
-                _isLoading.value = false
                 _errorMessage.postValue(e.message ?: "Terjadi kesalahan")
+            } finally {
+                _isLoading.value = false
             }
         }
     }

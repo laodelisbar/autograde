@@ -33,14 +33,16 @@
             android:name=".login.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".test.TestOverviewActivity"
             android:exported="false" />
-
         <activity
-            android:name=".home.HomeActivity"
+            android:name=".MainActivity"
             android:exported="false" />
         <activity
             android:name=".register.RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".home.HomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

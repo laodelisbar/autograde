@@ -51,9 +51,9 @@
     <string name="exam_title_2">Exam Title 2</string>
     <string name="your_past_test">Your Past Test</string>
     <string name="exam_title_a">Exam Title A</string>
-    <string name="minutes">45 Minutes</string>
-    <string name="number">5 Number</string>
-    <string name="users">25 Users</string>
+    <string name="minutes">%d Minutes</string>
+    <string name="number">%d Questions</string>
+    <string name="users">%d Users</string>
     <string name="your_username">Your Username</string>
     <string name="start_test">Start Test</string>
     <string name="already_have_an_account">Already have an account?</string>

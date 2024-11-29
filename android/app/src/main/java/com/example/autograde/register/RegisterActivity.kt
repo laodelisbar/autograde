@@ -85,14 +85,11 @@ class RegisterActivity : AppCompatActivity() {
     private fun observeViewModel() {
         registerViewModel.registerResponse.observe(this) { response ->
             binding.registerButton.isEnabled = true
-            if (response !== null) {
-                showMessage(response.message)
+            if (response.user !== null && response.message !== null) {
+                showSuccess(response.message)
+            } else {
+                showMessage(response?.message)
             }
-        }
-
-        registerViewModel.errorMessage.observe(this) { errorMessage ->
-            binding.registerButton.isEnabled = true
-            showMessage(errorMessage)
         }
     }
 
@@ -109,11 +106,6 @@ class RegisterActivity : AppCompatActivity() {
         finish()
     }
 
-    fun getToken(): String {
-        val user = UserPreference.getInstance(applicationContext.dataStore)
-        val token = runBlocking { user.getSession().first()?.token }
-        return token ?: ""
-    }
 
     private fun playAnimation() {
         ObjectAnimator.ofFloat(binding.tvTitle, View.ALPHA, 1f).setDuration(1000).apply {

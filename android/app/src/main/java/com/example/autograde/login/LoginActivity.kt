@@ -4,7 +4,9 @@ import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.autograde.data.di.ViewModelFactory
 import com.example.autograde.databinding.ActivityLoginBinding
@@ -30,8 +32,7 @@ class LoginActivity : AppCompatActivity() {
         playAnimation()
 
         loginViewModel.loginResponse.observe(this, { response ->
-            startActivity(Intent(this, HomeActivity::class.java))
-            finish()
+            showSuccess(response.message)
         })
 
         loginViewModel.isLoading.observe (this) {
@@ -39,7 +40,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         loginViewModel.errorMessage.observe(this, { error ->
-            binding.emailEditText.error = error
+           showMessage(error)
         })
 
         binding.loginButton.setOnClickListener {
@@ -68,6 +69,19 @@ class LoginActivity : AppCompatActivity() {
 
     private fun showLoading(isLoading : Boolean) {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+    }
+
+    private fun showMessage(message: String?) {
+        AlertDialog.Builder(this)
+            .setMessage(message ?: "Terjadi kesalahan")
+            .setPositiveButton("OK") { _, _ -> }
+            .show()
+    }
+
+    private fun showSuccess(message: String?) {
+        Toast.makeText(this, "${message ?: ""}", Toast.LENGTH_SHORT).show()
+        startActivity(Intent(this, HomeActivity::class.java))
+        finish()
     }
 
 }
