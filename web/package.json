@@ -20,6 +20,7 @@
     "@radix-ui/react-switch": "^1.1.1",
     "@radix-ui/react-tabs": "^1.1.1",
     "@radix-ui/react-tooltip": "^1.1.4",
+    "@yudiel/react-qr-scanner": "^2.0.8",
     "axios": "^1.7.8",
     "boxicons": "^2.1.4",
     "class-variance-authority": "^0.7.1",
