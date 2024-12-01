@@ -45,7 +45,7 @@ router.post('/api/tests/submit', authenticateMiddleware, testController.submitTe
 router.post('/api/tests/store', authenticateMiddleware, authorizeMiddleware, testController.storeTest);  // Add new test with questions
 router.get('/api/tests', authenticateMiddleware, authorizeMiddleware, testController.getTests);  // Get all tests that created by
 router.get('/api/tests/show/:id', authenticateMiddleware, authorizeMiddleware, testController.showTest);  // Get created test by id
-router.post('/api/tests/accept-responses', authenticateMiddleware, authorizeMiddleware, testController.acceptResponses);  // Get created test by id
+router.post('/api/tests/accept-responses', authenticateMiddleware, authorizeMiddleware, testController.acceptResponses);
 router.post('/api/tests/update-answer-grade', authenticateMiddleware, authorizeMiddleware, testController.updateAnswerGrade);
 router.post('/api/tests/show-user-test-details', authenticateMiddleware, authorizeMiddleware, testController.showUserTestDetails);
 

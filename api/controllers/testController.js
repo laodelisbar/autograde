@@ -1,5 +1,3 @@
-
-const { where } = require('sequelize');
 const { UserTests, Test, Answer, Question } = require('../models');
 
 // Tambahkan test beserta questions
@@ -7,12 +5,11 @@ exports.storeTest = async (req, res) => {
   try {
     const { testTitle, testDuration, questions } = req.body;
 
-    // Ambil `creator_id` dari token yang sudah diverifikasi oleh middleware
-    const creatorId = req.user.id; // `req.user` berasal dari middleware autentikasi
+    const creatorId = req.user.id;
 
     // Validasi input
     if (!questions || !Array.isArray(questions) || questions.length === 0) {
-      return res.status(400).json({ message: 'Pertanyaan harus disediakan' });
+      return res.status(400).json({ message: 'Must have a question' });
     }
 
     // Buat test baru
@@ -31,9 +28,10 @@ exports.storeTest = async (req, res) => {
       }
     );
 
-    return res.status(201).json({ message: 'Test berhasil dibuat', test });
+    return res.status(201).json({ message: 'Test Created', test });
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    console.error(err.message);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 };
 
@@ -47,14 +45,16 @@ exports.getTests = async (req, res) => {
         {
           model: Question,
           as: 'questions',
-          attributes: { exclude: ['createdAt', 'updatedAt', 'testId'] }, // Menghapus createdAt dan updatedAt
+          attributes: { exclude: ['createdAt', 'updatedAt', 'testId'] },
         },
       ],
+      order: [['updatedAt', 'DESC']], // Order by updatedAt in descending order
     });
 
-    return res.status(200).json({ message: tests });
+    return res.status(200).json({ tests });
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    console.error(err.message);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 };
 
@@ -83,12 +83,13 @@ exports.showTest = async (req, res) => {
     test.dataValues.userTestCount = userTestCount;
 
     if (!test) {
-      return res.status(404).json({ message: 'Test tidak ditemukan' });
+      return res.status(404).json({ message: 'Test not found' });
     }
 
-    return res.status(200).json({ message: test });
+    return res.status(200).json({ test });
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    console.error(err.message);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 };
 
@@ -99,15 +100,16 @@ exports.acceptResponses = async (req, res) => {
     const test = await Test.findOne({ where: { id, creatorId } });
 
     if (!test) {
-      return res.status(404).json({ message: 'Test tidak ditemukan' });
+      return res.status(404).json({ message: 'Test not found' });
     }
 
     test.acceptResponses = Boolean(acceptResponses); // Convert to boolean
     await test.save();
 
-    return res.status(200).json({ message: 'Test berhasil diubah', test });
+    return res.status(200).json({ message: 'Accept Responses updated'});
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    console.error(err.message);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 };
 
@@ -179,16 +181,16 @@ exports.showUserTestDetails = async (req, res) => {
     });
 
     if (!userTest) {
-      return res.status(404).json({ message: 'User test tidak ditemukan' });
+      return res.status(404).json({ message: 'Response not found' });
     }
 
-    return res.status(200).json({ message: 'Detail user test berhasil diambil', userTest });
+    return res.status(200).json({ message: 'Response detail found', userTest });
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    console.error(err.message);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 };
 
-// jika creator_id sama dengan id user yang login maka munculkan jawaban peserta beserta nilainya
 exports.getTestById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -206,16 +208,15 @@ exports.getTestById = async (req, res) => {
     });
 
     if (!test) {
-      return res.status(404).json({ message: 'Test tidak ditemukan' });
+      return res.status(404).json({ message: 'Test not found' });
     }
 
     const questionCount = await Question.count({ where: { testId: id } });
     const UserTestCount = await UserTests.count({ where: { testId: id } });
     
-    // Add questionCount to the test object
     test.dataValues.questionCount = questionCount;
     test.dataValues.UserTestCount = UserTestCount;
-    return res.status(200).json({ message: 'Detail test berhasil diambil', test });
+    return res.status(200).json({ message: 'Test found', test });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
@@ -229,7 +230,7 @@ exports.startTest = async (req, res) => {
 
     // Jika user_id dan username tidak ada, kembalikan error
     if (!userId && !userTestUsername) {
-      return res.status(400).json({ message: 'User ID atau username harus disediakan.' });
+      return res.status(400).json({ message: 'Must have user' });
     }
 
     if (userTestUsername && !userId) {
@@ -238,7 +239,7 @@ exports.startTest = async (req, res) => {
       });
 
       if (existingUserTest) {
-        return res.status(400).json({ message: 'Username sudah ada.' });
+        return res.status(400).json({ message: 'Username already exist' });
       }
     }
 
@@ -256,12 +257,12 @@ exports.startTest = async (req, res) => {
     });
 
     if (!test) {
-      return res.status(404).json({ message: 'Test tidak ditemukan.' });
+      return res.status(404).json({ message: 'Test not found' });
     }
 
     // Periksa apakah test mengizinkan hasil
     if (!test.acceptResponses) {
-      return res.status(403).json({ message: 'Tes ini tidak dapat dimulai (results disabled).' });
+      return res.status(403).json({ message: 'Test doesnt accept response' });
     }
 
     // Periksa apakah User_tests sudah ada
@@ -294,7 +295,8 @@ exports.startTest = async (req, res) => {
       test,
     });
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    console.error(err.message);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 };
 
@@ -308,7 +310,7 @@ exports.submitTest = async (req, res) => {
     const test = await Test.findOne({ where: { id: userTest.testId } });
 
     if (!userTest) {
-      return res.status(404).json({ message: 'User test tidak ditemukan.' });
+      return res.status(404).json({ message: 'User not found' });
     }
 
     // Validasi setiap pertanyaan dan simpan jawabannya
@@ -364,6 +366,7 @@ exports.submitTest = async (req, res) => {
       results,
     });
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    console.error(err.message);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 };

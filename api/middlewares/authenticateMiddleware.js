@@ -12,7 +12,7 @@ const authenticateToken = (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify token
     req.user = decoded; // Save token payload to req.user
   } catch (err) {
-    // Optionally, you can handle token verification errors here
+    console.log(err.message);
   }
 
   next(); // Proceed to the next middleware

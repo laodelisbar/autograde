@@ -7,11 +7,12 @@ exports.profile = async (req, res) => {
     
     const user = await User.findByPk(userId);
     if (!user) {
-      return res.status(404).json({ message: 'User tidak ditemukan' });
+      return res.status(404).json({ message: 'User not found' });
     }
 
     return res.json(user);
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    console.error(err.message);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 };
