@@ -19,15 +19,13 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password\",\n  \"username\": \"username\"\n}"
+					"raw": "{\n  \"email\": \"sss@example.com\",\n  \"password\": \"password\",\n  \"username\": \"ssss\"\n}"
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/api/register",
-					"protocol": "http",
+					"raw": "{{url}}/api/register",
 					"host": [
-						"{{host}}"
+						"{{url}}"
 					],
-					"port": "{{port}}",
 					"path": [
 						"api",
 						"register"
@@ -46,7 +44,8 @@
 							"var jsonData = pm.response.json();",
 							"pm.environment.set(\"token\", jsonData.token);"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -60,15 +59,13 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password\"\n}"
+					"raw": "{\n  \"email\": \"patientone@gmail.com\",\n  \"password\": \"123456\"\n}"
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/api/login",
-					"protocol": "http",
+					"raw": "{{url}}/api/login",
 					"host": [
-						"{{host}}"
+						"{{url}}"
 					],
-					"port": "{{port}}",
 					"path": [
 						"api",
 						"login"
@@ -88,12 +85,10 @@
 					}
 				],
 				"url": {
-					"raw": "http://{{host}}:{{port}}/api/users/profile",
-					"protocol": "http",
+					"raw": "{{url}}/api/users/profile",
 					"host": [
-						"{{host}}"
+						"{{url}}"
 					],
-					"port": "{{port}}",
 					"path": [
 						"api",
 						"users",
@@ -113,7 +108,8 @@
 							"var jsonData = pm.response.json();",
 							"pm.environment.set(\"testId\", jsonData.test.id);"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -131,15 +127,13 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"testTitle\": \"test title\",\n  \"testDuration\": 60,\n  \"questions\": [\n    {\n      \"questionText\": \"question text\",\n      \"answerText\": \"answer text\"\n    }\n  ]\n}"
+					"raw": "{\n  \"testTitle\": \"test Judul\",\n  \"testDuration\": 60,\n  \"questions\": [\n    {\n      \"questionText\": \"question text\",\n      \"answerText\": \"answer text\"\n    }\n  ]\n}"
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/api/tests/store",
-					"protocol": "http",
+					"raw": "{{url}}/api/tests/store",
 					"host": [
-						"{{host}}"
+						"{{url}}"
 					],
-					"port": "{{port}}",
 					"path": [
 						"api",
 						"tests",
@@ -168,12 +162,10 @@
 					"raw": "{\n  \"id\": \"{{testId}}\",\n  \"acceptResponses\": true\n}"
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/api/tests/accept-responses",
-					"protocol": "http",
+					"raw": "{{url}}/api/tests/accept-responses",
 					"host": [
-						"{{host}}"
+						"{{url}}"
 					],
-					"port": "{{port}}",
 					"path": [
 						"api",
 						"tests",
@@ -194,12 +186,10 @@
 					}
 				],
 				"url": {
-					"raw": "http://{{host}}:{{port}}/api/tests/{{testId}}",
-					"protocol": "http",
+					"raw": "{{url}}/api/tests/{{testId}}",
 					"host": [
-						"{{host}}"
+						"{{url}}"
 					],
-					"port": "{{port}}",
 					"path": [
 						"api",
 						"tests",
@@ -220,7 +210,8 @@
 							"pm.environment.set(\"questionId\", jsonData.test.questions[0].id);",
 							"pm.environment.set(\"userTestId\", jsonData.userTestId);"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -241,12 +232,10 @@
 					"raw": "{\n  \"testId\": \"{{testId}}\"\n}"
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/api/tests/start",
-					"protocol": "http",
+					"raw": "{{url}}/api/tests/start",
 					"host": [
-						"{{host}}"
+						"{{url}}"
 					],
-					"port": "{{port}}",
 					"path": [
 						"api",
 						"tests",
@@ -275,12 +264,10 @@
 					"raw": "{\n  \"userTestId\": \"{{userTestId}}\",\n  \"questions\": [\n    {\n      \"questionId\": \"{{questionId}}\",\n      \"answer\": \"answer\"\n    }\n  ]\n}"
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/api/tests/submit",
-					"protocol": "http",
+					"raw": "{{url}}/api/tests/submit",
 					"host": [
-						"{{host}}"
+						"{{url}}"
 					],
-					"port": "{{port}}",
 					"path": [
 						"api",
 						"tests",
@@ -320,12 +307,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/",
-					"protocol": "http",
+					"raw": "{{url}}/",
 					"host": [
-						"{{host}}"
+						"{{url}}"
 					],
-					"port": "{{port}}",
 					"path": [
 						""
 					]
@@ -363,15 +348,13 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"testId\": \"{{testId}}\",\n  \"username\": \"notlogged\"\n}"
+					"raw": "{\n  \"testId\": \"{{testId}}\",\n  \"username\": \"barusaja\"\n}"
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/api/tests/start",
-					"protocol": "http",
+					"raw": "{{url}}/api/tests/start",
 					"host": [
-						"{{host}}"
+						"{{url}}"
 					],
-					"port": "{{port}}",
 					"path": [
 						"api",
 						"tests",
@@ -387,12 +370,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{host}}:{{port}}/api/auth/google",
-					"protocol": "http",
+					"raw": "{{url}}/api/auth/google",
 					"host": [
-						"{{host}}"
+						"{{url}}"
 					],
-					"port": "{{port}}",
 					"path": [
 						"api",
 						"auth",
@@ -408,12 +389,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{host}}:{{port}}/api/auth/google/callback",
-					"protocol": "http",
+					"raw": "{{url}}/api/auth/google/callback",
 					"host": [
-						"{{host}}"
+						"{{url}}"
 					],
-					"port": "{{port}}",
 					"path": [
 						"api",
 						"auth",
@@ -435,12 +414,10 @@
 					}
 				],
 				"url": {
-					"raw": "http://{{host}}:{{port}}/api/tests/show/{{testId}}",
-					"protocol": "http",
+					"raw": "{{url}}/api/tests/show/{{testId}}",
 					"host": [
-						"{{host}}"
+						"{{url}}"
 					],
-					"port": "{{port}}",
 					"path": [
 						"api",
 						"tests",
@@ -462,12 +439,10 @@
 					}
 				],
 				"url": {
-					"raw": "http://{{host}}:{{port}}/api/tests",
-					"protocol": "http",
+					"raw": "{{url}}/api/tests",
 					"host": [
-						"{{host}}"
+						"{{url}}"
 					],
-					"port": "{{port}}",
 					"path": [
 						"api",
 						"tests"
@@ -495,12 +470,10 @@
 					"raw": "{\n  \"answerId\": \"{{answerId}}\",\n  \"grade\": 90\n}"
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/api/tests/update-answer-grade",
-					"protocol": "http",
+					"raw": "{{url}}/api/tests/update-answer-grade",
 					"host": [
-						"{{host}}"
+						"{{url}}"
 					],
-					"port": "{{port}}",
 					"path": [
 						"api",
 						"tests",
@@ -529,12 +502,10 @@
 					"raw": "{\n  \"userTestId\": \"{{userTestId}}\"\n}"
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/api/tests/show-user-test-details",
-					"protocol": "http",
+					"raw": "{{url}}/api/tests/show-user-test-details",
 					"host": [
-						"{{host}}"
+						"{{url}}"
 					],
-					"port": "{{port}}",
 					"path": [
 						"api",
 						"tests",
@@ -561,7 +532,9 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
-					""
+					"if (!pm.collectionVariables.get(\"url\")){\r",
+					"pm.collectionVariables.set(\"url\", pm.collectionVariables.get(\"host\")+':'+pm.collectionVariables.get(\"port\"));\r",
+					"}"
 				]
 			}
 		},
@@ -576,6 +549,11 @@
 		}
 	],
 	"variable": [
+		{
+			"key": "url",
+			"value": "",
+			"type": "string"
+		},
 		{
 			"key": "host",
 			"value": "localhost"
