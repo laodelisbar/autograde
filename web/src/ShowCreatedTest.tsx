@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle } from "
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { BiArrowBack } from 'react-icons/bi';
 import { Avatar, AvatarFallback, AvatarImage } from './components/ui/avatar';
+import { toast } from "sonner";
 
 interface ShowCreatedTestProps {
   testId: string;
@@ -31,8 +32,8 @@ const ShowCreatedTest: React.FC<ShowCreatedTestProps> = ({ testId, goToHome, goT
         const token = localStorage.getItem('jwtToken');
         if (token) {
           const response = await showCreatedTest(token, testId);
-          setTest(response.data.message);
-          setAcceptResponses(response.data.message.acceptResponses);
+          setTest(response.data.test);
+          setAcceptResponses(response.data.test.acceptResponses);
         } else {
             console.log("No token found");
         }
@@ -51,7 +52,7 @@ const ShowCreatedTest: React.FC<ShowCreatedTestProps> = ({ testId, goToHome, goT
     try {
       const token = localStorage.getItem('jwtToken');
       if (token) {
-        await updateAcceptResponses(token, testId, !acceptResponses);
+        toast.success((await updateAcceptResponses(token, testId, !acceptResponses)).data.message, { duration: 1000 });
         setAcceptResponses(!acceptResponses);
       }
     } catch (error) {

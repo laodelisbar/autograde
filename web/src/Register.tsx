@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react';
+import React from 'react';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -16,6 +16,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { registerUser } from './api';
+import { toast } from 'sonner';
+import { AxiosError } from 'axios';
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -36,7 +38,6 @@ const formSchema = z.object({
 });
 
 const Register: React.FC<{ goToHome: () => void, goToLogin: () => void }> = ({ goToHome, goToLogin }) => {
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -50,9 +51,13 @@ const Register: React.FC<{ goToHome: () => void, goToLogin: () => void }> = ({ g
   const onSubmit = async (data: any) => {
     try {
       const response = await registerUser(data.username, data.email, data.password);
-      setSuccessMessage(response.data.message);
+      toast.success(response.data.message, { duration: 1000 });
     } catch (error) {
-      console.error(error);
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data.message, { duration: 1000 });
+      } else {
+        toast.error("An unknown error occurred.", { duration: 1000 });
+      }
     }
   };
 
@@ -122,11 +127,6 @@ const Register: React.FC<{ goToHome: () => void, goToLogin: () => void }> = ({ g
               </div>
             </form>
           </Form>
-          {successMessage && (
-            <div className="mt-4 text-green-600">
-              {successMessage}
-            </div>
-          )}
         </Card>
       </div>
     </div>

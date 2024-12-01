@@ -17,6 +17,8 @@ import { BiEraser, BiArrowBack } from 'react-icons/bi';
 import { createTest } from './api';
 import { Card } from './components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from './components/ui/avatar';
+import { toast } from 'sonner';
+import { AxiosError } from 'axios';
 
 const formSchema = z.object({
   testTitle: z.string().min(1, { message: "Test title is required" }),
@@ -63,11 +65,16 @@ const MakeTest: React.FC<MakeTestProps> = ({ goToHome, goToProfile, goToShowCrea
       const token = localStorage.getItem('jwtToken');
       if (token) {
         const response = await createTest(token, formData);
+        toast.success(response.data.message, { duration: 1000 });
         reset();
         goToShowCreatedTest(response.data.test.id);
       }
     } catch (error) {
-      console.error(error);
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data.message, { duration: 1000 });
+      } else {
+        toast.error("An unknown error occurred.", { duration: 1000 });
+      }
     } finally {
       setIsDialogOpen(false);
     }
@@ -116,7 +123,7 @@ const MakeTest: React.FC<MakeTestProps> = ({ goToHome, goToProfile, goToShowCrea
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium">Test Duration (minutes)</label>
+                    <label className="block text-sm font-medium">Test Duration minutes</label>
                     <Controller
                     name="testDuration"
                     control={control}

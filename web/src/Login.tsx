@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react';
+import React from 'react';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -16,6 +16,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { loginUser } from './api';
+import { AxiosError } from 'axios';
+import { toast } from 'sonner';
 
 const formSchema = z.object({
   email: z.string().email({
@@ -27,7 +29,6 @@ const formSchema = z.object({
 });
 
 const Login: React.FC<{ goToHome: () => void, goToRegister: () => void }> = ({ goToHome, goToRegister }) => {
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -39,13 +40,16 @@ const Login: React.FC<{ goToHome: () => void, goToRegister: () => void }> = ({ g
   const onSubmit = async (data: any) => {
     try {
       const response = await loginUser(data.email, data.password);
-      setSuccessMessage(response.data.message);
       localStorage.setItem('jwtToken', response.data.token);
       localStorage.setItem('username', response.data.username);
-      console.log(response.data);
+      toast.success(response.data.message, { duration: 1000 });
       goToHome();
     } catch (error) {
-      console.error(error);
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data.message, { duration: 1000 });
+      } else {
+        toast.error("An unknown error occurred.", { duration: 1000 });
+      }
     }
   };
 
@@ -93,11 +97,6 @@ const Login: React.FC<{ goToHome: () => void, goToRegister: () => void }> = ({ g
               </div>
             </form>
           </Form>
-          {successMessage && (
-            <div className="mt-4 text-green-600">
-              {successMessage}
-            </div>
-          )}
         </Card>
       </div>
     </div>

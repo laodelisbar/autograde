@@ -10,6 +10,18 @@ const api = axios.create({
   },
 });
 
+// Interceptor untuk menangani kode status 401
+api.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response && error.response.status === 401) {
+      // Arahkan pengguna ke halaman login
+      window.dispatchEvent(new CustomEvent('unauthorized'));
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const registerUser = (username: string, email: string, password: string) => {
   return api.post('/api/register', { username, email, password });
 };

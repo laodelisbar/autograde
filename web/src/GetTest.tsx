@@ -9,15 +9,16 @@ import { BiArrowBack, BiGroup, BiMenuAltLeft, BiTime } from 'react-icons/bi';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Avatar, AvatarFallback, AvatarImage } from './components/ui/avatar';
 
 interface GetTestProps {
   testId: string;
   goToHome: () => void;
   goToLogin: () => void;
   onTestStart: (Test: any, userTestId: string) => void;
+  goToProfile: () => void;
 }
-
-const GetTest: React.FC<GetTestProps> = ({ testId, goToHome, goToLogin, onTestStart }) => {
+const GetTest: React.FC<GetTestProps> = ({ testId, goToHome, goToLogin, onTestStart, goToProfile }) => {
   const [test, setTest] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [showDialog, setShowDialog] = useState(false);
@@ -30,13 +31,16 @@ const GetTest: React.FC<GetTestProps> = ({ testId, goToHome, goToLogin, onTestSt
         setTest(response.data.test);
       } catch (error) {
         console.error(error);
-        alert("Failed to fetch test details");
       } finally {
         setLoading(false);
       }
     };
-
-    fetchTest();
+  
+    fetchTest(); // Initial fetch
+  
+    const intervalId = setInterval(fetchTest, 5000); // Fetch every 5 seconds
+  
+    return () => clearInterval(intervalId); // Cleanup interval on component unmount
   }, [testId]);
 
   const handleStartTest = async () => {
@@ -76,7 +80,14 @@ const GetTest: React.FC<GetTestProps> = ({ testId, goToHome, goToLogin, onTestSt
         </TooltipProvider>
       </div>
       <div className="absolute top-4 right-4 p-2 rounded-full">
+      {!jwtToken ? (
         <Button onClick={goToLogin}>Login</Button>
+      ) : (
+        <Avatar onClick={goToProfile} className="cursor-pointer">
+        <AvatarImage src="https://picsum.photos/200" alt="User Avatar" />
+        <AvatarFallback>U</AvatarFallback>
+      </Avatar>
+      )}
       </div>
       <div className='w-full min-h-full mt-12 flex flex-col justify-center items-center'>
         <div className="w-full items-center rounded-lg overflow-hidden mb-4">
@@ -110,7 +121,14 @@ const GetTest: React.FC<GetTestProps> = ({ testId, goToHome, goToLogin, onTestSt
                 )}
                 <Dialog open={showDialog} onOpenChange={setShowDialog}>
                   <DialogTrigger asChild>
-                    <Button type="button" className="w-full mb-4" onClick={() => setShowDialog(true)}>Start Test</Button>
+                  <Button 
+                    type="button" 
+                    className="w-full mb-4" 
+                    onClick={() => setShowDialog(true)} 
+                    disabled={!test.acceptResponses}
+                  >
+                    Start Test
+                  </Button>
                   </DialogTrigger>
                   <DialogContent>
                     <DialogTitle>Confirm Start Test</DialogTitle>

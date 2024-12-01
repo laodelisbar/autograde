@@ -28,11 +28,11 @@ const Profile: React.FC<{ goToHome: () => void, goToShowCreatedTest: (id: string
           setProfile(response.data);
 
           const createdtestsResponse = await getTests(token);
-          setCreatedTests(createdtestsResponse.data.message);
+          setCreatedTests(createdtestsResponse.data.tests);
 
           //TODO: Ubah agar mencari test yang sudah dilkukan oleh user
           const pasttestsResponse = await getTests(token);
-          setPastTests(pasttestsResponse.data.message);
+          setPastTests(pasttestsResponse.data.tests);
         }
       } catch (error) {
         console.error(error);

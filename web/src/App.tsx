@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import Register from './Register';
 import Login from './Login';
@@ -11,6 +11,7 @@ import TakeTest from './TakeTest';
 import TestResult from './TestResult';
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Toaster } from "@/components/ui/sonner"
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -18,6 +19,18 @@ function App() {
   const [userTestId, setUserTestId] = useState<string | null>(null);
   const [Test, setTest] = useState<any | null>(null);
   const [testResult, setTestResult] = useState<{ totalGrade: any; questionGrades: any[]; } | null>(null);
+
+  useEffect(() => {
+    const handleUnauthorized = () => {
+      setCurrentPage('login');
+    };
+
+    window.addEventListener('unauthorized', handleUnauthorized);
+
+    return () => {
+      window.removeEventListener('unauthorized', handleUnauthorized);
+    };
+  }, []);
 
   const renderPage = () => {
     switch (currentPage) {
@@ -34,7 +47,7 @@ function App() {
       case 'showCreatedTest':
         return testId ? <ShowCreatedTest testId={testId} goToHome={() => setCurrentPage('home')} goToProfile={() => setCurrentPage('profile')} /> : <Home goToGetTest={(id: string) => { setTestId(id); setCurrentPage('showCreatedTest'); }} />;
       case 'getTest':
-        return testId ? <GetTest testId={testId} goToHome={() => setCurrentPage('home')} goToLogin={() => setCurrentPage('login')} onTestStart={(Test: any, userTestId: string) => { setTest(Test); setUserTestId(userTestId); setCurrentPage('takeTest'); }} /> : <Home goToGetTest={(id: string) => { setTestId(id); setCurrentPage('getTest'); }} />;
+        return testId ? <GetTest testId={testId} goToHome={() => setCurrentPage('home')} goToLogin={() => setCurrentPage('login')} goToProfile={() => setCurrentPage('profile')} onTestStart={(Test: any, userTestId: string) => { setTest(Test); setUserTestId(userTestId); setCurrentPage('takeTest'); }} /> : <Home goToGetTest={(id: string) => { setTestId(id); setCurrentPage('getTest'); }} />;
       case 'takeTest':
         return Test && userTestId ? <TakeTest Test={Test} userTestId={userTestId} onTestSubmit={(testResult: any) => { setTestResult(testResult); setCurrentPage('testResult'); }} /> : <Home goToGetTest={(id: string) => { setTestId(id); setCurrentPage('getTest'); }} />;
       case 'testResult':
@@ -52,6 +65,7 @@ function App() {
       <div className="flex-grow flex items-center justify-center">
         {renderPage()}
       </div>
+      <Toaster />
     </div>
   );
 }
