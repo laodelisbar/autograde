@@ -4,6 +4,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { BiBookmark } from 'react-icons/bi';
 import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { submitTest } from '@/api';
+import { Loader2 } from 'lucide-react';
 
 interface TakeTestProps {
   Test: any;
@@ -129,9 +130,9 @@ const TakeTest: React.FC<TakeTestProps> = ({ Test, userTestId, onTestSubmit }) =
             Are you sure you want to finish the test? Once submitted, you cannot change your answers.
           </DialogDescription>
           <DialogFooter>
-            <Button onClick={() => setIsDialogOpen(false)}>Cancel</Button>
+            <Button onClick={() => setIsDialogOpen(false)} variant={'secondary'}>Cancel</Button>
             <Button onClick={handleSubmit} disabled={isLoading}>
-              {isLoading ? 'Loading' : 'Confirm'}
+              {isLoading && <Loader2 className="animate-spin mr-2" />} Confirm
             </Button>
           </DialogFooter>
         </DialogContent>

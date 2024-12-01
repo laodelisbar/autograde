@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle } from "
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { BiArrowBack } from 'react-icons/bi';
 import { Avatar, AvatarFallback, AvatarImage } from './components/ui/avatar';
+import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 
 interface ShowCreatedTestProps {
@@ -62,7 +63,42 @@ const ShowCreatedTest: React.FC<ShowCreatedTestProps> = ({ testId, goToHome, goT
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen w-full p-8 text-primary">
+        <div className="absolute top-4 left-4 p-2 rounded-full">
+          <Skeleton className="w-8 h-8 rounded-full" />
+        </div>
+        <div className="absolute top-4 right-4 p-2 rounded-full">
+          <Skeleton className="w-8 h-8 rounded-full" />
+        </div>
+        <div className="w-full mt-12 flex flex-col justify-center items-center">
+          <Skeleton className="w-48 h-12 mb-4" />
+          <div className="w-full mb-4 flex flex-col justify-start">
+            <Skeleton className="w-full h-6 mb-2" />
+            <Skeleton className="w-full h-6 mb-4" />
+            <Skeleton className="w-32 h-10" />
+          </div>
+          <Tabs defaultValue="responses" className="w-full">
+            <TabsList className="mb-4">
+              <Skeleton className="w-24 h-8 mr-2" />
+              <Skeleton className="w-24 h-8" />
+            </TabsList>
+            <TabsContent value="questions">
+              <Skeleton className="w-full h-6 mb-4" />
+              {[...Array(3)].map((_, index) => (
+                <Skeleton key={index} className="w-full h-24 mb-4" />
+              ))}
+            </TabsContent>
+            <TabsContent value="responses">
+              <Skeleton className="w-full h-6 mb-4" />
+              {[...Array(3)].map((_, index) => (
+                <Skeleton key={index} className="w-full h-24 mb-4" />
+              ))}
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
+    );
   }
 
   if (!test) {
@@ -71,44 +107,44 @@ const ShowCreatedTest: React.FC<ShowCreatedTestProps> = ({ testId, goToHome, goT
 
   return (
     <div className="min-h-screen w-full p-8 text-primary">
-    <div className="absolute top-4 left-4 p-2 rounded-full">
+      <div className="absolute top-4 left-4 p-2 rounded-full">
         <TooltipProvider>
-            <Tooltip>
-                <TooltipTrigger onClick={goToHome}>
-                    <BiArrowBack size={24} className="text-primary" />
-                </TooltipTrigger>
-                <TooltipContent>
-                <p>Back</p>
-                </TooltipContent>
-            </Tooltip>
+          <Tooltip>
+            <TooltipTrigger onClick={goToHome}>
+              <BiArrowBack size={24} className="text-primary" />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Back</p>
+            </TooltipContent>
+          </Tooltip>
         </TooltipProvider>
-    </div>
-    <div className="absolute top-4 right-4 p-2 rounded-full">
+      </div>
+      <div className="absolute top-4 right-4 p-2 rounded-full">
         <TooltipProvider>
-            <Tooltip>
-                <TooltipTrigger onClick={goToProfile}>
-                    <Avatar className="cursor-pointer">
-                        <AvatarImage src="https://picsum.photos/200" alt="User Avatar" />
-                        <AvatarFallback>U</AvatarFallback>
-                    </Avatar>
-                </TooltipTrigger>
-                <TooltipContent>
-                    <p>Profile</p>
-                </TooltipContent>
-            </Tooltip>
+          <Tooltip>
+            <TooltipTrigger onClick={goToProfile}>
+              <Avatar className="cursor-pointer">
+                <AvatarImage src="https://picsum.photos/200" alt="User Avatar" />
+                <AvatarFallback>U</AvatarFallback>
+              </Avatar>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Profile</p>
+            </TooltipContent>
+          </Tooltip>
         </TooltipProvider>
-    </div>
+      </div>
       <div className='w-full mt-12 flex flex-col justify-center items-center'>
         <h2 className="text-4xl text-primary font-bold mb-4 text-center">{test.testTitle}</h2>
         <div className="w-full mb-4 flex flex-col justify-start">
-            <div>  
-                <p><strong>Duration:</strong> {test.testDuration} minutes</p>
-                <div className="flex items-center mb-4">
-                    <p className="mr-2"><strong>Accept Responses:</strong></p>
-                    <Switch checked={acceptResponses} onCheckedChange={handleToggleAcceptResponses} />
-                </div>
-                <Button onClick={() => setIsQrCodeOpen(true)}>Show QR Code</Button>
+          <div>
+            <p><strong>Duration:</strong> {test.testDuration} minutes</p>
+            <div className="flex items-center mb-4">
+              <p className="mr-2"><strong>Accept Responses:</strong></p>
+              <Switch checked={acceptResponses} onCheckedChange={handleToggleAcceptResponses} />
             </div>
+            <Button onClick={() => setIsQrCodeOpen(true)}>Show QR Code</Button>
+          </div>
         </div>
         <Tabs defaultValue="responses" className="w-full">
           <TabsList className="mb-4">
@@ -129,12 +165,12 @@ const ShowCreatedTest: React.FC<ShowCreatedTestProps> = ({ testId, goToHome, goT
             {test.userTests.length > 0 ? (
               test.userTests.map((userTest: any) => (
                 <Card key={userTest.id} className="mb-4 p-4 flex justify-between">
-                    <div>
-                        <p className='text-primary text-2xl font-bold'>{userTest.username}</p>
-                    </div>
-                    <div>
-                        <p className='text-primary text-2xl font-bold'>{userTest.totalGrade}</p>
-                    </div>
+                  <div>
+                    <p className='text-primary text-2xl font-bold'>{userTest.username}</p>
+                  </div>
+                  <div>
+                    <p className='text-primary text-2xl font-bold'>{userTest.totalGrade}</p>
+                  </div>
                 </Card>
               ))
             ) : (

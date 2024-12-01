@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react';
+import React, { useState } from 'react';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -18,6 +18,7 @@ import { Card } from "@/components/ui/card";
 import { registerUser } from './api';
 import { toast } from 'sonner';
 import { AxiosError } from 'axios';
+import { Loader2 } from 'lucide-react';
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -38,6 +39,7 @@ const formSchema = z.object({
 });
 
 const Register: React.FC<{ goToHome: () => void, goToLogin: () => void }> = ({ goToHome, goToLogin }) => {
+  const [loading, setLoading] = useState(false);
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -49,15 +51,19 @@ const Register: React.FC<{ goToHome: () => void, goToLogin: () => void }> = ({ g
   });
 
   const onSubmit = async (data: any) => {
+    setLoading(true);
     try {
       const response = await registerUser(data.username, data.email, data.password);
       toast.success(response.data.message, { duration: 1000 });
+      goToLogin();
     } catch (error) {
       if (error instanceof AxiosError) {
         toast.error(error.response?.data.message, { duration: 1000 });
       } else {
         toast.error("An unknown error occurred.", { duration: 1000 });
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -119,7 +125,10 @@ const Register: React.FC<{ goToHome: () => void, goToLogin: () => void }> = ({ g
                 )}
               />
               <div className="flex flex-col w-full">
-                <Button type="submit">Register</Button>
+                <Button type="submit" disabled={loading}>
+                  {loading && <Loader2 className="animate-spin mr-2" />}
+                  Register
+                </Button>
                 <p className="text-primary p-4">
                   Already have an account?
                   <strong className="text-md font-bold cursor-pointer" onClick={goToLogin}> Login</strong>

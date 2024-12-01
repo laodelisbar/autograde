@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react';
+import React, { useState } from 'react';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -18,6 +18,7 @@ import { Card } from "@/components/ui/card";
 import { loginUser } from './api';
 import { AxiosError } from 'axios';
 import { toast } from 'sonner';
+import { Loader2 } from 'lucide-react';
 
 const formSchema = z.object({
   email: z.string().email({
@@ -29,6 +30,7 @@ const formSchema = z.object({
 });
 
 const Login: React.FC<{ goToHome: () => void, goToRegister: () => void }> = ({ goToHome, goToRegister }) => {
+  const [loading, setLoading] = useState(false);
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -38,6 +40,7 @@ const Login: React.FC<{ goToHome: () => void, goToRegister: () => void }> = ({ g
   });
 
   const onSubmit = async (data: any) => {
+    setLoading(true);
     try {
       const response = await loginUser(data.email, data.password);
       localStorage.setItem('jwtToken', response.data.token);
@@ -50,6 +53,8 @@ const Login: React.FC<{ goToHome: () => void, goToRegister: () => void }> = ({ g
       } else {
         toast.error("An unknown error occurred.", { duration: 1000 });
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -87,7 +92,10 @@ const Login: React.FC<{ goToHome: () => void, goToRegister: () => void }> = ({ g
                 )}
               />
               <div className="flex flex-col w-full">
-                <Button type="submit">Login</Button>
+                <Button type="submit" disabled={loading}>
+                  {loading && <Loader2 className="animate-spin mr-2" />}
+                  Login
+                </Button>
                 <div className="text-primary font-medium">or</div>
                 <Button variant="secondary" onClick={goToHome}>Login With Google</Button>
                 <p className="text-primary p-4">
