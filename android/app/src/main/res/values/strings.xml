@@ -58,5 +58,9 @@
     <string name="start_test">Start Test</string>
     <string name="already_have_an_account">Already have an account?</string>
     <string name="nav_register_here">Register here!</string>
+    <string name="tv_subtitle">Onlline test application with AI evaluator</string>
+    <string name="tv_information">-------Information 1-------</string>
+    <string name="skip">Skip</string>
+    <string name="next">Next</string>
 
 </resources>
