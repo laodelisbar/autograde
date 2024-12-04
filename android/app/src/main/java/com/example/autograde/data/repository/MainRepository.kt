@@ -1,9 +1,14 @@
 package com.example.autograde.data.repository
 
+import com.example.autograde.data.api.response.Answer
 import com.example.autograde.data.api.response.JoinTestResponse
 import com.example.autograde.data.api.response.LoginResponse
 import com.example.autograde.data.api.response.RegisterRequest
 import com.example.autograde.data.api.response.RegisterResponse
+import com.example.autograde.data.api.response.StartTestResponse
+import com.example.autograde.data.api.response.SubmitTestRequest
+import com.example.autograde.data.api.response.SubmitTestResponse
+import com.example.autograde.data.api.response.TestRequest
 import com.example.autograde.data.api.response.User
 import com.example.autograde.data.api.retrofit.ApiService
 import com.example.autograde.data.pref.UserModel
@@ -24,6 +29,14 @@ class MainRepository (private val apiService: ApiService, private val userPrefer
         return apiService.getTestById(testId)
     }
 
+    suspend fun startTestByid(requestBody : TestRequest) : Response<StartTestResponse> {
+        return apiService.startTestById(requestBody)
+    }
+
+    suspend fun submitTest (userTestId : String, body : List<SubmitTestRequest>) : Response<SubmitTestResponse> {
+        return apiService.submitTestAnswers(userTestId, body)
+    }
+
     suspend fun saveSession(user: UserModel) {
         userPreference.saveSession(user)
     }
@@ -31,6 +44,7 @@ class MainRepository (private val apiService: ApiService, private val userPrefer
     fun getSession(): Flow<UserModel> {
         return userPreference.getSession()
     }
+
 
     suspend fun logout() {
         userPreference.logout()

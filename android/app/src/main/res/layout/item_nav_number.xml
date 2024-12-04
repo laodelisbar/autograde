@@ -10,15 +10,18 @@
     card_view:cardElevation="4dp">
 
 
-        <com.example.autograde.TextViewCustom
+        <TextView
             android:id="@+id/tv_number"
             android:layout_width="38dp"
             android:layout_height="34dp"
-            android:enabled="false"
+            android:enabled="true"
+            android:background="@drawable/bg_border"
             android:fontFamily="@font/quicksand_bold"
             android:gravity="center"
             android:text="1"
             android:textSize="16sp"/>
+
+
 
 
 </androidx.cardview.widget.CardView>

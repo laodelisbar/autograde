@@ -62,5 +62,13 @@
     <string name="tv_information">-------Information 1-------</string>
     <string name="skip">Skip</string>
     <string name="next">Next</string>
+    <string name="finish">Finish</string>
+    <string name="previous">Previous</string>
+    <string name="create_test_confrimation">Create Test?</string>
+    <string name="create">Create</string>
+    <string name="back">Back</string>
+    <string name="start">Start</string>
+    <string name="start_test_confirmation">Start test?</string>
+
 
 </resources>

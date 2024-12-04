@@ -220,7 +220,7 @@
                 android:visibility="visible"/>
 
             <TextView
-                android:id="@+id/textView15"
+                android:id="@+id/tv_username"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"

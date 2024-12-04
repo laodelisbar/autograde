@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
     id("kotlin-parcelize")
 }
 
@@ -47,6 +48,8 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.room.common)
+    implementation(libs.androidx.room.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -59,5 +62,7 @@ dependencies {
     implementation(libs.lifecycle.livedata.ktx)
     implementation(libs.glide)
     implementation(libs.androidx.viewpager2)
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.room.compiler)
 
 }

@@ -9,6 +9,8 @@ import com.example.autograde.data.pref.dataStore
 import com.example.autograde.home.HomeViewModel
 import com.example.autograde.login.LoginViewModel
 import com.example.autograde.register.RegisterViewModel
+import com.example.autograde.test.SubmitTestViewModel
+import com.example.autograde.test.TestViewModel
 
 
 class ViewModelFactory (private val mainRespository: MainRepository, userPreference: UserPreference) : ViewModelProvider.NewInstanceFactory() {
@@ -23,6 +25,12 @@ class ViewModelFactory (private val mainRespository: MainRepository, userPrefere
         }
         if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
             return HomeViewModel(mainRespository) as T
+        }
+        if (modelClass.isAssignableFrom(TestViewModel::class.java)) {
+            return TestViewModel(mainRespository) as T
+        }
+        if (modelClass.isAssignableFrom(SubmitTestViewModel::class.java)) {
+            return SubmitTestViewModel(mainRespository) as T
         }
 
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)

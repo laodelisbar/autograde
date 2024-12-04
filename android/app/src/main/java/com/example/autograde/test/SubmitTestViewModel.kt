@@ -1,25 +1,28 @@
-package com.example.autograde.home
+package com.example.autograde.test
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.autograde.data.api.response.Answer
 import com.example.autograde.data.api.response.JoinTestResponse
-import com.example.autograde.data.api.response.Test
+import com.example.autograde.data.api.response.ResultsItem
+import com.example.autograde.data.api.response.SubmitTestRequest
+import com.example.autograde.data.api.response.SubmitTestResponse
+import com.example.autograde.data.api.response.TestRequest
 import com.example.autograde.data.repository.MainRepository
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class HomeViewModel (private val mainRepository: MainRepository ) : ViewModel() {
+class SubmitTestViewModel (private val mainRepository: MainRepository) : ViewModel() {
 
+    private val _submitTestResponse = MutableLiveData<SubmitTestResponse>()
+    val submitTestResponse : LiveData<SubmitTestResponse> get() = _submitTestResponse
 
-    private val _joinTestResponse = MutableLiveData<JoinTestResponse>()
-    val joinTestResponse : LiveData<JoinTestResponse> get() = _joinTestResponse
-
-    private val _testResponse = MutableLiveData<List<Test>>()
-    val testResponse : LiveData<List<Test>> get() = _testResponse
+    private val _resultItemResponse = MutableLiveData<List<ResultsItem>>()
+    val resultItemResponse : LiveData<List<ResultsItem>> get() = _resultItemResponse
 
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
@@ -28,25 +31,25 @@ class HomeViewModel (private val mainRepository: MainRepository ) : ViewModel() 
     val isLoading: LiveData<Boolean> = _isLoading
 
 
-    fun getTestById(testId: String) {
+    fun submitTest(userTestId : String, body : List<SubmitTestRequest>) {
         viewModelScope.launch {
             _isLoading.value = true
             try {
                 val response = withContext(Dispatchers.IO) {
-                    mainRepository.getTestById(testId)
+                    mainRepository.submitTest(userTestId, body)
                 }
                 if (response.isSuccessful) {
                     response.body()?.let { body ->
-                        body.test?.let { test ->
-                            _testResponse.postValue(listOf(test))
-                            _joinTestResponse.postValue(body)
+                        body.results?.let { test ->
+                            _resultItemResponse.postValue(listOf(ResultsItem()))
+                            _submitTestResponse.postValue(body)
                         } ?: run {
-                            _joinTestResponse.postValue(body)
+                            _submitTestResponse.postValue(body)
+                            _errorMessage.postValue("Gagal")
                         }
                     }
                 } else {
                     val errorMessage = response.errorBody()?.string()?.let { errorBody ->
-                        // Parsing JSON jika perlu, misalnya menggunakan Gson
                         try {
                             val errorResponse = Gson().fromJson(errorBody, JoinTestResponse::class.java)
                             errorResponse.message
@@ -54,19 +57,13 @@ class HomeViewModel (private val mainRepository: MainRepository ) : ViewModel() 
                             "Terjadi kesalahan: ${response.message()}"
                         }
                     } ?: "Terjadi kesalahan tak dikenal"
-                    _joinTestResponse.postValue(JoinTestResponse(message = errorMessage)) // Mengirimkan data default
+                    _submitTestResponse.postValue(SubmitTestResponse(message = errorMessage)) // Mengirimkan data default
                 }
-
-
             } catch (e: Exception) {
-                _errorMessage.postValue(e.message ?: "Terjadi kesalahan")
+
             } finally {
                 _isLoading.value = false
             }
         }
     }
-
-
-
-
 }

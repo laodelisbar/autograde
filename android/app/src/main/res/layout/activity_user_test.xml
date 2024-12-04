@@ -28,7 +28,7 @@
     </com.google.android.material.appbar.MaterialToolbar>
 
     <TextView
-        android:id="@+id/tv_test_title"
+        android:id="@+id/tv_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="0dp"
@@ -41,7 +41,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
-        tools:text="@string/test_title" />
+        tools:text="@string/username" />
 
     <TextView
         android:id="@+id/tv_result"
@@ -56,7 +56,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_test_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_username"
         tools:text="@string/int_test_result" />
 
     <androidx.constraintlayout.widget.Guideline

@@ -43,11 +43,12 @@ class LoginViewModel (private val mainRepository: MainRepository ) : ViewModel()
                 if (response.isSuccessful) {
                     response.body()?.let { body ->
                         _loginResponse.postValue(body)
-                        response.body()?.token?.let { token ->
+                        response.body()?.let { response ->
                             mainRepository.saveSession(
                                 UserModel(
+                                    username = response.username ?: "",
                                     email = email,
-                                    token = token ?: "",
+                                    token = response.token ?: "",
                                     isLogin = true
                                 )
                             )
