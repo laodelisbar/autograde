@@ -7,6 +7,7 @@ import Profile from './Profile';
 import MakeTest from './MakeTest';
 import ShowCreatedTest from './ShowCreatedTest';
 import ShowPastTest from './ShowPastTest';
+import UserTest from './UserTest';
 import GetTest from './GetTest';
 import TakeTest from './TakeTest';
 import TestResult from './TestResult';
@@ -65,7 +66,7 @@ function App() {
       case 'makeTest':
         return <MakeTest goToHome={() => setCurrentPage('home')} goToProfile={() => setCurrentPage('profile')} goToShowCreatedTest={(id: string) => { setTestId(id); setCurrentPage('showCreatedTest'); }} />;
       case 'showCreatedTest':
-        return testId ? <ShowCreatedTest testId={testId} goToHome={() => setCurrentPage('home')} goToProfile={() => setCurrentPage('profile')} /> : <Home goToGetTest={(id: string) => { setTestId(id); setCurrentPage('showCreatedTest'); }} />;
+        return testId ? <ShowCreatedTest testId={testId} goToHome={() => setCurrentPage('home')} goToProfile={() => setCurrentPage('profile')} goToUserTest={(userTestId: string) => { setUserTestId(userTestId); setCurrentPage('userTest'); }} /> : <Home goToGetTest={(id: string) => { setTestId(id); setCurrentPage('showCreatedTest'); }} />;
       case 'getTest':
         return testId ? <GetTest testId={testId} goToHome={() => setCurrentPage('home')} goToLogin={() => setCurrentPage('login')} goToProfile={() => setCurrentPage('profile')} onTestStart={(Test: any, userTestId: string) => { setTest(Test); setUserTestId(userTestId); setCurrentPage('takeTest'); }} /> : <Home goToGetTest={(id: string) => { setTestId(id); setCurrentPage('getTest'); }} />;
       case 'takeTest':
@@ -74,6 +75,8 @@ function App() {
         return testResult ? <TestResult TestResult={testResult} goToHome={() => setCurrentPage('home')} /> : <Home goToGetTest={(id: string) => { setTestId(id); setCurrentPage('getTest'); }} />;
       case 'showPastTest':
         return testId ? <ShowPastTest testId={testId} goToHome={() => setCurrentPage('home')} /> : <Home goToGetTest={(id: string) => { setTestId(id); setCurrentPage('showPastTest'); }} />;
+      case 'userTest':
+        return userTestId ? <UserTest userTestId={userTestId} goToHome={() => setCurrentPage('home')} /> : <Home goToGetTest={(id: string) => { setTestId(id); setCurrentPage('userTest'); }} />;
       default:
         return <Home goToGetTest={(id: string) => { setTestId(id); setCurrentPage('getTest'); }} />;
     }

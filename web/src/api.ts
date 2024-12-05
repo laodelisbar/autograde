@@ -118,6 +118,22 @@ export const showCreatedTest = (token: string, testId: string) => {
   });
 };
 
+export const showUserTestDetails = (token: string, userTestId: string) => {
+  return api.post('/api/tests/show-user-test-details', { userTestId }, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const updateAnswerGrade = (token: string, answerId: string, grade: number) => {
+  return api.post('/api/tests/update-answer-grade', { answerId, grade }, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 export const updateAcceptResponses = (token: string, testId: string, acceptResponses: boolean) => {
   return api.post('/api/tests/accept-responses', {
     id: testId,

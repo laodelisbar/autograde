@@ -1,4 +1,3 @@
-// src/pages/ShowCreatedTest.tsx
 "use client"
 
 import React, { useEffect, useState } from 'react';
@@ -19,9 +18,10 @@ interface ShowCreatedTestProps {
   testId: string;
   goToHome: () => void;
   goToProfile: () => void;
+  goToUserTest: (userTestId: string) => void;
 }
 
-const ShowCreatedTest: React.FC<ShowCreatedTestProps> = ({ testId, goToHome, goToProfile }) => {
+const ShowCreatedTest: React.FC<ShowCreatedTestProps> = ({ testId, goToHome, goToProfile, goToUserTest }) => {
   const [test, setTest] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isQrCodeOpen, setIsQrCodeOpen] = useState(false);
@@ -164,7 +164,7 @@ const ShowCreatedTest: React.FC<ShowCreatedTestProps> = ({ testId, goToHome, goT
             <h3 className="text-lg font-medium mb-4">Responses</h3>
             {test.userTests.length > 0 ? (
               test.userTests.map((userTest: any) => (
-                <Card key={userTest.id} className="mb-4 p-4 flex justify-between">
+                <Card key={userTest.id} className="mb-4 p-4 flex justify-between cursor-pointer hover:bg-gray-200" onClick={() => goToUserTest(userTest.id)}>
                   <div>
                     <p className='text-primary text-2xl font-bold'>{userTest.username}</p>
                   </div>
