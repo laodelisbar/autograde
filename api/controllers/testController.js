@@ -48,8 +48,47 @@ exports.getTests = async (req, res) => {
           attributes: { exclude: ['createdAt', 'updatedAt', 'testId'] },
         },
       ],
-      order: [['updatedAt', 'DESC']], // Order by updatedAt in descending order
+      order: [['updatedAt', 'DESC']],
     });
+
+    return res.status(200).json({ tests });
+  } catch (err) {
+    console.error(err.message);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+exports.getPastTests = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    // console.log('User Id : ', userId);
+
+    const userTests = await UserTests.findAll({
+      where: { userId },
+      attributes: ['testId'],
+    });
+    // console.log(userTests);
+    const testIds = userTests.map(userTest => userTest.testId);
+
+    if (testIds.length === 0) {
+      return res.status(404).json({ message: 'No past tests found' });
+    }
+
+    const tests = await Test.findAll({
+      where: { id: testIds },
+      include: [
+        {
+          model: Question,
+          as: 'questions',
+          attributes: { exclude: ['createdAt', 'updatedAt', 'testId'] },
+        },
+      ],
+      order: [['updatedAt', 'DESC']],
+    });
+
+    if (tests.length === 0) {
+      return res.status(404).json({ message: 'Test notx found' });
+    }
 
     return res.status(200).json({ tests });
   } catch (err) {
@@ -93,6 +132,60 @@ exports.showTest = async (req, res) => {
   }
 };
 
+exports.showPastTest = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    const userTest = await UserTests.findOne({
+      where: { testId: id, userId },
+      include: [
+        {
+          model: Test,
+          as: 'test',
+          include: [
+            {
+              model: Question,
+              as: 'questions',
+              attributes: { exclude: ['createdAt', 'updatedAt', 'testId'] },
+            },
+          ],
+        },
+        {
+          model: Answer,
+          as: 'answers',
+          include: [
+            {
+              model: Question,
+              as: 'question',
+              attributes: ['questionText'],
+            },
+          ],
+        },
+      ],
+    });
+
+    if (!userTest) {
+      return res.status(404).json({ message: 'Test not found' });
+    }
+
+    const results = userTest.answers.map(answer => ({
+      question: answer.question.questionText,
+      answer: answer.answer,
+      grade: answer.grade,
+    }));
+
+    return res.status(200).json({
+      testTitle: userTest.test.testTitle,
+      totalGrade: userTest.totalGrade,
+      results,
+    });
+  } catch (err) {
+    console.error(err.message);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 exports.acceptResponses = async (req, res) => {
   try {
     const { id, acceptResponses } = req.body;
@@ -125,7 +218,7 @@ exports.updateAnswerGrade = async (req, res) => {
       include: [
         {
           model: UserTests,
-          as: 'userTests',
+          as: 'userTest',
           include: [
             {
               model: Test,
@@ -173,7 +266,7 @@ exports.showUserTestDetails = async (req, res) => {
             {
               model: Question,
               as: 'question',
-              attributes: ['questionTest'],
+              attributes: ['questionText'],
             },
           ],
         },
@@ -275,6 +368,7 @@ exports.startTest = async (req, res) => {
       return res.status(200).json({
         message: 'Tes sudah dimulai sebelumnya.',
         userTestId: userTest.id,
+        timeLeft: userTest.timeLeft,
         test,
       });
     }
@@ -292,6 +386,7 @@ exports.startTest = async (req, res) => {
     return res.status(201).json({
       message: 'Tes berhasil dimulai.',
       userTestId: userTest.id,
+      timeLeft: userTest.timeLeft,
       test,
     });
   } catch (err) {
@@ -300,9 +395,29 @@ exports.startTest = async (req, res) => {
   }
 };
 
+exports.updateTimeLeft = async (req, res) => {
+  try {
+    const { userTestId, timeLeft } = req.body;
+
+    const userTest = await UserTests.findOne({ where: { id: userTestId } });
+
+    if (!userTest) {
+      return res.status(404).json({ message: 'User test not found' });
+    }
+
+    userTest.timeLeft = timeLeft;
+    await userTest.save();
+
+    return res.status(200).json({ message: 'Time left updated successfully' });
+  } catch (err) {
+    console.error(err.message);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 exports.submitTest = async (req, res) => {
   try {
-    const { userTestId, questions } = req.body;
+    const { userTestId, questions, timeLeft } = req.body;
 
     // Cari User_test untuk memastikan user memiliki akses
     const userTest = await UserTests.findOne({ where: { id: userTestId } });
@@ -312,6 +427,10 @@ exports.submitTest = async (req, res) => {
     if (!userTest) {
       return res.status(404).json({ message: 'User not found' });
     }
+
+    // Perbarui timeLeft
+    userTest.timeLeft = timeLeft;
+    await userTest.save();
 
     // Validasi setiap pertanyaan dan simpan jawabannya
     const results = [];
