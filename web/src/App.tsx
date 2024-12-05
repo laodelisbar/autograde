@@ -14,7 +14,12 @@ import TestResult from './TestResult';
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Toaster } from "@/components/ui/sonner";
-import { getUserProfile } from './api'; // Import fungsi getUserProfile dan startTest
+import { getUserProfile } from './api'; 
+//TODO: login google tidak berhasil pada saat deploy
+//TODO: avatar tidak muncul tepat setelah login
+//TODO: Autograde muncul 2 di navbar setelah logout
+//TODO: Logika saat sudah pernah mengerjakan test
+//TODO: Ganti tombol home pada halaman UserTest, ShowPastTest menjadi tombol back 
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');

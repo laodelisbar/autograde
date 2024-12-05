@@ -4,7 +4,7 @@ import { toast } from 'sonner';
 import { googleLogin } from './api'; // Import fungsi googleLogin
 
 const GoogleLoginButton: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
-  const clientId = typeof process !== 'undefined' ? process.env.GOOGLE_CLIENT_ID : '';
+  const clientId = typeof process !== 'undefined' ? import.meta.env.GOOGLE_CLIENT_ID : '';
 
   if (!clientId) {
     return null; // Do not render the component if clientId is null or process is undefined
