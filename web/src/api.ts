@@ -61,14 +61,11 @@ export const getPastTests = (token: string) => {
   });
 };
 
-export const showPastTests = (token: string) => {
-  return api.get('/api/pasttests/show', {
+export const showPastTest = (token: string, testId: string) => {
+  return api.get(`/api/pasttests/show/${testId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
-  }).then(response => {
-    console.log('Response:', response);
-    return response;
   });
 };
 

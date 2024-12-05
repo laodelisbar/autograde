@@ -6,6 +6,7 @@ import Home from './Home';
 import Profile from './Profile';
 import MakeTest from './MakeTest';
 import ShowCreatedTest from './ShowCreatedTest';
+import ShowPastTest from './ShowPastTest';
 import GetTest from './GetTest';
 import TakeTest from './TakeTest';
 import TestResult from './TestResult';
@@ -13,8 +14,6 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Toaster } from "@/components/ui/sonner";
 import { getUserProfile } from './api'; // Import fungsi getUserProfile dan startTest
-//TODO: handle join code tidak ditemukan
-//TODO: 
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -74,7 +73,7 @@ function App() {
       case 'testResult':
         return testResult ? <TestResult TestResult={testResult} goToHome={() => setCurrentPage('home')} /> : <Home goToGetTest={(id: string) => { setTestId(id); setCurrentPage('getTest'); }} />;
       case 'showPastTest':
-        return testId ? <ShowCreatedTest testId={testId} goToHome={() => setCurrentPage('home')} goToProfile={() => setCurrentPage('profile')} /> : <Home goToGetTest={(id: string) => { setTestId(id); setCurrentPage('showPastTest'); }} />;
+        return testId ? <ShowPastTest testId={testId} goToHome={() => setCurrentPage('home')} /> : <Home goToGetTest={(id: string) => { setTestId(id); setCurrentPage('showPastTest'); }} />;
       default:
         return <Home goToGetTest={(id: string) => { setTestId(id); setCurrentPage('getTest'); }} />;
     }

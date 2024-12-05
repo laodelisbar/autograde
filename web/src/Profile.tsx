@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useEffect, useState } from 'react';
-import { getUserProfile, getTests } from './api';
+import { getUserProfile, getTests, getPastTests } from './api';
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -14,10 +14,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { BiArrowBack } from 'react-icons/bi';
 import { FiLogOut } from 'react-icons/fi'; // Import ikon logout dari react-icons
 
-const Profile: React.FC<{ goToHome: () => void, goToShowCreatedTest: (id: string) => void }> = ({ goToHome, goToShowCreatedTest }) => {
+const Profile: React.FC<{ goToHome: () => void, goToShowCreatedTest: (id: string) => void, goToShowPastTest: (id: string) => void }> = ({ goToHome, goToShowCreatedTest, goToShowPastTest }) => {
   const [profile, setProfile] = useState<any>(null);
-  const [createdtestsResponse, setCreatedTests] = useState<any[]>([]);
-  const [pasttestsResponse, setPastTests] = useState<any[]>([]);
+  const [createdTests, setCreatedTests] = useState<any[]>([]);
+  const [pastTests, setPastTests] = useState<any[]>([]);
   const [loadingProfile, setLoadingProfile] = useState(true);
   const [loadingCreatedTests, setLoadingCreatedTests] = useState(true);
   const [loadingPastTests, setLoadingPastTests] = useState(true);
@@ -33,14 +33,13 @@ const Profile: React.FC<{ goToHome: () => void, goToShowCreatedTest: (id: string
           setLoadingProfile(false);
 
           setLoadingCreatedTests(true);
-          const createdtestsResponse = await getTests(token);
-          setCreatedTests(createdtestsResponse.data.tests);
+          const createdTestsResponse = await getTests(token);
+          setCreatedTests(createdTestsResponse.data.tests);
           setLoadingCreatedTests(false);
 
-          //TODO: Ubah agar mencari test yang sudah dilkukan oleh user
           setLoadingPastTests(true);
-          const pasttestsResponse = await getTests(token);
-          setPastTests(pasttestsResponse.data.tests);
+          const pastTestsResponse = await getPastTests(token);
+          setPastTests(pastTestsResponse.data.tests);
           setLoadingPastTests(false);
         }
       } catch (error) {
@@ -118,10 +117,10 @@ const Profile: React.FC<{ goToHome: () => void, goToShowCreatedTest: (id: string
                 <Skeleton key={index} className="w-full max-w-lg h-24 mx-auto" />
               ))
             ) : (
-              createdtestsResponse.map((test) => (
+              createdTests.map((test) => (
                 <Card 
                   key={test.id} 
-                  className="w-full max-w-lg p-8 cursor-pointer hover:bg-gray-100"
+                  className="w-full p-8 cursor-pointer hover:bg-gray-100"
                   onClick={() => goToShowCreatedTest(test.id)}
                 >
                   <p className="text-primary text-xl font-medium">{test.testTitle}</p>
@@ -138,8 +137,12 @@ const Profile: React.FC<{ goToHome: () => void, goToShowCreatedTest: (id: string
                 <Skeleton key={index} className="w-full max-w-lg h-24 mx-auto" />
               ))
             ) : (
-              pasttestsResponse.map((test) => (
-                <Card key={test.id} className="w-full max-w-lg p-8">
+              pastTests.map((test) => (
+                <Card 
+                  key={test.id} 
+                  className="w-full p-8 cursor-pointer hover:bg-gray-100"
+                  onClick={() => goToShowPastTest(test.id)}
+                >
                   <p className="text-primary text-xl font-medium">{test.testTitle}</p>
                 </Card>
               ))
