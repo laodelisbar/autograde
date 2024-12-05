@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from 'sonner';
 import { Scanner } from '@yudiel/react-qr-scanner';
 import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { getTestById } from '@/api'; // Import the API function
 
 interface HomeProps {
   goToGetTest: (testId: string) => void;
@@ -14,19 +15,28 @@ const Home: React.FC<HomeProps> = ({ goToGetTest }) => {
   const [joinCode, setJoinCode] = useState('');
   const [showQrScanner, setShowQrScanner] = useState(false);
 
-  const handleJoinClick = () => {
+  const handleJoinClick = async () => {
     if (joinCode.trim()) {
-      console.log('Joining with code:', joinCode);
-      goToGetTest(joinCode);
+      try {
+        await getTestById(joinCode); // Check if the test exists
+        goToGetTest(joinCode);
+      } catch (error) {
+        toast.error('Test code not found');
+      }
     }
   };
 
-  const handleScan = (result: any) => {
+  const handleScan = async (result: any) => {
     if (result) {
       const rawValue = result[0].rawValue;
-      toast.success('Code scanned', { duration: 1000 });
-      setShowQrScanner(false);
-      goToGetTest(rawValue);
+      try {
+        await getTestById(rawValue); // Check if the test exists
+        toast.success('Code scanned', { duration: 1000 });
+        setShowQrScanner(false);
+        goToGetTest(rawValue);
+      } catch (error) {
+        toast.error('Test code not found');
+      }
     }
   };
 
@@ -35,7 +45,7 @@ const Home: React.FC<HomeProps> = ({ goToGetTest }) => {
     if (err.name === 'NotReadableError') {
       toast.error('Could not start video source. Please ensure no other application is using the camera and try again.', { duration: 3000 });
     } else {
-      toast.error('Failed to scan QR code'+ err, { duration: 3000 });
+      toast.error('Failed to scan QR code' + err, { duration: 3000 });
     }
   };
 

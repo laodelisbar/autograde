@@ -138,7 +138,7 @@ const ShowCreatedTest: React.FC<ShowCreatedTestProps> = ({ testId, goToHome, goT
         <h2 className="text-4xl text-primary font-bold mb-4 text-center">{test.testTitle}</h2>
         <div className="w-full mb-4 flex flex-col justify-start">
           <div>
-            <p><strong>Duration:</strong> {test.testDuration} minutes</p>
+            <p><strong>Duration:</strong> {test.testDuration / 60} minutes</p>
             <div className="flex items-center mb-4">
               <p className="mr-2"><strong>Accept Responses:</strong></p>
               <Switch checked={acceptResponses} onCheckedChange={handleToggleAcceptResponses} />

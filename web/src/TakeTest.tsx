@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { BiBookmark } from 'react-icons/bi';
@@ -18,7 +18,24 @@ const TakeTest: React.FC<TakeTestProps> = ({ Test, userTestId, onTestSubmit }) =
   const [answers, setAnswers] = useState<{ [key: string]: string }>({});
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(Test.testDuration);
   const questions = Test.questions;
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft((prevTime: number) => {
+        if (prevTime <= 1) {
+          clearInterval(timer);
+          setIsDialogOpen(true);
+          return 0;
+        }
+        const newTimeLeft = prevTime - 1;
+        return newTimeLeft;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [userTestId]);
 
   const handleNext = () => {
     if (currentQuestionIndex < questions.length - 1) {
@@ -55,6 +72,7 @@ const TakeTest: React.FC<TakeTestProps> = ({ Test, userTestId, onTestSubmit }) =
         questionId,
         answer: answers[questionId],
       })),
+      timeLeft, // send the remaining time
     };
 
     setIsLoading(true);
@@ -63,6 +81,7 @@ const TakeTest: React.FC<TakeTestProps> = ({ Test, userTestId, onTestSubmit }) =
       const response = await submitTest(payload);
 
       if (response.status === 200) {
+        console.log('Test submitted:', response.data);
         onTestSubmit(response.data);
       } else {
         alert('Failed to submit test.');
@@ -75,8 +94,17 @@ const TakeTest: React.FC<TakeTestProps> = ({ Test, userTestId, onTestSubmit }) =
     }
   };
 
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+  };
+
   return (
     <div className="min-h-screen w-full flex flex-col p-8">
+      <div className="absolute top-4 right-4 text-primary text-xl font-bold">
+        {formatTime(timeLeft)}
+      </div>
       <div className="flex-grow flex justify-center">
         <div className="flex flex-col w-full gap-4">
           <h1 className="text-4xl text-primary font-bold mb-4 text-center">{Test.testTitle}</h1>

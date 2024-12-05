@@ -1,5 +1,3 @@
-"use client"
-
 import React, { useState } from 'react';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -19,6 +17,7 @@ import { loginUser } from './api';
 import { AxiosError } from 'axios';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
+import GoogleLoginButton from './GoogleLoginButton';
 
 const formSchema = z.object({
   email: z.string().email({
@@ -97,7 +96,7 @@ const Login: React.FC<{ goToHome: () => void, goToRegister: () => void }> = ({ g
                   Login
                 </Button>
                 <div className="text-primary font-medium">or</div>
-                <Button variant="secondary" onClick={goToHome}>Login With Google</Button>
+                {<GoogleLoginButton onSuccess={goToHome} />}
                 <p className="text-primary p-4">
                   Don't have an account?
                   <strong className="text-md font-bold cursor-pointer" onClick={goToRegister}> Register</strong>

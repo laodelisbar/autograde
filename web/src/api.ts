@@ -30,6 +30,10 @@ export const loginUser = (email: string, password: string) => {
   return api.post('/api/login', { email, password });
 };
 
+export const googleLogin = (accessToken: string) => {
+  return api.post('/api/auth/google', { access_token: accessToken });
+};
+
 export const getUserProfile = (token: string) => {
   return api.get('/api/users/profile', {
     headers: {
@@ -46,6 +50,28 @@ export const getTests = (token: string) => {
   });
 };
 
+export const getPastTests = (token: string) => {
+  return api.get('/api/pasttests', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then(response => {
+    console.log('Response:', response);
+    return response;
+  });
+};
+
+export const showPastTests = (token: string) => {
+  return api.get('/api/pasttests/show', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then(response => {
+    console.log('Response:', response);
+    return response;
+  });
+};
+
 export const createTest = (token: string, test: any) => {
   return api.post('/api/tests/store', test, {
     headers: {
@@ -54,8 +80,16 @@ export const createTest = (token: string, test: any) => {
   });
 };
 
-export const getTestById = (testId: string) => {
-    return api.get(`/api/tests/${testId}`);
+export const getTestById = async (testId: string) => {
+  try {
+    const response = await api.get(`/api/tests/${testId}`);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response && error.response.status === 404) {
+      throw new Error('Test not found');
+    }
+    throw error;
+  }
 };
 
 export const startTest = (data: { testId: string, username?: string }) => {
@@ -70,6 +104,10 @@ export const startTest = (data: { testId: string, username?: string }) => {
   console.log('Request Body: ',requestBody);
 
   return api.post('/api/tests/start', requestBody, { headers });
+};
+
+export const updateTimeLeft = (userTestId: string, timeLeft: number) => {
+  return api.post('/api/tests/update-time-left', { userTestId, timeLeft });
 };
 
 export const showCreatedTest = (token: string, testId: string) => {
@@ -95,6 +133,7 @@ export const updateAcceptResponses = (token: string, testId: string, acceptRespo
 };
 
 export const submitTest = (payload: { userTestId: string, questions: { questionId: string, answer: string }[] }) => {
+  console.log('Payload: ',payload);
   return api.post('/api/tests/submit', payload);
 };
 

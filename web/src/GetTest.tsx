@@ -32,7 +32,8 @@ const GetTest: React.FC<GetTestProps> = ({ testId, goToHome, goToLogin, onTestSt
     const fetchTest = async () => {
       try {
         const response = await getTestById(testId);
-        setTest(response.data.test);
+        console.log('Response: ', response);
+        setTest(response.test);
       } catch (error) {
         console.error(error);
       } finally {
@@ -123,7 +124,7 @@ const GetTest: React.FC<GetTestProps> = ({ testId, goToHome, goToLogin, onTestSt
         <div className="w-full md:w-[50%] grid grid-cols-3 gap-4 mb-4">
           <Card className="p-4 col-span-1 flex flex-col items-center text-center">
             <BiTime size={48} className="text-primary mb-2" />
-            <p>{test.testDuration} minutes</p>
+            <p>{test.testDuration / 60} minutes</p>
           </Card>
           <Card className="p-4 col-span-1 flex flex-col items-center">
             <BiMenuAltLeft size={48} className="text-primary mb-2" />
