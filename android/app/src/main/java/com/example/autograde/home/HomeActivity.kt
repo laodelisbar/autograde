@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.autograde.create_test.CreateTestActivity
 import com.example.autograde.data.di.ViewModelFactory
 import com.example.autograde.databinding.ActivityHomeBinding
 import com.example.autograde.login.LoginActivity
@@ -47,6 +48,11 @@ class HomeActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
             homeViewModel.getTestById(testCode)
+        }
+
+        binding.makeTestButton.setOnClickListener {
+            intent = Intent (this@HomeActivity, CreateTestActivity::class.java)
+            startActivity(intent)
         }
 
         observeJoinTestResponse()

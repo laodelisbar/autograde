@@ -1,8 +1,11 @@
 package com.example.autograde.data.api.retrofit
 
-import com.example.autograde.data.api.response.Answer
+
+import com.example.autograde.data.api.response.CreateTestRequest
+import com.example.autograde.data.api.response.CreateTestResponse
 import com.example.autograde.data.api.response.JoinTestResponse
 import com.example.autograde.data.api.response.LoginResponse
+import com.example.autograde.data.api.response.ProfileResponse
 import com.example.autograde.data.api.response.RegisterRequest
 import com.example.autograde.data.api.response.RegisterResponse
 import com.example.autograde.data.api.response.StartTestResponse
@@ -24,7 +27,6 @@ interface ApiService {
         @Body user: RegisterRequest
     ): Response<RegisterResponse>
 
-
     @POST("/api/login")
     suspend fun login(
         @Body  user : User
@@ -40,11 +42,18 @@ interface ApiService {
         @Body  requestBody : TestRequest
     ): Response<StartTestResponse>
 
-    @POST("tests/{userTestId}/submit")
+    @POST("/api/tests/submit")
     suspend fun submitTestAnswers(
-        @Path("userTestId") userTestId: String,
-        @Body answers: List<SubmitTestRequest>
+        @Body request: SubmitTestRequest
     ): Response<SubmitTestResponse>
+
+    @GET("/api/users/profile")
+    suspend fun getProfile (): Response<ProfileResponse>
+
+    @POST("/api/tests/store")
+    suspend fun storeTest(
+        @Body  requestBody : CreateTestRequest
+    ): Response<CreateTestResponse>
 
 }
 

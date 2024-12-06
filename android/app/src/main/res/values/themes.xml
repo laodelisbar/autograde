@@ -15,6 +15,8 @@
     <style name="ShapeAppearanceParticularButton">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">10dp</item>
+        <item name="strokeWidth">12dp</item>
+        <item name="strokeColor">@color/primary</item>
     </style>
 
     <style name="ShapeAppearanceParticularButtonChecked">

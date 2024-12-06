@@ -11,5 +11,6 @@ data class UserAnswer(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val userTestId: String,
     val questionId: String,
-    val answer: String
+    val answer: String? = null,
+    val isBookmarked: Boolean = false // Properti baru
 ) : Parcelable

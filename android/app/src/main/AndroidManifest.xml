@@ -41,6 +41,14 @@
         <activity
             android:name=".register.RegisterActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".profile.ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".test_result.TestResultActivity"
+            android:exported="false" />
+
         <activity
             android:name=".home.HomeActivity"
             android:exported="true">

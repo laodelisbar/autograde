@@ -1,7 +1,10 @@
 package com.example.autograde.data.api.response
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class SubmitTestResponse(
 
 	@field:SerializedName("totalGrade")
@@ -15,8 +18,9 @@ data class SubmitTestResponse(
 
 	@field:SerializedName("testTitle")
 	val testTitle: String? = null
-)
+) : Parcelable
 
+@Parcelize
 data class ResultsItem(
 
 	@field:SerializedName("question")
@@ -24,8 +28,10 @@ data class ResultsItem(
 
 	@field:SerializedName("answer")
 	val answer: Answer? = null
-)
+) : Parcelable
 
+
+@Parcelize
 data class Answer(
 
 	@field:SerializedName("userTestId")
@@ -48,8 +54,10 @@ data class Answer(
 
 	@field:SerializedName("updatedAt")
 	val updatedAt: String? = null
-)
+) : Parcelable
 
+
+@Parcelize
 data class Question(
 
 	@field:SerializedName("createdAt")
@@ -69,9 +77,17 @@ data class Question(
 
 	@field:SerializedName("updatedAt")
 	val updatedAt: String? = null
+
+) : Parcelable
+
+data class SubmitTestRequest(
+	val userTestId: String,
+	val questions: List<Answers>,
+	val timeLeft : Int
 )
 
-data class SubmitTestRequest (
-	val questionId: String?,
-	val answer: String?
+data class Answers(
+	val questionId: String,
+	val answer: String
 )
+

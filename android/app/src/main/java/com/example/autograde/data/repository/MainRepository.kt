@@ -1,8 +1,11 @@
 package com.example.autograde.data.repository
 
 import com.example.autograde.data.api.response.Answer
+import com.example.autograde.data.api.response.CreateTestRequest
+import com.example.autograde.data.api.response.CreateTestResponse
 import com.example.autograde.data.api.response.JoinTestResponse
 import com.example.autograde.data.api.response.LoginResponse
+import com.example.autograde.data.api.response.ProfileResponse
 import com.example.autograde.data.api.response.RegisterRequest
 import com.example.autograde.data.api.response.RegisterResponse
 import com.example.autograde.data.api.response.StartTestResponse
@@ -17,6 +20,7 @@ import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 
 class MainRepository (private val apiService: ApiService, private val userPreference: UserPreference) {
+
 
     suspend fun registerUser(registerRequest: RegisterRequest): Response<RegisterResponse> {
         return apiService.register(registerRequest)
@@ -33,8 +37,12 @@ class MainRepository (private val apiService: ApiService, private val userPrefer
         return apiService.startTestById(requestBody)
     }
 
-    suspend fun submitTest (userTestId : String, body : List<SubmitTestRequest>) : Response<SubmitTestResponse> {
-        return apiService.submitTestAnswers(userTestId, body)
+    suspend fun storeTest(requestBody : CreateTestRequest) : Response<CreateTestResponse> {
+        return apiService.storeTest(requestBody)
+    }
+
+    suspend fun submitTest (request : SubmitTestRequest) : Response<SubmitTestResponse> {
+        return apiService.submitTestAnswers(request)
     }
 
     suspend fun saveSession(user: UserModel) {
@@ -45,10 +53,14 @@ class MainRepository (private val apiService: ApiService, private val userPrefer
         return userPreference.getSession()
     }
 
-
     suspend fun logout() {
         userPreference.logout()
     }
+
+    suspend fun getProfile () : Response<ProfileResponse> {
+        return apiService.getProfile()
+    }
+
 
 
     companion object {

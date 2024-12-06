@@ -1,14 +1,17 @@
 package com.example.autograde.data.api.response
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 
+@Parcelize
 data class ProfileResponse(
-
 	@field:SerializedName("googleId")
-	val googleId: Any? = null,
+	val googleId: @RawValue Any? = null,
 
 	@field:SerializedName("profilePictureUrl")
-	val profilePictureUrl: Any? = null,
+	val profilePictureUrl: @RawValue Any? = null,
 
 	@field:SerializedName("createdAt")
 	val createdAt: String? = null,
@@ -26,17 +29,17 @@ data class ProfileResponse(
 	val email: String? = null,
 
 	@field:SerializedName("profilePictureCloudId")
-	val profilePictureCloudId: Any? = null,
+	val profilePictureCloudId: @RawValue Any? = null,
 
 	@field:SerializedName("username")
 	val username: String? = null,
 
 	@field:SerializedName("googleToken")
-	val googleToken: Any? = null,
+	val googleToken: @RawValue Any? = null,
 
 	@field:SerializedName("refreshToken")
-	val refreshToken: Any? = null,
+	val refreshToken: @RawValue Any? = null,
 
 	@field:SerializedName("updatedAt")
 	val updatedAt: String? = null
-)
+) : Parcelable

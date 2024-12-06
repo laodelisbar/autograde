@@ -1,15 +1,14 @@
 package com.example.autograde.test
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.autograde.data.api.response.Answer
-import com.example.autograde.data.api.response.JoinTestResponse
+import com.example.autograde.data.api.response.Answers
 import com.example.autograde.data.api.response.ResultsItem
 import com.example.autograde.data.api.response.SubmitTestRequest
 import com.example.autograde.data.api.response.SubmitTestResponse
-import com.example.autograde.data.api.response.TestRequest
 import com.example.autograde.data.repository.MainRepository
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -31,12 +30,17 @@ class SubmitTestViewModel (private val mainRepository: MainRepository) : ViewMod
     val isLoading: LiveData<Boolean> = _isLoading
 
 
-    fun submitTest(userTestId : String, body : List<SubmitTestRequest>) {
+    fun submitTest(userTestId: String, answers: List<Answers>, timeLeft : Int) {
         viewModelScope.launch {
             _isLoading.value = true
             try {
                 val response = withContext(Dispatchers.IO) {
-                    mainRepository.submitTest(userTestId, body)
+                    val request = SubmitTestRequest (
+                        userTestId = userTestId,
+                        questions = answers,
+                        timeLeft = timeLeft
+                    )
+                    mainRepository.submitTest(request)
                 }
                 if (response.isSuccessful) {
                     response.body()?.let { body ->
@@ -51,19 +55,21 @@ class SubmitTestViewModel (private val mainRepository: MainRepository) : ViewMod
                 } else {
                     val errorMessage = response.errorBody()?.string()?.let { errorBody ->
                         try {
-                            val errorResponse = Gson().fromJson(errorBody, JoinTestResponse::class.java)
+                            val errorResponse = Gson().fromJson(errorBody, SubmitTestResponse::class.java)
                             errorResponse.message
                         } catch (e: Exception) {
                             "Terjadi kesalahan: ${response.message()}"
                         }
                     } ?: "Terjadi kesalahan tak dikenal"
-                    _submitTestResponse.postValue(SubmitTestResponse(message = errorMessage)) // Mengirimkan data default
+                    _submitTestResponse.postValue(SubmitTestResponse(message = errorMessage)) // Kirimkan data default
                 }
             } catch (e: Exception) {
-
+                Log.e("SubmitTest", "Error: ${e.message}", e)
+                _errorMessage.postValue("Terjadi kesalahan: ${e.message}")
             } finally {
                 _isLoading.value = false
             }
         }
     }
+
 }

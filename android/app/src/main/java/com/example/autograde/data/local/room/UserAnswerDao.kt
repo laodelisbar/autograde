@@ -25,4 +25,24 @@ interface UserAnswerDao {
     // Fungsi untuk menghapus jawaban berdasarkan questionId
     @Query("DELETE FROM user_answers WHERE questionId = :questionId")
     suspend fun deleteAnswerByQuestionId(questionId: String)
+
+
+    @Query("DELETE FROM user_answers WHERE userTestId = :userTestId")
+    suspend fun deleteAllAnswersByUserTestId(userTestId: String)
+
+    // Query untuk mendapatkan semua soal yang di-bookmark
+    @Query("SELECT * FROM user_answers WHERE isBookmarked = 1")
+    suspend fun getBookmarkedQuestions(): List<UserAnswer>
+
+    // Update status bookmark
+    @Query("UPDATE user_answers SET isBookmarked = :isBookmarked WHERE questionId = :questionId")
+    suspend fun updateBookmarkStatus(questionId: String, isBookmarked: Boolean)
+
+
+    @Query("SELECT isBookmarked FROM user_answers WHERE questionId = :questionId")
+    suspend fun isQuestionBookmarked(questionId: String): Boolean
+
+    @Query("UPDATE user_answers SET answer = :answer WHERE questionId = :questionId")
+    suspend fun updateAnswerByQuestionId(questionId: String, answer: String)
+
 }

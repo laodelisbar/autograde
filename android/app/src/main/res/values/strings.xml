@@ -40,6 +40,7 @@
     <string name="int_test_result">100</string>
     <string name="loremn_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
     <string name="answer">Answer</string>
+    <string name="answers">Answers</string>
     <string name="answey_key">Answey key</string>
     <string name="grade">Grade</string>
     <string name="timer">25 : 59</string>
@@ -69,6 +70,14 @@
     <string name="back">Back</string>
     <string name="start">Start</string>
     <string name="start_test_confirmation">Start test?</string>
+    <string name="home">Home</string>
+    <string name="finish_test_confirmation">Finish test?</string>
+    <string name="number_of_question">1</string>
+    <string name="cancel">Cancel</string>
+    <string name="exit">Exit</string>
+    <string name="exit_confirmation">Exit now?</string>
+    <string name="duration">Duration :</string>
+    <string name="show_qr_code">Show QR code</string>
 
 
 </resources>
