@@ -15,9 +15,8 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Toaster } from "@/components/ui/sonner";
 import { getUserProfile } from './api'; 
-//TODO: login google tidak berhasil pada saat deploy
-//TODO: avatar tidak muncul tepat setelah login
-//TODO: Autograde muncul 2 di navbar setelah logout
+
+//TODO: Penerapan machine learning
 //TODO: Logika saat sudah pernah mengerjakan test
 //TODO: Ganti tombol home pada halaman UserTest, ShowPastTest menjadi tombol back 
 
@@ -57,6 +56,17 @@ function App() {
     fetchProfile();
   }, []);
 
+  const handleLoginSuccess = async () => {
+    const token = localStorage.getItem('jwtToken');
+    if (token) {
+      try {
+        const response = await getUserProfile(token);
+        setProfile(response.data);
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
+    }
+  };
 
   const renderPage = () => {
     switch (currentPage) {
@@ -65,7 +75,7 @@ function App() {
       case 'register':
         return <Register goToHome={() => setCurrentPage('home')} goToLogin={() => setCurrentPage('login')} />;
       case 'login':
-        return <Login goToHome={() => setCurrentPage('home')} goToRegister={() => setCurrentPage('register')} />;
+        return <Login goToHome={() => setCurrentPage('home')} goToRegister={() => setCurrentPage('register')} onLoginSuccess={handleLoginSuccess} />;
       case 'profile':
         return <Profile goToHome={() => setCurrentPage('home')} goToShowCreatedTest={(id: string) => { setTestId(id); setCurrentPage('showCreatedTest'); }} goToShowPastTest={(id: string) => { setTestId(id); setCurrentPage('showPastTest'); }} />;
       case 'makeTest':
@@ -107,17 +117,12 @@ function Navbar({ goToLogin, goToProfile, goToMakeTest, profile }: { goToLogin: 
       {token ? (
         <Button variant="secondary" onClick={goToMakeTest}>Make Test</Button>
       ) : <h1 className="text-3xl font-bold">Autograde</h1>}
-      {token ? (
-        profile ? (
-          <Avatar onClick={goToProfile} className="cursor-pointer">
-            <AvatarImage src={profile.profilePictureUrl || "https://picsum.photos/200"} alt="User Avatar" />
-            <AvatarFallback>{profile.username.charAt(0).toUpperCase()}</AvatarFallback>
-          </Avatar>
-        ) : null
+      {token && profile ? (
+        <Avatar onClick={goToProfile} className="cursor-pointer">
+          <AvatarImage src={profile.profilePictureUrl || "https://picsum.photos/200"} alt="User Avatar" />
+          <AvatarFallback>{profile.username.charAt(0).toUpperCase()}</AvatarFallback>
+        </Avatar>
       ) : (
-        <h1 className="text-3xl font-bold">Autograde</h1>
-      )}
-      {!token && (
         <Button variant="secondary" onClick={goToLogin}>Login</Button>
       )}
     </div>

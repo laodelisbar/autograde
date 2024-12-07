@@ -9,10 +9,12 @@ import {
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
-  } from "@/components/ui/tooltip"
+} from "@/components/ui/tooltip"
 import { Skeleton } from "@/components/ui/skeleton";
 import { BiArrowBack } from 'react-icons/bi';
-import { FiLogOut } from 'react-icons/fi'; // Import ikon logout dari react-icons
+import { FiLogOut } from 'react-icons/fi';
+import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 const Profile: React.FC<{ goToHome: () => void, goToShowCreatedTest: (id: string) => void, goToShowPastTest: (id: string) => void }> = ({ goToHome, goToShowCreatedTest, goToShowPastTest }) => {
   const [profile, setProfile] = useState<any>(null);
@@ -21,6 +23,7 @@ const Profile: React.FC<{ goToHome: () => void, goToShowCreatedTest: (id: string
   const [loadingProfile, setLoadingProfile] = useState(true);
   const [loadingCreatedTests, setLoadingCreatedTests] = useState(true);
   const [loadingPastTests, setLoadingPastTests] = useState(true);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -76,7 +79,7 @@ const Profile: React.FC<{ goToHome: () => void, goToShowCreatedTest: (id: string
       <div className="absolute top-4 right-4 p-2 rounded-full">
         <TooltipProvider>
           <Tooltip>
-            <TooltipTrigger onClick={handleLogout}>
+            <TooltipTrigger onClick={() => setIsDialogOpen(true)}>
               <FiLogOut size={24} className="text-primary" />
             </TooltipTrigger>
             <TooltipContent>
@@ -116,6 +119,8 @@ const Profile: React.FC<{ goToHome: () => void, goToShowCreatedTest: (id: string
               [...Array(3)].map((_, index) => (
                 <Skeleton key={index} className="w-full max-w-lg h-24 mx-auto" />
               ))
+            ) : createdTests.length === 0 ? (
+              <p className="text-center text-primary">No created tests found.</p>
             ) : (
               createdTests.map((test) => (
                 <Card 
@@ -136,6 +141,8 @@ const Profile: React.FC<{ goToHome: () => void, goToShowCreatedTest: (id: string
               [...Array(3)].map((_, index) => (
                 <Skeleton key={index} className="w-full max-w-lg h-24 mx-auto" />
               ))
+            ) : pastTests.length === 0 ? (
+              <p className="text-center text-primary">No past tests found.</p>
             ) : (
               pastTests.map((test) => (
                 <Card 
@@ -150,6 +157,21 @@ const Profile: React.FC<{ goToHome: () => void, goToShowCreatedTest: (id: string
           </div>
         </div>
       </div>
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirm Logout</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to logout?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="secondary" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleLogout}>Confirm</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

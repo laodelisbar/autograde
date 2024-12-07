@@ -28,7 +28,7 @@ const formSchema = z.object({
   }),
 });
 
-const Login: React.FC<{ goToHome: () => void, goToRegister: () => void }> = ({ goToHome, goToRegister }) => {
+const Login: React.FC<{ goToHome: () => void, goToRegister: () => void, onLoginSuccess: () => void }> = ({ goToHome, goToRegister, onLoginSuccess }) => {
   const [loading, setLoading] = useState(false);
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -45,6 +45,7 @@ const Login: React.FC<{ goToHome: () => void, goToRegister: () => void }> = ({ g
       localStorage.setItem('jwtToken', response.data.token);
       localStorage.setItem('username', response.data.username);
       toast.success(response.data.message, { duration: 1000 });
+      onLoginSuccess();
       goToHome();
     } catch (error) {
       if (error instanceof AxiosError) {
