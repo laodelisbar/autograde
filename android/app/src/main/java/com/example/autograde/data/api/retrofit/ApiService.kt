@@ -1,6 +1,8 @@
 package com.example.autograde.data.api.retrofit
 
 
+import com.example.autograde.data.api.response.AcceptResponse
+import com.example.autograde.data.api.response.AcceptResponseRequest
 import com.example.autograde.data.api.response.CreateTestRequest
 import com.example.autograde.data.api.response.CreateTestResponse
 import com.example.autograde.data.api.response.JoinTestResponse
@@ -54,6 +56,11 @@ interface ApiService {
     suspend fun storeTest(
         @Body  requestBody : CreateTestRequest
     ): Response<CreateTestResponse>
+
+    @POST("/api/tests/accept-responses")
+    suspend fun acceptResponse(
+        @Body  acceptResponse : AcceptResponseRequest
+    ): Response<AcceptResponse>
 
 }
 

@@ -1,6 +1,7 @@
 package com.example.autograde.data.repository
 
-import com.example.autograde.data.api.response.Answer
+import com.example.autograde.data.api.response.AcceptResponse
+import com.example.autograde.data.api.response.AcceptResponseRequest
 import com.example.autograde.data.api.response.CreateTestRequest
 import com.example.autograde.data.api.response.CreateTestResponse
 import com.example.autograde.data.api.response.JoinTestResponse
@@ -43,6 +44,10 @@ class MainRepository (private val apiService: ApiService, private val userPrefer
 
     suspend fun submitTest (request : SubmitTestRequest) : Response<SubmitTestResponse> {
         return apiService.submitTestAnswers(request)
+    }
+
+    suspend fun acceptResponse ( request : AcceptResponseRequest) : Response<AcceptResponse> {
+        return apiService.acceptResponse(request)
     }
 
     suspend fun saveSession(user: UserModel) {

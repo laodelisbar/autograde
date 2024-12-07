@@ -9,7 +9,7 @@ import kotlinx.parcelize.Parcelize
 data class CreateTestResponse(
 
 	@field:SerializedName("test")
-	val test: CreatedTest? = null,
+	val test: Test? = null,
 
 	@field:SerializedName("message")
 	val message: String? = null
@@ -64,6 +64,17 @@ data class CreatedTest(
 	@field:SerializedName("updatedAt")
 	val updatedAt: String? = null
 ) : Parcelable
+
+
+data class AcceptResponse(
+	@field:SerializedName("message")
+	val message: String? = null,
+)
+
+data class AcceptResponseRequest(
+	val id : String,
+	val acceptResponses: Boolean?
+)
 
 data class CreateTestRequest (
 	val testTitle : String,

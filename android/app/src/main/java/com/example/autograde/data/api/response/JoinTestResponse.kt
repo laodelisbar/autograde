@@ -40,7 +40,7 @@ data class Test(
 	val userTestCount: Int? = null,
 
 	@field:SerializedName("id")
-	val id: String? = null,
+	val id: String,
 
 	@field:SerializedName("testTitle")
 	val testTitle: String? = null,
@@ -48,3 +48,5 @@ data class Test(
 	@field:SerializedName("testDuration")
 	val testDuration: Int? = null
 ) : Parcelable
+
+

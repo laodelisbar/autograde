@@ -77,19 +77,19 @@ class TestAdapter(
 
             val textColor = when {
                 isBookmarked && isCurrentlyDisplayed -> R.color.primary
-                isCurrentlyDisplayed -> R.color.primary
+                isCurrentlyDisplayed -> R.color.white
                 isBookmarked && isAnswered -> R.color.primary
                 isBookmarked -> R.color.primary
-                isAnswered -> R.color.white
+                isAnswered -> R.color.primary
                 else -> R.color.primary
             }
 
             val backgroundColor = when {
                 isBookmarked && isCurrentlyDisplayed -> R.drawable.bg_nav_number_warning
-                isCurrentlyDisplayed -> R.drawable.bg_nav_number_filled
+                isCurrentlyDisplayed -> R.drawable.bg_nav_number_active
                 isBookmarked && isAnswered -> R.drawable.bg_nav_number_warning
                 isBookmarked -> R.drawable.bg_nav_number_warning
-                isAnswered -> R.drawable.bg_nav_number_active
+                isAnswered -> R.drawable.bg_nav_number_filled
                 else -> R.drawable.bg_nav_number_inactive
             }
 

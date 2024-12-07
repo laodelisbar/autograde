@@ -29,9 +29,10 @@
             android:layout_height="50dp"
             android:layout_gravity="end"
             android:layout_marginEnd="10dp"
-            android:background="@color/primary"
             android:contentDescription="@string/desc_action_profil"
+            android:background="@drawable/rounded"
             android:src="@drawable/icon_profil"
+            android:backgroundTint="@color/primary"
             tools:ignore="RedundantDescriptionCheck"
             tools:layout_editor_absoluteX="351dp"
             tools:layout_editor_absoluteY="7dp" />
@@ -211,12 +212,13 @@
                 android:id="@+id/iv_profile_username"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
+                android:layout_margin="5dp"
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
-                android:background="@color/primary"
+                android:background="@drawable/rounded"
                 app:srcCompat="@drawable/icon_profil"
                 android:src="@drawable/icon_profil"
-                android:backgroundTint="@color/black"
+                android:backgroundTint="@color/primary"
                 android:visibility="visible"/>
 
             <TextView
