@@ -1,7 +1,7 @@
 // src/api.ts
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.API_BASE_URL ||'http://localhost:5000'; // Sesuaikan dengan host dan port Anda
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ||'http://localhost:5000'; // Sesuaikan dengan host dan port Anda
 
 const api = axios.create({
   baseURL: API_BASE_URL,
