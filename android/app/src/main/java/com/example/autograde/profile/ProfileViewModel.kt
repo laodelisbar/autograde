@@ -11,11 +11,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class ProfileViewModel  (private val mainRepository: MainRepository ) : ViewModel() {
-
+class ProfileViewModel(private val mainRepository: MainRepository) : ViewModel() {
 
     private val _profileResponse = MutableLiveData<ProfileResponse>()
-    val profileResponse : LiveData<ProfileResponse> get() = _profileResponse
+    val profileResponse: LiveData<ProfileResponse> get() = _profileResponse
 
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
@@ -42,13 +41,16 @@ class ProfileViewModel  (private val mainRepository: MainRepository ) : ViewMode
                         _errorMessage.postValue("Respons dari server kosong")
                     }
                 } else {
-                    val errorMessage = response.errorBody()?.string()?.let { errorBody ->
-                        try {
-                            val errorResponse = Gson().fromJson(errorBody, ProfileResponse::class.java)
-                        } catch (e: Exception) {
-                            "Terjadi kesalahan: ${response.message()}"
-                        }
-                    } ?: "Terjadi kesalahan tak dikenal"
+                    val errorBody = response.errorBody()?.string()
+                    _errorMessage.postValue(
+                        errorBody?.let {
+                            try {
+                                Gson().fromJson(it, ProfileResponse::class.java).message
+                            } catch (e: Exception) {
+                                "Terjadi kesalahan: ${response.message()}"
+                            }
+                        } ?: "Terjadi kesalahan tak dikenal"
+                    )
                 }
             } catch (e: Exception) {
                 _errorMessage.postValue(e.message ?: "Terjadi kesalahan")

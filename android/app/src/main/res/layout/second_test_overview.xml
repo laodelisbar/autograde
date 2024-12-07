@@ -29,7 +29,8 @@
             android:layout_height="50dp"
             android:layout_gravity="end"
             android:layout_marginEnd="10dp"
-            android:background="@color/primary"
+            android:background="@drawable/circle"
+            android:scaleType="centerCrop"
             android:contentDescription="@string/desc_action_profil"
             android:src="@drawable/icon_profil"
             tools:ignore="RedundantDescriptionCheck"
@@ -213,10 +214,9 @@
                 android:layout_height="50dp"
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
-                android:background="@color/primary"
+                android:background="@drawable/circle"
                 app:srcCompat="@drawable/icon_profil"
                 android:src="@drawable/icon_profil"
-                android:backgroundTint="@color/black"
                 android:visibility="visible"/>
 
             <TextView
