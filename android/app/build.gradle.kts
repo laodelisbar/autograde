@@ -63,6 +63,7 @@ dependencies {
     implementation(libs.glide)
     implementation(libs.androidx.viewpager2)
     implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.fragment.ktx)
     ksp(libs.room.compiler)
 
 }

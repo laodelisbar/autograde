@@ -18,6 +18,18 @@ class ProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        binding = ProfileBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        setupFragment()
+        observeProfileResponse()
+
+    }
+
+    private fun setupFragment() {
+        supportFragmentManager.beginTransaction()
+            .replace(binding.fragmentContainer.id, ProfileFragment())
+            .commit()
     }
 
     private fun observeProfileResponse() {

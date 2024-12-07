@@ -31,6 +31,8 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/icon_profil"
+            android:background="@drawable/circle"
+            android:scaleType="centerCrop"
             android:background="@drawable/rounded"
             android:backgroundTint="@color/primary"
             android:layout_gravity="end"
