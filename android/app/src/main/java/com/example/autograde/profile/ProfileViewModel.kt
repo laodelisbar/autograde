@@ -43,13 +43,7 @@ class ProfileViewModel(private val mainRepository: MainRepository) : ViewModel()
                 } else {
                     val errorBody = response.errorBody()?.string()
                     _errorMessage.postValue(
-                        errorBody?.let {
-                            try {
-                                Gson().fromJson(it, ProfileResponse::class.java).message
-                            } catch (e: Exception) {
-                                "Terjadi kesalahan: ${response.message()}"
-                            }
-                        } ?: "Terjadi kesalahan tak dikenal"
+                        errorBody ?: "Terjadi kesalahan tak dikenal"
                     )
                 }
             } catch (e: Exception) {
