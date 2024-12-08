@@ -2,10 +2,12 @@ package com.example.autograde.data.repository
 
 import com.example.autograde.data.api.response.AcceptResponse
 import com.example.autograde.data.api.response.AcceptResponseRequest
+import com.example.autograde.data.api.response.AllTestResponse
 import com.example.autograde.data.api.response.CreateTestRequest
 import com.example.autograde.data.api.response.CreateTestResponse
 import com.example.autograde.data.api.response.JoinTestResponse
 import com.example.autograde.data.api.response.LoginResponse
+import com.example.autograde.data.api.response.PastTestResponse
 import com.example.autograde.data.api.response.ProfileResponse
 import com.example.autograde.data.api.response.RegisterRequest
 import com.example.autograde.data.api.response.RegisterResponse
@@ -64,6 +66,12 @@ class MainRepository (private val apiService: ApiService, private val userPrefer
 
     suspend fun getProfile () : Response<ProfileResponse> {
         return apiService.getProfile()
+    }
+    suspend fun getAllTest () : Response<AllTestResponse> {
+        return apiService.getAllTest()
+    }
+    suspend fun getPastTest () : Response<PastTestResponse> {
+        return apiService.getPastTest()
     }
 
 

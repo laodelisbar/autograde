@@ -2,20 +2,28 @@ package com.example.autograde.profile
 
 import android.app.Dialog
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.marginTop
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Glide.init
 import com.bumptech.glide.request.RequestOptions
 import com.example.autograde.R
+import com.example.autograde.data.api.response.Answer
+import com.example.autograde.data.api.response.TestsItem
 import com.example.autograde.data.di.ViewModelFactory
 import com.example.autograde.databinding.ActivityConfirmationBinding
 import com.example.autograde.databinding.ProfileBinding
 import com.example.autograde.login.LoginViewModel
-import kotlinx.coroutines.launch
+import com.example.autograde.profile.adapter.YourCreatedTestAdapter
+import com.example.autograde.profile.adapter.YourPastTestAdapter
 
 
 class ProfileActivity : AppCompatActivity() {
@@ -34,6 +42,13 @@ class ProfileActivity : AppCompatActivity() {
 
     private lateinit var binding: ProfileBinding
 
+    private var isShowingAllTests = false
+    private var isShowingPastTests = false
+
+    private lateinit var yourCreatedTestAdapter: YourCreatedTestAdapter
+    private lateinit var yourPastTestAdapter: YourPastTestAdapter
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -41,6 +56,8 @@ class ProfileActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         observeProfileResponse()
+        observeYourCreatedTestResponse()
+        observeYourPastTestResponse()
 
         binding.btnBack.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
@@ -49,6 +66,126 @@ class ProfileActivity : AppCompatActivity() {
             showLogoutConfirmation(this)
         }
 
+        binding.tvViewAll1.setOnClickListener {
+            isShowingAllTests = !isShowingAllTests
+            // Perbarui dataset di adapter
+            profileViewModel.allTestResponse.value?.let { test ->
+                yourCreatedTestAdapter.submitList(if (isShowingAllTests) test else test.take(3))
+            }
+            updateViewAllText()
+            updateUIForCreatedTest()
+
+        }
+
+        binding.tvViewAll2.setOnClickListener {
+            isShowingPastTests = !isShowingPastTests
+            // Perbarui dataset di adapter
+            profileViewModel.pastTestResponse.value?.let { test ->
+                yourPastTestAdapter.submitList(if (isShowingPastTests) test else test.take(3))
+            }
+            updateViewAllText()
+            updateUIForPastTest()
+        }
+
+        profileViewModel.isLoading.observe (this) {
+            showLoading(it)
+        }
+
+    }
+
+    private fun updateUIForCreatedTest() {
+        // Update UI berdasarkan status isShowingAllTests
+        if (isShowingAllTests) {
+            updateVisibilityForAllTests(isVisible = true)
+            configureTextView(
+                binding.tvYourCreatedTest,
+                topMargin = 24,
+                textSize = 24f,
+                gravity = Gravity.CENTER_HORIZONTAL
+            )
+            binding.tvViewAll1.textSize = 20f
+        } else {
+            updateVisibilityForAllTests(isVisible = false)
+            configureTextView(
+                binding.tvYourCreatedTest,
+                textSize = 17f
+            )
+            binding.tvViewAll1.textSize = 14f
+        }
+    }
+
+
+    private fun updateUIForPastTest() {
+
+        // Update UI berdasarkan status isShowingPastTests
+        if (isShowingPastTests) {
+            updateVisibilityForPastTests(isVisible = true)
+            configureTextView(
+                binding.tvYourPastTest,
+                topMargin = 24,
+                textSize = 24f,
+                gravity = Gravity.CENTER_HORIZONTAL
+            )
+            binding.tvViewAll2.textSize = 20f
+        } else {
+            updateVisibilityForPastTests(isVisible = false)
+            configureTextView(
+                binding.tvYourPastTest,
+                textSize = 17f
+            )
+            binding.tvViewAll2.textSize = 14f
+        }
+    }
+
+    private fun updateVisibilityForAllTests(isVisible: Boolean) {
+        binding.imgViewProfile.visibility = if (isVisible) View.GONE else View.VISIBLE
+        binding.recyclerViewPastTests.visibility = if (isVisible) View.GONE else View.VISIBLE
+        binding.btnLogout.visibility = if (isVisible) View.GONE else View.VISIBLE
+        binding.tvUsername.visibility = if (isVisible) View.GONE else View.VISIBLE
+        binding.tvEmail.visibility = if (isVisible) View.GONE else View.VISIBLE
+        binding.tvYourPastTest.visibility = if (isVisible) View.GONE else View.VISIBLE
+        binding.toolbar.visibility = if (isVisible) View.GONE else View.VISIBLE
+        binding.tvViewAll2.visibility = if (isVisible) View.GONE else View.VISIBLE
+    }
+
+    private fun updateVisibilityForPastTests(isVisible: Boolean) {
+        binding.imgViewProfile.visibility = if (isVisible) View.GONE else View.VISIBLE
+        binding.recyclerViewCreatedTests.visibility = if (isVisible) View.GONE else View.VISIBLE
+        binding.btnLogout.visibility = if (isVisible) View.GONE else View.VISIBLE
+        binding.tvUsername.visibility = if (isVisible) View.GONE else View.VISIBLE
+        binding.tvEmail.visibility = if (isVisible) View.GONE else View.VISIBLE
+        binding.tvYourCreatedTest.visibility = if (isVisible) View.GONE else View.VISIBLE
+        binding.toolbar.visibility = if (isVisible) View.GONE else View.VISIBLE
+        binding.tvViewAll1.visibility = if (isVisible) View.GONE else View.VISIBLE
+    }
+
+    private fun configureTextView(
+        textView: TextView,
+        topMargin: Int? = null,
+        textSize: Float? = null,
+        gravity: Int? = null
+    ) {
+        topMargin?.let {
+            val layoutParams = textView.layoutParams as ViewGroup.MarginLayoutParams
+            layoutParams.topMargin = it
+            textView.layoutParams = layoutParams
+        }
+        textSize?.let { textView.textSize = it }
+        gravity?.let { textView.gravity = it }
+    }
+
+
+    private fun updateViewAllText() {
+        binding.tvViewAll1.text = if (isShowingAllTests) {
+            getString(R.string.back)
+        } else {
+            getString(R.string.view_all)
+        }
+        binding.tvViewAll2.text = if (isShowingPastTests) {
+            getString(R.string.back)
+        } else {
+            getString(R.string.view_all)
+        }
 
     }
 
@@ -80,6 +217,33 @@ class ProfileActivity : AppCompatActivity() {
 
     }
 
+    fun observeYourCreatedTestResponse() {
+        profileViewModel.allTestResponse.observe(this) { test ->
+            if (test !== null) {
+                setListYourCreatedTest(test)
+            } else {
+                Toast.makeText(
+                    this@ProfileActivity,
+                    "Your created test is empty",
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+            }
+        }
+    }
+
+    fun observeYourPastTestResponse() {
+        profileViewModel.pastTestResponse.observe(this) { test ->
+            if (test != null) {
+                setListYourPastTest(test)
+            } else {
+                Toast.makeText(this@ProfileActivity, "Your past test is empty", Toast.LENGTH_SHORT)
+                    .show()
+            }
+
+        }
+    }
+
     fun showLogoutConfirmation(activity: AppCompatActivity) {
         val dialog = Dialog(activity)
         dialogBinding = ActivityConfirmationBinding.inflate(layoutInflater)
@@ -105,6 +269,35 @@ class ProfileActivity : AppCompatActivity() {
         dialog.show()
     }
 
+    private fun setListYourCreatedTest(test: List<TestsItem>) {
+        if (!::yourCreatedTestAdapter.isInitialized) {
+            yourCreatedTestAdapter = YourCreatedTestAdapter {
+                // Tambahkan logika onClick di sini jika diperlukan
+            }
+            binding.recyclerViewCreatedTests.layoutManager = LinearLayoutManager(this)
+            binding.recyclerViewCreatedTests.adapter = yourCreatedTestAdapter
+        }
+
+        yourCreatedTestAdapter.submitList(if (isShowingAllTests) test else test.take(3))
+        updateViewAllText()
+    }
+
+    private fun setListYourPastTest(test: List<TestsItem>) {
+        if (!::yourPastTestAdapter.isInitialized) {
+            yourPastTestAdapter = YourPastTestAdapter {
+                // Tambahkan logika onClick di sini jika diperlukan
+            }
+            binding.recyclerViewPastTests.layoutManager = LinearLayoutManager(this)
+            binding.recyclerViewPastTests.adapter = yourPastTestAdapter
+        }
+
+        yourPastTestAdapter.submitList(if (isShowingPastTests) test else test.take(3))
+        updateViewAllText()
+    }
+
+    private fun showLoading(isLoading : Boolean) {
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+    }
 
 
 }

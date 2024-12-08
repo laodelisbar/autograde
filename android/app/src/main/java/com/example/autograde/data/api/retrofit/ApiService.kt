@@ -3,10 +3,12 @@ package com.example.autograde.data.api.retrofit
 
 import com.example.autograde.data.api.response.AcceptResponse
 import com.example.autograde.data.api.response.AcceptResponseRequest
+import com.example.autograde.data.api.response.AllTestResponse
 import com.example.autograde.data.api.response.CreateTestRequest
 import com.example.autograde.data.api.response.CreateTestResponse
 import com.example.autograde.data.api.response.JoinTestResponse
 import com.example.autograde.data.api.response.LoginResponse
+import com.example.autograde.data.api.response.PastTestResponse
 import com.example.autograde.data.api.response.ProfileResponse
 import com.example.autograde.data.api.response.RegisterRequest
 import com.example.autograde.data.api.response.RegisterResponse
@@ -62,5 +64,10 @@ interface ApiService {
         @Body  acceptResponse : AcceptResponseRequest
     ): Response<AcceptResponse>
 
+    @GET("/api/tests")
+    suspend fun getAllTest (): Response<AllTestResponse>
+
+    @GET("/api/pasttests")
+    suspend fun getPastTest (): Response<PastTestResponse>
 }
 

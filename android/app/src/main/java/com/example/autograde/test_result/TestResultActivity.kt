@@ -2,13 +2,11 @@ package com.example.autograde.test_result
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.autograde.data.api.response.Answer
-import com.example.autograde.data.api.response.ResultsItem
 import com.example.autograde.data.api.response.SubmitTestResponse
 import com.example.autograde.databinding.ActivityTestResultBinding
 import com.example.autograde.home.HomeActivity

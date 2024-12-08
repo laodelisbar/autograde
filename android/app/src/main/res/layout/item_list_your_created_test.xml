@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
+    android:backgroundTint="@color/white"
     android:layout_margin="8dp"
     card_view:cardCornerRadius="8dp"
     card_view:cardElevation="4dp">
@@ -14,18 +15,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:backgroundTint="@color/dark_white"
         android:orientation="horizontal"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceParticularButton"
         android:background="@drawable/bg_border">
 
         <TextView
-            android:id="@+id/tv_answer"
+            android:id="@+id/tv_test_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="@font/roboto_bold"
-            android:textSize="24sp"
+            android:textSize="16sp"
             android:textColor="@color/primary"
             android:text="@string/exam_title" />
 

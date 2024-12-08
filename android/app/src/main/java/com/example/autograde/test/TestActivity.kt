@@ -348,7 +348,6 @@ class TestActivity : AppCompatActivity() {
 
                 submitTestViewModel.submitTestResponse.observe(this) { response ->
                     response.message?.let {
-                        // Hapus sesi pengujian
                         deleteTestSession(testId)
                         Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
                     }
