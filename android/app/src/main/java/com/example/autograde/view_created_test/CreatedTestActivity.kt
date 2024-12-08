@@ -1,5 +1,6 @@
 package com.example.autograde.view_created_test
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -7,11 +8,16 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.autograde.R
 import com.example.autograde.data.api.response.CreateTestResponse
 import com.example.autograde.data.api.response.Test
 import com.example.autograde.data.di.ViewModelFactory
+import com.example.autograde.data.pref.UserModel
 import com.example.autograde.databinding.ActivityCreatedTestBinding
+import com.example.autograde.login.LoginViewModel
+import com.example.autograde.profile.ProfileActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -24,6 +30,10 @@ class CreatedTestActivity : AppCompatActivity() {
         ViewModelFactory.getInstance(applicationContext)
     }
 
+    private val loginViewModel: LoginViewModel by viewModels {
+        ViewModelFactory.getInstance(applicationContext)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -33,6 +43,15 @@ class CreatedTestActivity : AppCompatActivity() {
         // Observasi loading state
         createdTestViewModel.isLoading.observe(this) {
             showLoading(it)
+        }
+
+        binding.btnBack.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+
+        binding.btnProfile.setOnClickListener {
+            intent = Intent(this@CreatedTestActivity, ProfileActivity::class.java)
+            startActivity(intent)
         }
 
         // Ambil test yang dibuat dari intent
@@ -48,6 +67,9 @@ class CreatedTestActivity : AppCompatActivity() {
 
         observeTestResponse()
         observeAcceptResponse()
+        observeUserSession()
+
+
     }
 
     private fun observeTestDetails(test: Test) {
@@ -56,14 +78,17 @@ class CreatedTestActivity : AppCompatActivity() {
                 binding.tvTestTitle.text = test.testTitle
                 binding.tvTestMinutes.text = getString(R.string.minutes, test.testDuration ?: 0)
                 if (test?.acceptResponses != null) {
-                binding.switch1.isChecked = test.acceptResponses }
-                else {
+                    binding.switch1.isChecked = test.acceptResponses
+                } else {
                     binding.switch1.isChecked = false
                 }
 
                 binding.switch1.setOnCheckedChangeListener { _, isChecked ->
                     // Log status sebelumnya dan status baru
-                    Log.d("SwitchListener", "Current state: ${test.acceptResponses}, New state: $isChecked")
+                    Log.d(
+                        "SwitchListener",
+                        "Current state: ${test.acceptResponses}, New state: $isChecked"
+                    )
 
                     // Pastikan bahwa statusnya berubah
                     if (isChecked != test.acceptResponses) {
@@ -117,6 +142,27 @@ class CreatedTestActivity : AppCompatActivity() {
                     ).show()
                 }
             }
+        }
+    }
+
+    private fun observeUserSession() {
+        loginViewModel.getSession().observe(this) { user ->
+            updateUI(user)
+        }
+    }
+
+    private fun updateUI(user: UserModel) {
+        if (user.profilePictureUrl != null) {
+            Glide.with(this)
+                .load(user.profilePictureUrl)
+                .apply(RequestOptions.circleCropTransform())
+                .into(binding.btnProfile)
+
+        } else {
+            Glide.with(this)
+                .load(R.drawable.icon_profil)
+                .apply(RequestOptions.circleCropTransform())
+                .into(binding.btnProfile)
         }
     }
 }

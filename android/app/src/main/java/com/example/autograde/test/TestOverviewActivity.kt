@@ -8,6 +8,8 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.autograde.R
 import com.example.autograde.data.api.response.Test
 import com.example.autograde.data.di.ViewModelFactory
@@ -15,6 +17,7 @@ import com.example.autograde.data.pref.UserModel
 import com.example.autograde.databinding.ActivityConfirmationBinding
 import com.example.autograde.databinding.SecondTestOverviewBinding
 import com.example.autograde.login.LoginViewModel
+import com.example.autograde.profile.ProfileActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -52,6 +55,15 @@ class TestOverviewActivity : AppCompatActivity() {
         binding.btnStart.setOnClickListener {
             showCustomDialog(this)
         }
+
+        binding.actionProfil.setOnClickListener {
+            intent = Intent(this@TestOverviewActivity, ProfileActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.btnBack.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
     }
 
 
@@ -82,6 +94,28 @@ class TestOverviewActivity : AppCompatActivity() {
 
     private fun updateUI(user: UserModel) {
         binding.tvUsername.text = user.username
+        if (user.profilePictureUrl != null) {
+            Glide.with(this)
+                .load(user.profilePictureUrl)
+                .apply(RequestOptions.circleCropTransform())
+                .into(binding.ivProfileUsername)
+
+            Glide.with(this)
+                .load(user.profilePictureUrl)
+                .apply(RequestOptions.circleCropTransform())
+                .into(binding.actionProfil)
+        } else {
+            Glide.with(this)
+                .load(R.drawable.icon_profil)
+                .apply(RequestOptions.circleCropTransform())
+                .into(binding.ivProfileUsername)
+
+            Glide.with(this)
+                .load(R.drawable.icon_profil)
+                .apply(RequestOptions.circleCropTransform())
+                .into(binding.actionProfil)
+        }
+
     }
 
     fun showLoading(isLoading: Boolean) {

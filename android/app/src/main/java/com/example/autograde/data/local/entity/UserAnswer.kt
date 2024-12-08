@@ -12,5 +12,7 @@ data class UserAnswer(
     val userTestId: String,
     val questionId: String,
     val answer: String? = null,
-    val isBookmarked: Boolean = false // Properti baru
+    val isBookmarked: Boolean = false,
+    val remainingTime: Long = 0L
 ) : Parcelable
+

@@ -15,6 +15,7 @@
         android:id="@+id/ly1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:backgroundTint="@color/dark_white"
         android:padding="16dp"
         android:orientation="vertical"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceParticularButton"

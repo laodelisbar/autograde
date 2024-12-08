@@ -9,13 +9,18 @@ import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.autograde.R
 import com.example.autograde.data.api.response.CreateQuestion
 import com.example.autograde.data.api.response.CreateTestRequest
 import com.example.autograde.data.di.ViewModelFactory
+import com.example.autograde.data.pref.UserModel
 import com.example.autograde.databinding.ActivityConfirmationBinding
 import com.example.autograde.databinding.ActivityCreateTestBinding
 import com.example.autograde.home.HomeActivity
+import com.example.autograde.login.LoginViewModel
+import com.example.autograde.profile.ProfileActivity
 import com.example.autograde.view_created_test.CreatedTestActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -26,6 +31,10 @@ class CreateTestActivity : AppCompatActivity() {
     private lateinit var questionAdapter: ItemQuestionAdapter
     private lateinit var dialogBinding: ActivityConfirmationBinding
     private var customDialog: Dialog? = null
+
+    private val loginViewModel: LoginViewModel by viewModels {
+        ViewModelFactory.getInstance(applicationContext)
+    }
 
     private val createTestViewModel: CreateTestViewModel by viewModels {
         ViewModelFactory.getInstance(applicationContext)
@@ -50,7 +59,38 @@ class CreateTestActivity : AppCompatActivity() {
         setupAddQuestionButton()
 
         setupCreateTestButton()
+
+        observeUserSession()
+
+        binding.btnProfile.setOnClickListener {
+            intent = Intent(this@CreateTestActivity, ProfileActivity::class.java)
+            startActivity(intent)
+        }
     }
+
+    private fun observeUserSession() {
+        loginViewModel.getSession().observe(this) { user ->
+            updateUI(user)
+        }
+    }
+
+    private fun updateUI(user: UserModel) {
+        if (user.profilePictureUrl != null) {
+            Glide.with(this)
+                .load(user.profilePictureUrl)
+                .apply(RequestOptions.circleCropTransform())
+                .into(binding.btnProfile)
+
+        } else {
+            Glide.with(this)
+                .load(R.drawable.icon_profil)
+                .apply(RequestOptions.circleCropTransform())
+                .into(binding.btnProfile)
+        }
+
+    }
+
+
 
 
     private fun setupRecyclerView() {

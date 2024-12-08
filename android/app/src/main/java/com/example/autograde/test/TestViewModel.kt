@@ -1,5 +1,6 @@
 package com.example.autograde.test
 
+import android.app.Application
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.LiveData
@@ -11,6 +12,8 @@ import com.example.autograde.data.api.response.StartTestResponse
 import com.example.autograde.data.api.response.TestRequest
 import com.example.autograde.data.api.response.TestStart
 import com.example.autograde.data.local.entity.UserAnswer
+import com.example.autograde.data.local.room.UserAnswerDao
+import com.example.autograde.data.local.room.UserAnswerDatabase
 import com.example.autograde.data.repository.MainRepository
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -33,10 +36,6 @@ class TestViewModel(private val mainRepository: MainRepository) : ViewModel() {
 
     private val _savedAnswer = MutableLiveData<UserAnswer>()
     val savedAnswer : LiveData<UserAnswer> get() = _savedAnswer
-
-
-
-
 
 
     fun startTestById(testId : String) {

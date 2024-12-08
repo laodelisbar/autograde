@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     id("kotlin-parcelize")
+    id ("kotlin-kapt")
 }
 
 android {
@@ -50,6 +51,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.room.common)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.ui.desktop)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -65,5 +67,9 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.fragment.ktx)
     ksp(libs.room.compiler)
+    kapt(libs.glide.compiler)
+    implementation(libs.androidx.work.runtime)
+    implementation(libs.android.async.http)
+    implementation (libs.work.runtime.ktx)
 
 }

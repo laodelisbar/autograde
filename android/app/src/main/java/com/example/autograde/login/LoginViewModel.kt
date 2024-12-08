@@ -15,11 +15,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class LoginViewModel (private val mainRepository: MainRepository ) : ViewModel() {
+class LoginViewModel(private val mainRepository: MainRepository) : ViewModel() {
 
 
     private val _loginResponse = MutableLiveData<LoginResponse>()
-    val loginResponse : LiveData<LoginResponse> get() = _loginResponse
+    val loginResponse: LiveData<LoginResponse> get() = _loginResponse
 
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
@@ -33,7 +33,7 @@ class LoginViewModel (private val mainRepository: MainRepository ) : ViewModel()
             try {
                 _isLoading.value = true
                 val response = withContext(Dispatchers.IO) {
-                    val loginRequest = User (
+                    val loginRequest = User(
                         email = email,
                         password = password
                     )
@@ -42,24 +42,30 @@ class LoginViewModel (private val mainRepository: MainRepository ) : ViewModel()
 
                 if (response.isSuccessful) {
                     response.body()?.let { body ->
-                        _loginResponse.postValue(body)
                         response.body()?.let { response ->
-                            mainRepository.saveSession(
-                                UserModel(
-                                    username = response.username ?: "",
-                                    email = email,
-                                    token = response.token ?: "",
-                                    isLogin = true
+                            mainRepository.getProfile().body().let { profile ->
+                                mainRepository.saveSession(
+                                        UserModel(
+                                        username = response.username ?: "",
+                                        email = email,
+                                        token = response.token ?: "",
+                                        isLogin = true,
+                                        profilePictureUrl = profile?.profilePictureUrl?:""
+                                    )
                                 )
-                            )
+                            }
+                            _loginResponse.postValue(body)
+
                         }
+                        _loginResponse.postValue(body)
                     } ?: run {
                         _errorMessage.postValue("Respons dari server kosong")
                     }
                 } else {
                     val errorMessage = response.errorBody()?.string()?.let { errorBody ->
                         try {
-                            val errorResponse = Gson().fromJson(errorBody, LoginResponse::class.java)
+                            val errorResponse =
+                                Gson().fromJson(errorBody, LoginResponse::class.java)
                             errorResponse.message
                         } catch (e: Exception) {
                             "Terjadi kesalahan: ${response.message()}"

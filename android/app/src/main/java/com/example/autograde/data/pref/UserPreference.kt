@@ -1,6 +1,7 @@
 package com.example.autograde.data.pref
 
 import android.content.Context
+import androidx.core.os.persistableBundleOf
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -20,16 +21,20 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
             preferences[EMAIL_KEY] = user.email
             preferences[TOKEN_KEY] = user.token
             preferences[IS_LOGIN_KEY] = true
+            preferences[PROFILE_PICTURE_KEY] = user.profilePictureUrl
         }
     }
 
     fun getSession(): Flow<UserModel> {
         return dataStore.data.map { preferences ->
+            val profilePictureUrl = preferences[PROFILE_PICTURE_KEY]?.takeIf { it.isNotBlank() }
+                ?: "android.resource://com.example.autograde/drawable/default_profile"
             UserModel(
                 preferences[USERNAME_KEY]?: "",
                 preferences[EMAIL_KEY] ?: "",
                 preferences[TOKEN_KEY] ?: "",
-                preferences[IS_LOGIN_KEY] ?: false
+                preferences[IS_LOGIN_KEY] ?: false,
+                profilePictureUrl = profilePictureUrl
             )
         }
     }
@@ -48,6 +53,7 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
         private val EMAIL_KEY = stringPreferencesKey("email")
         private val TOKEN_KEY = stringPreferencesKey("token")
         private val IS_LOGIN_KEY = booleanPreferencesKey("isLogin")
+        private val PROFILE_PICTURE_KEY = stringPreferencesKey("profile_picture")
 
         fun getInstance(dataStore: DataStore<Preferences>): UserPreference {
             return INSTANCE ?: synchronized(this) {

@@ -11,7 +11,7 @@ data class ProfileResponse(
 	val googleId: @RawValue Any? = null,
 
 	@field:SerializedName("profilePictureUrl")
-	val profilePictureUrl: @RawValue Any? = null,
+	val profilePictureUrl: String? = null,
 
 	@field:SerializedName("createdAt")
 	val createdAt: String? = null,

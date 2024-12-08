@@ -1,26 +1,39 @@
 package com.example.autograde.test
 
 import android.app.Dialog
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
 import com.example.autograde.R
 import com.example.autograde.data.api.response.Answers
 import com.example.autograde.data.api.response.ResultsItem
 import com.example.autograde.databinding.ActivityTestBinding
 import com.example.autograde.data.api.response.TestStart
+import com.example.autograde.data.background_task.TestTimerWorker
 import com.example.autograde.data.di.ViewModelFactory
 import com.example.autograde.data.local.entity.UserAnswer
 import com.example.autograde.data.local.room.UserAnswerDao
 import com.example.autograde.data.local.room.UserAnswerDatabase
 import com.example.autograde.databinding.ActivityConfirmationBinding
+import com.example.autograde.home.HomeActivity
 import com.example.autograde.test_result.TestResultActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
@@ -32,6 +45,12 @@ class TestActivity : AppCompatActivity() {
     private lateinit var userAnswerDao: UserAnswerDao
     private lateinit var dialogBinding: ActivityConfirmationBinding
     private var customDialog: Dialog? = null
+    private lateinit var timerFinishedReceiver: BroadcastReceiver
+
+    private val _timeLeft = MutableLiveData<Int>()
+    val timeLeft: LiveData<Int> get() = _timeLeft
+
+
 
     private val submitTestViewModel: SubmitTestViewModel by viewModels {
         ViewModelFactory.getInstance(applicationContext)
@@ -83,14 +102,40 @@ class TestActivity : AppCompatActivity() {
 
 
         val testData: TestStart? = intent.getParcelableExtra("TEST_START_OBJECT")
+        val testId = intent.getStringExtra("USER_TEST_ID")
+
+        if (testId != null) {
+            updateTimer(testId) // Menampilkan data yang ada di database ke UI
+        }
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            val isTimerRunning = userAnswerDao.isTimerRunning(testId ?: "")
+            if (isTimerRunning == 0 && testData != null && testData.testDuration != null && testData.id != null) {
+                val workRequest = OneTimeWorkRequestBuilder<TestTimerWorker>()
+                    .setInputData(
+                        workDataOf(
+                            "testId" to testId,
+                            "testDuration" to testData.testDuration
+                        )
+                    )
+                    .build()
+
+                WorkManager.getInstance(applicationContext).enqueue(workRequest)
+            }
+        }
+
+
 
         testData?.let {
             binding.tvTestTitle.text = it.testTitle
             val nonNullQuestions =
                 it.questions?.filterNotNull() ?: emptyList()
             testAdapter.submitList(nonNullQuestions)
-            displayQuestion(0) // Tampilkan soal pertama
+            displayQuestion(0)
+
         }
+
 
         binding.btnPrevious.text = getString(R.string.previous)
 
@@ -136,17 +181,52 @@ class TestActivity : AppCompatActivity() {
                 }
             }
         }
+
+        onBackPressedDispatcher.addCallback(this) {
+            showExitConfirmation(this@TestActivity)
+        }
+
+
+        timerFinishedReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                if (intent?.action == "com.example.autograde.TIMER_FINISHED") {
+                    submitTest(0)
+                    observeSubmitTestResponse()
+                }
+            }
+        }
+
+        val filter = IntentFilter("com.example.autograde.TIMER_FINISHED")
+        registerReceiver(timerFinishedReceiver, filter)
     }
 
-    private fun submitTest() {
-        val testResponse = intent.getStringExtra("USER_TEST_ID")
+
+    private fun updateTimer(userTestId: String) {
+        getRemainingTime(userTestId).observe(this) { remainingTime ->
+            if (remainingTime != null) {
+                val seconds = (remainingTime / 1000) % 60
+                val minutes = (remainingTime / (1000 * 60)) % 60
+                val hours = (remainingTime / (1000 * 60 * 60)) % 24
+
+                val timeLeftInSecond = remainingTime
+                _timeLeft.postValue(timeLeftInSecond.toInt())
+                binding.tvTimer.text = String.format("%02d:%02d:%02d", hours, minutes, seconds)
+            } else {
+                binding.tvTimer.text = "00:00"
+            }
+        }
+    }
+
+
+    private fun submitTest(timeLeft : Int) {
+        val testId = intent.getStringExtra("USER_TEST_ID")
         val testData: TestStart? = intent.getParcelableExtra("TEST_START_OBJECT")
 
-        if (testResponse != null && testData != null) {
+        if (testId != null && testData != null) {
             Log.d("TestActivity", "request called")
             lifecycleScope.launch {
                 // Ambil semua jawaban yang tersimpan untuk `userTestId`
-                val savedAnswers = userAnswerDao.getAllAnswersByUserTestId(testResponse)
+                val savedAnswers = userAnswerDao.getAllAnswersByUserTestId(testId)
 
                 // Konversi jawaban ke dalam format `SubmitTestRequest`
                 val answers = savedAnswers.map { savedAnswer ->
@@ -155,9 +235,7 @@ class TestActivity : AppCompatActivity() {
                         answer = savedAnswer.answer ?: ""
                     )
                 }
-
-                val timeLeft = 56
-                submitTestViewModel.submitTest(testResponse, answers, timeLeft )
+                submitTestViewModel.submitTest(testId, answers, timeLeft)
             }
         }
     }
@@ -236,8 +314,12 @@ class TestActivity : AppCompatActivity() {
         dialogBinding.btnBack.text = activity.getString(R.string.back)
 
         dialogBinding.btnContinue.setOnClickListener {
-            submitTest()
-            observeStartTestResponse()
+            lifecycleScope.launch {
+                val remainingTime = timeLeft.value ?: 0
+                val timeLeftInSecond = remainingTime / 1000
+                submitTest(timeLeftInSecond)
+            }
+            observeSubmitTestResponse()
         }
 
 
@@ -256,18 +338,18 @@ class TestActivity : AppCompatActivity() {
         }
     }
 
-    private fun observeStartTestResponse() {
+    private fun observeSubmitTestResponse() {
         submitTestViewModel.resultItemResponse.observe(this) { result ->
             if (result != null && result.isNotEmpty()) {
                 val answers = ArrayList<ResultsItem>()
                 answers.addAll(result)  // Memasukkan data ke answers
 
-                val testResponse = intent.getStringExtra("USER_TEST_ID")
+                val testId = intent.getStringExtra("USER_TEST_ID")
 
                 submitTestViewModel.submitTestResponse.observe(this) { response ->
                     response.message?.let {
                         // Hapus sesi pengujian
-                        deleteTestSession(testResponse)
+                        deleteTestSession(testId)
                         Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
                     }
 
@@ -313,6 +395,38 @@ class TestActivity : AppCompatActivity() {
             binding.btnBookmark.setImageResource(R.drawable.baseline_bookmark_border_24) // Gambar kosong
         }
     }
+
+    fun showExitConfirmation(activity: AppCompatActivity) {
+        val dialog = Dialog(activity)
+        dialogBinding = ActivityConfirmationBinding.inflate(layoutInflater)
+        val view: View = dialogBinding.root
+        dialog.setContentView(view)
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        dialogBinding.tvConfirmation.text = activity.getString(R.string.exit_confirmation)
+        dialogBinding.btnContinue.text = activity.getString(R.string.exit)
+        dialogBinding.btnBack.text = activity.getString(R.string.cancel)
+
+        dialogBinding.btnContinue.setOnClickListener {
+            intent = Intent(this@TestActivity, HomeActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
+            finish()
+        }
+
+        dialogBinding.btnBack.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        this.customDialog = dialog // Menyimpan referensi dialog
+        dialog.show()
+    }
+
+    fun getRemainingTime(userTestId: String): LiveData<Long> {
+        return userAnswerDao.getRemainingTime(userTestId)
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()

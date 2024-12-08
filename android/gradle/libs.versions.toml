@@ -24,6 +24,10 @@ roomCompiler = "2.5.2"
 roomRuntime = "2.5.2"
 fragmentKtx = "1.6.1"
 ksp = "1.9.0-1.0.11"
+androidAsyncHttp = "1.4.10"
+workRuntime = "2.8.1"
+workmanager = "2.8.0"
+uiDesktop = "1.7.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -48,6 +52,11 @@ androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = 
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }
 androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
+glide-compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
+android-async-http = { module = "com.loopj.android:android-async-http", version.ref = "androidAsyncHttp" }
+androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "workRuntime" }
+work-runtime-ktx = {module = "androidx.work:work-runtime-ktx", version.ref = "workmanager"}
+androidx-ui-desktop = { group = "androidx.compose.ui", name = "ui-desktop", version.ref = "uiDesktop" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

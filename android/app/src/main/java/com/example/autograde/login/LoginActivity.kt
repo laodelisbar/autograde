@@ -33,6 +33,8 @@ class LoginActivity : AppCompatActivity() {
 
         loginViewModel.loginResponse.observe(this, { response ->
             showSuccess(response.message)
+            startActivity(Intent(this, HomeActivity::class.java))
+            finish()
         })
 
         loginViewModel.isLoading.observe (this) {
@@ -80,8 +82,6 @@ class LoginActivity : AppCompatActivity() {
 
     private fun showSuccess(message: String?) {
         Toast.makeText(this, "${message ?: ""}", Toast.LENGTH_SHORT).show()
-        startActivity(Intent(this, HomeActivity::class.java))
-        finish()
     }
 
 }

@@ -8,11 +8,16 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.example.autograde.R
 import com.example.autograde.create_test.CreateTestActivity
 import com.example.autograde.data.di.ViewModelFactory
+import com.example.autograde.data.pref.UserModel
 import com.example.autograde.databinding.ActivityHomeBinding
 import com.example.autograde.login.LoginActivity
 import com.example.autograde.login.LoginViewModel
+import com.example.autograde.profile.ProfileActivity
 import com.example.autograde.test.TestOverviewActivity
 
 
@@ -50,6 +55,11 @@ class HomeActivity : AppCompatActivity() {
             homeViewModel.getTestById(testCode)
         }
 
+        binding.actionProfil.setOnClickListener {
+            intent = Intent(this@HomeActivity, ProfileActivity::class.java)
+            startActivity(intent)
+        }
+
         binding.makeTestButton.setOnClickListener {
             intent = Intent (this@HomeActivity, CreateTestActivity::class.java)
             startActivity(intent)
@@ -57,6 +67,23 @@ class HomeActivity : AppCompatActivity() {
 
         observeJoinTestResponse()
         observeTestResponse()
+    }
+
+
+    private fun updateUI(user: UserModel) {
+        if (user.profilePictureUrl != null) {
+            Glide.with(this)
+                .load(user.profilePictureUrl)
+                .apply(RequestOptions.circleCropTransform())
+                .into(binding.actionProfil)
+
+        } else {
+            Glide.with(this)
+                .load(R.drawable.icon_profil)
+                .apply(RequestOptions.circleCropTransform())
+                .into(binding.actionProfil)
+        }
+
     }
 
     private fun observeTestResponse() {
@@ -78,6 +105,8 @@ class HomeActivity : AppCompatActivity() {
             if (!user.isLogin) {
                 startActivity(Intent(this, LoginActivity::class.java))
                 finish()
+            } else {
+                updateUI(user)
             }
         }
     }

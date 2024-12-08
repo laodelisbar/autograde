@@ -76,6 +76,7 @@
     <string name="cancel">Cancel</string>
     <string name="exit">Exit</string>
     <string name="exit_confirmation">Exit now?</string>
+    <string name="logout_confirmation">Logout now?</string>
     <string name="duration">Duration :</string>
     <string name="show_qr_code">Show QR code</string>
 

@@ -3,13 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:background="@color/white"
+        android:background="@color/primary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,7 +21,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/baseline_arrow_back_24"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@android:color/transparent"
             android:layout_marginStart="10dp" />
 
         <ImageButton
@@ -32,8 +33,7 @@
             android:background="@drawable/circle"
             android:scaleType="centerCrop"
             android:contentDescription="@string/desc_action_profil"
-            android:background="@drawable/rounded"
-            android:src="@drawable/icon_profil"
+            android:src="@drawable/default_profile"
             android:backgroundTint="@color/primary"
             tools:ignore="RedundantDescriptionCheck"
             tools:layout_editor_absoluteX="351dp"
@@ -61,10 +61,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
         android:fontFamily="@font/quicksand_bold"
         android:text="@string/test_title"
         android:textColor="@color/primary"
-        android:textSize="30sp"
+        android:textSize="25sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.068"
         app:layout_constraintStart_toStartOf="parent"
@@ -218,11 +219,7 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:background="@drawable/circle"
-                app:srcCompat="@drawable/icon_profil"
-                android:src="@drawable/icon_profil"
-                android:background="@drawable/rounded"
-                app:srcCompat="@drawable/icon_profil"
-                android:src="@drawable/icon_profil"
+                app:srcCompat="@drawable/default_profile"
                 android:backgroundTint="@color/primary"
                 android:visibility="visible"/>
 
