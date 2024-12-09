@@ -8,7 +8,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.autograde.data.api.response.AcceptResponse
 import com.example.autograde.data.api.response.AcceptResponseRequest
 import com.example.autograde.data.api.response.JoinTestResponse
+import com.example.autograde.data.api.response.QuestionsShow
 import com.example.autograde.data.api.response.Test
+import com.example.autograde.data.api.response.UserTestsItem
 import com.example.autograde.data.repository.MainRepository
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -25,6 +27,13 @@ class CreatedTestViewModel(private val mainRepository: MainRepository) : ViewMod
 
     private val _testDetailResponse = MutableLiveData<Test>()
     val testDetailResponse: LiveData<Test> get() = _testDetailResponse
+
+    private val _testQuestionItemResponse = MutableLiveData<List<QuestionsShow>>()
+    val testQuestionItemResponse: LiveData<List<QuestionsShow>> get() = _testQuestionItemResponse
+
+    private val _usertestResponse = MutableLiveData<List <UserTestsItem>>()
+    val userTestResponse : LiveData<List<UserTestsItem>> get() = _usertestResponse
+
 
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
@@ -59,12 +68,12 @@ class CreatedTestViewModel(private val mainRepository: MainRepository) : ViewMod
                             _testDetailResponse.postValue(updatedTest)
                         }
                     }
-                }
-                else {
+                } else {
                     // Menangani error dari server
                     val errorMessage = response.errorBody()?.string()?.let { errorBody ->
                         try {
-                            val errorResponse = Gson().fromJson(errorBody, AcceptResponse::class.java)
+                            val errorResponse =
+                                Gson().fromJson(errorBody, AcceptResponse::class.java)
                             errorResponse.message
                         } catch (e: Exception) {
                             "Terjadi kesalahan: ${response.message()}"
@@ -91,6 +100,7 @@ class CreatedTestViewModel(private val mainRepository: MainRepository) : ViewMod
                     mainRepository.getTestById(testId)
                 }
                 if (response.isSuccessful) {
+                    showTestById(testId)
                     response.body()?.let { body ->
                         body.test?.let { test ->
                             _testDetailResponse.postValue(test)
@@ -111,6 +121,36 @@ class CreatedTestViewModel(private val mainRepository: MainRepository) : ViewMod
                     } ?: "Terjadi kesalahan tak dikenal"
                     _getTestResponse.postValue(JoinTestResponse(message = errorMessage))
                 }
+            } catch (e: Exception) {
+                _errorMessage.postValue(e.message ?: "Terjadi kesalahan")
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun showTestById(testId: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val response = withContext(Dispatchers.IO) {
+                    mainRepository.showTestById(testId)
+                }
+                if (response.isSuccessful) {
+                    response.body()?.let { body ->
+                        body.test?.questions.let { question ->
+                            _testQuestionItemResponse.postValue(question)
+                        } ?: run {
+                        }
+                        body.test?.userTests.let { user ->
+                            if (user != null) {
+                                val nonNullUsers = user.filterNotNull()
+                                _usertestResponse.postValue(nonNullUsers)
+                            }
+                        }
+                    }
+                }
+
             } catch (e: Exception) {
                 _errorMessage.postValue(e.message ?: "Terjadi kesalahan")
             } finally {

@@ -28,6 +28,8 @@ androidAsyncHttp = "1.4.10"
 workRuntime = "2.8.1"
 workmanager = "2.8.0"
 uiDesktop = "1.7.0"
+zxing-core = "3.5.1"
+zxing-android = "4.3.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -57,6 +59,8 @@ android-async-http = { module = "com.loopj.android:android-async-http", version.
 androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "workRuntime" }
 work-runtime-ktx = {module = "androidx.work:work-runtime-ktx", version.ref = "workmanager"}
 androidx-ui-desktop = { group = "androidx.compose.ui", name = "ui-desktop", version.ref = "uiDesktop" }
+zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxing-core" }
+zxing-android-embedded = { group = "com.journeyapps", name = "zxing-android-embedded", version.ref = "zxing-android" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

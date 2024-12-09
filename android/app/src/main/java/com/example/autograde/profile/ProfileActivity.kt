@@ -1,6 +1,7 @@
 package com.example.autograde.profile
 
 import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -24,6 +25,7 @@ import com.example.autograde.databinding.ProfileBinding
 import com.example.autograde.login.LoginViewModel
 import com.example.autograde.profile.adapter.YourCreatedTestAdapter
 import com.example.autograde.profile.adapter.YourPastTestAdapter
+import com.example.autograde.view_created_test.CreatedTestActivity
 
 
 class ProfileActivity : AppCompatActivity() {
@@ -271,8 +273,10 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun setListYourCreatedTest(test: List<TestsItem>) {
         if (!::yourCreatedTestAdapter.isInitialized) {
-            yourCreatedTestAdapter = YourCreatedTestAdapter {
-                // Tambahkan logika onClick di sini jika diperlukan
+            yourCreatedTestAdapter = YourCreatedTestAdapter { item ->
+                val intent = Intent(this, CreatedTestActivity::class.java)
+                intent.putExtra("TEST_ID", item.id)
+                startActivity(intent)
             }
             binding.recyclerViewCreatedTests.layoutManager = LinearLayoutManager(this)
             binding.recyclerViewCreatedTests.adapter = yourCreatedTestAdapter

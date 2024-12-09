@@ -11,11 +11,16 @@ import com.example.autograde.data.api.response.PastTestResponse
 import com.example.autograde.data.api.response.ProfileResponse
 import com.example.autograde.data.api.response.RegisterRequest
 import com.example.autograde.data.api.response.RegisterResponse
+import com.example.autograde.data.api.response.Request
+import com.example.autograde.data.api.response.ShowTestResponse
 import com.example.autograde.data.api.response.StartTestResponse
 import com.example.autograde.data.api.response.SubmitTestRequest
 import com.example.autograde.data.api.response.SubmitTestResponse
 import com.example.autograde.data.api.response.TestRequest
+import com.example.autograde.data.api.response.UpdateAnswer
+import com.example.autograde.data.api.response.UpdateUserGradeResponse
 import com.example.autograde.data.api.response.User
+import com.example.autograde.data.api.response.UserTestResponse
 import com.example.autograde.data.api.retrofit.ApiService
 import com.example.autograde.data.pref.UserModel
 import com.example.autograde.data.pref.UserPreference
@@ -74,7 +79,15 @@ class MainRepository (private val apiService: ApiService, private val userPrefer
         return apiService.getPastTest()
     }
 
-
+    suspend fun showTestById(testId : String) : Response<ShowTestResponse> {
+        return apiService.showTestById(testId)
+    }
+    suspend fun getUserTestDetail(userTestId : Request) : Response<UserTestResponse> {
+        return apiService.getUserTestDetail(userTestId)
+    }
+    suspend fun updateAnswer (updateAnswer : UpdateAnswer) : Response<UpdateUserGradeResponse> {
+        return apiService.updateAnswerGrade(updateAnswer)
+    }
 
     companion object {
         @Volatile

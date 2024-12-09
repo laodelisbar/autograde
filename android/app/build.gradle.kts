@@ -71,5 +71,7 @@ dependencies {
     implementation(libs.androidx.work.runtime)
     implementation(libs.android.async.http)
     implementation (libs.work.runtime.ktx)
+    implementation(libs.zxing.core)
+    implementation(libs.zxing.android.embedded)
 
 }

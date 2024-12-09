@@ -16,7 +16,7 @@
         android:padding="16dp"
         android:orientation="horizontal"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceParticularButton"
-        android:background="@drawable/button_border">
+        android:background="@drawable/bg_border">
 
         <TextView
             android:id="@+id/tv_name"

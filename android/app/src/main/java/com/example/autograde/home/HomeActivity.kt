@@ -65,8 +65,21 @@ class HomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        binding.qrButton.setOnClickListener {
+            val intent = Intent(this, ScanQRActivity::class.java)
+            startActivityForResult(intent, 1001)
+        }
+
         observeJoinTestResponse()
         observeTestResponse()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1001 && resultCode == RESULT_OK) {
+            val result = data?.getStringExtra("QR_RESULT")
+            homeViewModel.getTestById(result?: "0")
+        }
     }
 
 

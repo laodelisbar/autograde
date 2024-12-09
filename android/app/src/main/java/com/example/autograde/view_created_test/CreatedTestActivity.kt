@@ -1,12 +1,15 @@
 package com.example.autograde.view_created_test
 
+
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -18,6 +21,8 @@ import com.example.autograde.data.pref.UserModel
 import com.example.autograde.databinding.ActivityCreatedTestBinding
 import com.example.autograde.login.LoginViewModel
 import com.example.autograde.profile.ProfileActivity
+import com.example.autograde.view_created_test.fragment.ItemQuestionFragment
+import com.example.autograde.view_created_test.fragment.ItemResponseFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -56,10 +61,14 @@ class CreatedTestActivity : AppCompatActivity() {
 
         // Ambil test yang dibuat dari intent
         val testCreated: CreateTestResponse? = intent.getParcelableExtra("TEST_OBJECT")
+        val testIdDetail : String? = intent.getStringExtra("TEST_ID")
 
         if (testCreated != null && testCreated.test?.id != null) {
             val testId = testCreated.test.id
             createdTestViewModel.getTestById(testId)
+        }
+        if (testIdDetail != null) {
+            createdTestViewModel.getTestById(testIdDetail)
         } else {
             Log.e("CreatedTestActivity", "Test data is null")
             Toast.makeText(this, "Gagal memuat data tes", Toast.LENGTH_SHORT).show()
@@ -68,7 +77,8 @@ class CreatedTestActivity : AppCompatActivity() {
         observeTestResponse()
         observeAcceptResponse()
         observeUserSession()
-
+        setupFragmentNavigation()
+        observeItemQuestionById()
 
     }
 
@@ -95,6 +105,14 @@ class CreatedTestActivity : AppCompatActivity() {
                         // Jika ada perubahan, kirimkan request ke API
                         createdTestViewModel.acceptResponse(test.id, isChecked)
                     }
+                }
+
+                binding.btnShowQr.setOnClickListener {
+                    intent = Intent(this@CreatedTestActivity, ShowCodeActivity::class.java).apply {
+                        val testId = test.id
+                        putExtra("TEST_ID", testId )
+                    }
+                    startActivity(intent)
                 }
             }
         }
@@ -165,4 +183,67 @@ class CreatedTestActivity : AppCompatActivity() {
                 .into(binding.btnProfile)
         }
     }
+
+    private fun setupFragmentNavigation() {
+        val viewResponseFragment = ItemResponseFragment()
+        val viewQuestionFragment = ItemQuestionFragment()
+        updateButtonStyles(isResponseActive = true)
+
+
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_host, viewResponseFragment)
+            .commit()
+
+
+        binding.btnViewResponse.setOnClickListener {
+            Log.d("FragmentNavigation", "View Response Button Clicked")
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_host, viewResponseFragment)
+                .commit()
+            updateButtonStyles(isResponseActive = true)
+        }
+
+        binding.btnViewQuestion.setOnClickListener {
+            Log.d("FragmentNavigation", "View Question Button Clicked")
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_host, viewQuestionFragment)
+                .commit()
+            updateButtonStyles(isResponseActive = false)
+        }
+    }
+
+    private fun updateButtonStyles(isResponseActive: Boolean) {
+        if (isResponseActive) {
+            binding.btnViewResponse.backgroundTintList =
+                ContextCompat.getColorStateList(this, R.color.primary_fade)
+            binding.btnViewResponse.setTextColor(ContextCompat.getColor(this, R.color.primary))
+            binding.btnViewResponse.strokeColor =
+                ContextCompat.getColorStateList(this, R.color.primary)
+
+            binding.btnViewQuestion.backgroundTintList =
+                ContextCompat.getColorStateList(this, android.R.color.transparent)
+            binding.btnViewQuestion.setTextColor(ContextCompat.getColor(this, R.color.primary))
+            binding.btnViewQuestion.strokeColor =
+                ContextCompat.getColorStateList(this, R.color.primary)
+        } else {
+            binding.btnViewQuestion.backgroundTintList =
+                ContextCompat.getColorStateList(this, R.color.primary_fade)
+            binding.btnViewQuestion.setTextColor(ContextCompat.getColor(this, R.color.primary))
+            binding.btnViewQuestion.strokeColor =
+                ContextCompat.getColorStateList(this, R.color.primary)
+
+            binding.btnViewResponse.backgroundTintList =
+                ContextCompat.getColorStateList(this, android.R.color.transparent)
+            binding.btnViewResponse.setTextColor(ContextCompat.getColor(this, R.color.primary))
+            binding.btnViewResponse.strokeColor =
+                ContextCompat.getColorStateList(this, R.color.primary)
+        }
+    }
+
+    private fun observeItemQuestionById() {
+        createdTestViewModel.testQuestionItemResponse.observe(this) { test ->
+            Log.d("CreatedTestActivity", "Data diterima dari ViewModel: $test")
+        }
+    }
+
 }
