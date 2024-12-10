@@ -2,28 +2,19 @@ package com.example.autograde.home
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
-import com.example.autograde.R
-import com.example.autograde.create_test.CreateTestActivity
 import com.example.autograde.data.di.ViewModelFactory
-import com.example.autograde.data.pref.UserModel
-import com.example.autograde.databinding.ActivityHomeBinding
+import com.example.autograde.databinding.ActivityHomeForGuestBinding
 import com.example.autograde.login.LoginActivity
 import com.example.autograde.login.LoginViewModel
-import com.example.autograde.profile.ProfileActivity
-import com.example.autograde.test.TestOverviewActivity
+import com.example.autograde.test.TestOverviewForGuestActivity
 
+class HomeForGuestActivity : AppCompatActivity() {
 
-class HomeActivity : AppCompatActivity() {
-
-    private lateinit var binding : ActivityHomeBinding
+    private lateinit var binding : ActivityHomeForGuestBinding
 
     private val loginViewModel: LoginViewModel by viewModels {
         ViewModelFactory.getInstance(applicationContext)
@@ -36,7 +27,7 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityHomeBinding.inflate(layoutInflater)
+        binding = ActivityHomeForGuestBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         observeLogin()
@@ -55,13 +46,8 @@ class HomeActivity : AppCompatActivity() {
             homeViewModel.getTestById(testCode)
         }
 
-        binding.actionProfil.setOnClickListener {
-            intent = Intent(this@HomeActivity, ProfileActivity::class.java)
-            startActivity(intent)
-        }
-
-        binding.makeTestButton.setOnClickListener {
-            intent = Intent (this@HomeActivity, CreateTestActivity::class.java)
+        binding.btnLogin.setOnClickListener {
+            intent = Intent(this@HomeForGuestActivity, LoginActivity::class.java)
             startActivity(intent)
         }
 
@@ -83,27 +69,11 @@ class HomeActivity : AppCompatActivity() {
     }
 
 
-    private fun updateUI(user: UserModel) {
-        if (user.profilePictureUrl != null) {
-            Glide.with(this)
-                .load(user.profilePictureUrl)
-                .apply(RequestOptions.circleCropTransform())
-                .into(binding.actionProfil)
-
-        } else {
-            Glide.with(this)
-                .load(R.drawable.icon_profil)
-                .apply(RequestOptions.circleCropTransform())
-                .into(binding.actionProfil)
-        }
-
-    }
-
     private fun observeTestResponse() {
         homeViewModel.testResponse.observe(this) { testList ->
             if (testList != null && testList.isNotEmpty()) {
                 val test = testList[0]
-                val intent = Intent(this@HomeActivity, TestOverviewActivity::class.java).apply {
+                val intent = Intent(this@HomeForGuestActivity, TestOverviewForGuestActivity::class.java).apply {
                     putExtra("TEST_OBJECT", test)  // Pass the test object to the next activity
                 }
                 startActivity(intent)
@@ -115,11 +85,11 @@ class HomeActivity : AppCompatActivity() {
 
     private fun observeLogin() {
         loginViewModel.getSession().observe(this) { user ->
-            if (!user.isLogin) {
-                startActivity(Intent(this, HomeForGuestActivity::class.java))
+            if (user.isLogin) {
+                startActivity(Intent(this, HomeActivity::class.java))
                 finish()
             } else {
-                updateUI(user)
+
             }
         }
     }
@@ -140,13 +110,6 @@ class HomeActivity : AppCompatActivity() {
 
     private fun showLoading(isLoading: Boolean) {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-    }
-
-    private fun showMessage(message: String?) {
-        AlertDialog.Builder(this)
-            .setMessage(message ?: "Terjadi kesalahan")
-            .setPositiveButton("OK") { _, _ -> }
-            .show()
     }
 
 }

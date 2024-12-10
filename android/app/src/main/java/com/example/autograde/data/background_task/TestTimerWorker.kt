@@ -25,7 +25,8 @@ class TestTimerWorker(context: Context, workerParams: WorkerParameters) : Corout
         val initialTimer = UserAnswer(
             userTestId = testId,
             questionId = "",
-            remainingTime = endTime - System.currentTimeMillis()
+            remainingTime = endTime - System.currentTimeMillis(),
+            sequence = 0
         )
         userAnswerDao.insertInitialTimer(initialTimer)
 

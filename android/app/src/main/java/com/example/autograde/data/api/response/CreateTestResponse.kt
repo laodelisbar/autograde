@@ -78,7 +78,7 @@ data class AcceptResponseRequest(
 
 data class CreateTestRequest (
 	val testTitle : String,
-	val testDuration : Int,
+	val testDuration : Int ,
 	val questions : List<CreateQuestion>?
 )
 

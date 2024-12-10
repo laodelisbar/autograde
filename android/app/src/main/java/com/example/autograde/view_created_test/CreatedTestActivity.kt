@@ -86,7 +86,11 @@ class CreatedTestActivity : AppCompatActivity() {
         lifecycleScope.launch {
             withContext(Dispatchers.Main) {
                 binding.tvTestTitle.text = test.testTitle
-                binding.tvTestMinutes.text = getString(R.string.minutes, test.testDuration ?: 0)
+                if (test.testDuration != null) {
+                    val testDuration = test.testDuration / 60
+                    binding.tvTestMinutes.text =
+                        getString(R.string.minutes, testDuration)
+                }
                 if (test?.acceptResponses != null) {
                     binding.switch1.isChecked = test.acceptResponses
                 } else {

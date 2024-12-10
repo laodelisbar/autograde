@@ -15,6 +15,7 @@ data class StartTestResponse(
 
 	@field:SerializedName("message")
 	val message: String? = null
+
 ) : Parcelable
 
 @Parcelize
@@ -53,4 +54,10 @@ data class TestStart(
 data class TestRequest (
 	val testId: String
 )
+
+data class TestRequestForGuest (
+	val testId: String,
+	val username : String
+)
+
 

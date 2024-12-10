@@ -8,25 +8,20 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.example.autograde.R
 import com.example.autograde.data.api.response.Test
 import com.example.autograde.data.di.ViewModelFactory
-import com.example.autograde.data.pref.UserModel
 import com.example.autograde.databinding.ActivityConfirmationBinding
-import com.example.autograde.databinding.SecondTestOverviewBinding
+import com.example.autograde.databinding.FirstTestOverviewBinding
 import com.example.autograde.login.LoginViewModel
-import com.example.autograde.profile.ProfileActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+class TestOverviewForGuestActivity : AppCompatActivity() {
 
-class TestOverviewActivity : AppCompatActivity() {
-
-    private lateinit var binding: SecondTestOverviewBinding
+    private lateinit var binding: FirstTestOverviewBinding
     private lateinit var dialogBinding: ActivityConfirmationBinding
     private val loginViewModel: LoginViewModel by viewModels {
         ViewModelFactory.getInstance(applicationContext)
@@ -42,7 +37,7 @@ class TestOverviewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = SecondTestOverviewBinding.inflate(layoutInflater)
+        binding = FirstTestOverviewBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val testOverview: Test? = intent.getParcelableExtra("TEST_OBJECT")
@@ -50,15 +45,9 @@ class TestOverviewActivity : AppCompatActivity() {
         if (testOverview != null) {
             observeTestDetails(testOverview)
         }
-        observeUserSession()
 
         binding.btnStart.setOnClickListener {
             showCustomDialog(this)
-        }
-
-        binding.actionProfil.setOnClickListener {
-            intent = Intent(this@TestOverviewActivity, ProfileActivity::class.java)
-            startActivity(intent)
         }
 
         binding.btnBack.setOnClickListener {
@@ -69,9 +58,6 @@ class TestOverviewActivity : AppCompatActivity() {
 
     private fun observeTestDetails(testOverview: Test) {
         showLoading(true)
-        if (testOverview.testDuration != null) {
-            val testDuration = testOverview.testDuration
-        }
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 delay(500)
@@ -91,38 +77,6 @@ class TestOverviewActivity : AppCompatActivity() {
         }
     }
 
-    private fun observeUserSession() {
-        loginViewModel.getSession().observe(this) { user ->
-            // Perbarui UI dengan data user
-            updateUI(user)
-        }
-    }
-
-    private fun updateUI(user: UserModel) {
-        binding.tvUsername.text = user.username
-        if (user.profilePictureUrl != null) {
-            Glide.with(this)
-                .load(user.profilePictureUrl)
-                .apply(RequestOptions.circleCropTransform())
-                .into(binding.ivProfileUsername)
-
-            Glide.with(this)
-                .load(user.profilePictureUrl)
-                .apply(RequestOptions.circleCropTransform())
-                .into(binding.actionProfil)
-        } else {
-            Glide.with(this)
-                .load(R.drawable.icon_profil)
-                .apply(RequestOptions.circleCropTransform())
-                .into(binding.ivProfileUsername)
-
-            Glide.with(this)
-                .load(R.drawable.icon_profil)
-                .apply(RequestOptions.circleCropTransform())
-                .into(binding.actionProfil)
-        }
-
-    }
 
     fun showLoading(isLoading: Boolean) {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
@@ -147,7 +101,8 @@ class TestOverviewActivity : AppCompatActivity() {
         dialogBinding.btnContinue.setOnClickListener {
             val testOverview: Test? = intent.getParcelableExtra("TEST_OBJECT")
             val testId = testOverview?.id.toString()
-            testViewModel.startTestById(testId)
+            val username = binding.edUsername.text.toString()
+            testViewModel.startTestForGuest(testId, username)
             observeTestResponse()
             observeStartTestResponse()
 
@@ -170,20 +125,20 @@ class TestOverviewActivity : AppCompatActivity() {
     }
 
 
-
     private fun observeTestResponse() {
         testViewModel.testResponse.observe(this) { testList ->
             if (testList != null && testList.isNotEmpty()) {
                 val test = testList[0]
                 testViewModel.startTestResponse.observe(this) { response ->
                     val userTestId = response.userTestId
-                    val intent = Intent(this@TestOverviewActivity, TestActivity::class.java).apply {
-                        putExtra(
-                            "TEST_START_OBJECT",
-                            test
-                        )  // Pass the test object to the next activity
-                        putExtra("USER_TEST_ID", userTestId)
-                    }
+                    val intent =
+                        Intent(this@TestOverviewForGuestActivity, TestActivity::class.java).apply {
+                            putExtra(
+                                "TEST_START_OBJECT",
+                                test
+                            )  // Pass the test object to the next activity
+                            putExtra("USER_TEST_ID", userTestId)
+                        }
                     startActivity(intent)
                     finish()
                 }
@@ -203,5 +158,4 @@ class TestOverviewActivity : AppCompatActivity() {
         }
 
     }
-
 }

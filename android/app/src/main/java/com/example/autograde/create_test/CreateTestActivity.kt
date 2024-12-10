@@ -186,7 +186,7 @@ class CreateTestActivity : AppCompatActivity() {
         createTestViewModel.storeTest(
             CreateTestRequest(
                 testTitle = testTitle,
-                testDuration = testDuration.toInt(),
+                testDuration = testDuration.toInt() * 60,
                 questions = questions.map {
                     CreateQuestion(
                         questionText = it.questionText,

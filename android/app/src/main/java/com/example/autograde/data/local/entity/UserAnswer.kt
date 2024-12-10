@@ -13,6 +13,7 @@ data class UserAnswer(
     val questionId: String,
     val answer: String? = null,
     val isBookmarked: Boolean = false,
-    val remainingTime: Long = 0L
+    val remainingTime: Long = 0L,
+    val sequence: Int,
 ) : Parcelable
 

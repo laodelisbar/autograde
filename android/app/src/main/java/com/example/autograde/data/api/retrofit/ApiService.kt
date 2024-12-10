@@ -19,6 +19,7 @@ import com.example.autograde.data.api.response.StartTestResponse
 import com.example.autograde.data.api.response.SubmitTestRequest
 import com.example.autograde.data.api.response.SubmitTestResponse
 import com.example.autograde.data.api.response.TestRequest
+import com.example.autograde.data.api.response.TestRequestForGuest
 import com.example.autograde.data.api.response.UpdateAnswer
 import com.example.autograde.data.api.response.UpdateUserGradeResponse
 import com.example.autograde.data.api.response.User
@@ -55,6 +56,11 @@ interface ApiService {
     @POST("api/tests/start")
     suspend fun startTestById(
         @Body  requestBody : TestRequest
+    ): Response<StartTestResponse>
+
+    @POST("/api/tests/start")
+    suspend fun startTestForGuset(
+        @Body  requestBody : TestRequestForGuest
     ): Response<StartTestResponse>
 
     @POST("/api/tests/submit")

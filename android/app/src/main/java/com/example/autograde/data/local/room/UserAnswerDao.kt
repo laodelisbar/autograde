@@ -13,8 +13,11 @@ interface UserAnswerDao {
     @Query("SELECT * FROM user_answers WHERE questionId = :questionId LIMIT 1")
     suspend fun getAnswerByQuestionId(questionId: String): UserAnswer?
 
-    @Query("SELECT * FROM user_answers WHERE userTestId = :userTestId")
+    @Query("SELECT * FROM user_answers WHERE userTestId = :userTestId AND sequence > 0 ORDER BY sequence")
     suspend fun getAllAnswersByUserTestId(userTestId: String): List<UserAnswer>
+
+    @Query("SELECT MAX(sequence) FROM user_answers WHERE userTestId = :userTestId")
+    suspend fun getMaxSequenceForUserTest(userTestId: String): Int?
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

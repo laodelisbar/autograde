@@ -18,6 +18,7 @@ import com.example.autograde.data.api.response.StartTestResponse
 import com.example.autograde.data.api.response.SubmitTestRequest
 import com.example.autograde.data.api.response.SubmitTestResponse
 import com.example.autograde.data.api.response.TestRequest
+import com.example.autograde.data.api.response.TestRequestForGuest
 import com.example.autograde.data.api.response.UpdateAnswer
 import com.example.autograde.data.api.response.UpdateUserGradeResponse
 import com.example.autograde.data.api.response.User
@@ -44,6 +45,10 @@ class MainRepository (private val apiService: ApiService, private val userPrefer
 
     suspend fun startTestByid(requestBody : TestRequest) : Response<StartTestResponse> {
         return apiService.startTestById(requestBody)
+    }
+
+    suspend fun startTestForGuest(requestBody : TestRequestForGuest) : Response<StartTestResponse> {
+        return apiService.startTestForGuset(requestBody)
     }
 
     suspend fun storeTest(requestBody : CreateTestRequest) : Response<CreateTestResponse> {

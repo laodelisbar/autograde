@@ -116,7 +116,7 @@ class TestActivity : AppCompatActivity() {
                     .setInputData(
                         workDataOf(
                             "testId" to testId,
-                            "testDuration" to testData.testDuration
+                            "testDuration" to testData.testDuration / 60
                         )
                     )
                     .build()
@@ -276,13 +276,16 @@ class TestActivity : AppCompatActivity() {
             if (testResponse != null) {
                 lifecycleScope.launch {
                     val isBookmarked = userAnswerDao.isQuestionBookmarked(question.id ?: "")
+                    val currentSequence = userAnswerDao.getMaxSequenceForUserTest(testResponse) ?: 0
+                    val nextSequence = currentSequence + 1
 
                     // Simpan jawaban bahkan jika kosong
                     val userAnswer = UserAnswer(
                         userTestId = testResponse,
                         questionId = question.id ?: "",
                         answer = answerText,
-                        isBookmarked = isBookmarked
+                        isBookmarked = isBookmarked,
+                        sequence = nextSequence
                     )
 
                     // Gunakan insertOrReplace atau update

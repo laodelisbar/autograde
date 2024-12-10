@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.autograde.data.api.response.JoinTestResponse
 import com.example.autograde.data.api.response.StartTestResponse
 import com.example.autograde.data.api.response.TestRequest
+import com.example.autograde.data.api.response.TestRequestForGuest
 import com.example.autograde.data.api.response.TestStart
 import com.example.autograde.data.local.entity.UserAnswer
 import com.example.autograde.data.local.room.UserAnswerDao
@@ -78,5 +79,49 @@ class TestViewModel(private val mainRepository: MainRepository) : ViewModel() {
             }
         }
     }
+
+    fun startTestForGuest(testId : String, username : String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val response = withContext(Dispatchers.IO) {
+                    val testRequestForGuest = TestRequestForGuest(
+                        testId = testId,
+                        username = username
+                    )
+                    mainRepository.startTestForGuest(testRequestForGuest)
+                }
+                if (response.isSuccessful) {
+                    response.body()?.let { body ->
+                        body.test?.let { test ->
+                            _testResponse.postValue(listOf(test))
+                            _startTestResponse.postValue(body)
+                        } ?: run {
+                            _startTestResponse.postValue(body)
+                            _errorMessage.postValue("Test tidak ditemukan")
+                        }
+                    }
+                } else {
+                    val errorMessage = response.errorBody()?.string()?.let { errorBody ->
+                        try {
+                            val errorResponse =
+                                Gson().fromJson(errorBody, JoinTestResponse::class.java)
+                            errorResponse.message
+                        } catch (e: Exception) {
+                            "Terjadi kesalahan: ${response.message()}"
+                        }
+                    } ?: "Terjadi kesalahan tak dikenal"
+                    _startTestResponse.postValue(StartTestResponse(message = errorMessage)) // Mengirimkan data default
+                }
+
+            } catch (e: Exception) {
+
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+
 
 }
