@@ -326,7 +326,9 @@ exports.startTest = async (req, res) => {
   try {
     const { testId, username } = req.body; // Ambil test_id dan username dari body request
     let userId = req.user ? req.user.id : null; // Ambil user_id dari middleware atau null jika tidak ada
+    console.log('User ID : ', userId);
     let userTestUsername = userId ? req.user.username : username; // Ambil username dari user yang login atau dari body
+    console.log('User Test Username : ', userTestUsername);
 
     // Jika user_id dan username tidak ada, kembalikan error
     if (!userId && !userTestUsername) {
@@ -335,7 +337,8 @@ exports.startTest = async (req, res) => {
 
     if (userTestUsername && !userId) {
       const existingUserTest = await UserTests.findOne({
-        where: { username: userTestUsername },
+        //TODO: cari usertest yang memiliki test id yang sama
+        where: { testId, username : userTestUsername },
       });
 
       if (existingUserTest) {
@@ -367,9 +370,10 @@ exports.startTest = async (req, res) => {
 
     // Periksa apakah User_tests sudah ada
     let userTest = await UserTests.findOne({
-      where: { testId, userId },
+      where: { testId, username : userTestUsername },
     });
-
+    
+    console.log('User Test apakah usertests sudah ada: ', userTest);
     if (userTest) {
       // Jika sudah ada, kembalikan ID user_test dan detail tes
       return res.status(200).json({
@@ -390,6 +394,7 @@ exports.startTest = async (req, res) => {
       testDate: new Date(),
     });
 
+    console.log('User Test Buat Test Baru: ', userTest);
     return res.status(201).json({
       message: 'Tes berhasil dimulai.',
       userTestId: userTest.id,
@@ -485,14 +490,24 @@ exports.submitTest = async (req, res) => {
       input_premise,
       input_hypothesis,
     };
-    const response = await axios.post(`${apiBaseUrl}${apiUri}`, requestBody);
-    const predictedGrades = response.data.predicted.map(grade => Math.min(Math.max(Math.round(grade * 5), 1), 5)); // Normalize to 1-5 scale
-    console.log('Predicted Grades:', predictedGrades);
+
+    let predictedGrades;
+    try {
+      const response = await axios.post(`${apiBaseUrl}${apiUri}`, requestBody);
+      predictedGrades = response.data.predicted.map(grade => Math.min(Math.max(Math.round(grade * 5), 1), 5)); // Normalize to 1-5 scale
+    } catch (error) {
+      console.error('Error making request to API:', error.message);
+      console.log('Predicted Grades:', predictedGrades);
+      // Handle the error appropriately, e.g., return a response with an error message
+    }
 
     // Simpan jawaban baru dengan grade yang diprediksi
     for (let i = 0; i < questions.length; i++) {
       const { questionId, answer } = questions[i];
-      const predictedGrade = predictedGrades[i];
+      let predictedGrade;
+      if (predictedGrades) {
+        predictedGrade = predictedGrades[i] || null;
+      }
 
       const newAnswer = await Answer.create({
         userTestId,
