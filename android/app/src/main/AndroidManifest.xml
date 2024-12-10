@@ -20,6 +20,11 @@
         <activity
             android:name=".view_created_test.ShowCodeActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".view_past_test.DetailPastTestActivity"
+            android:exported="false" />
+
         <activity
             android:name=".test.TestActivity"
             android:exported="false" />

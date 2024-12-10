@@ -7,6 +7,7 @@ import com.example.autograde.data.api.response.CreateTestRequest
 import com.example.autograde.data.api.response.CreateTestResponse
 import com.example.autograde.data.api.response.JoinTestResponse
 import com.example.autograde.data.api.response.LoginResponse
+import com.example.autograde.data.api.response.PastTestDetailResponse
 import com.example.autograde.data.api.response.PastTestResponse
 import com.example.autograde.data.api.response.ProfileResponse
 import com.example.autograde.data.api.response.RegisterRequest
@@ -82,6 +83,11 @@ class MainRepository (private val apiService: ApiService, private val userPrefer
     suspend fun showTestById(testId : String) : Response<ShowTestResponse> {
         return apiService.showTestById(testId)
     }
+
+    suspend fun showPastTestDetail(testId : String) : Response<PastTestDetailResponse> {
+        return apiService.showPastTestDetail(testId)
+    }
+
     suspend fun getUserTestDetail(userTestId : Request) : Response<UserTestResponse> {
         return apiService.getUserTestDetail(userTestId)
     }

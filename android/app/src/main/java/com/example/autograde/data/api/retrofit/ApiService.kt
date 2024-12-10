@@ -8,6 +8,7 @@ import com.example.autograde.data.api.response.CreateTestRequest
 import com.example.autograde.data.api.response.CreateTestResponse
 import com.example.autograde.data.api.response.JoinTestResponse
 import com.example.autograde.data.api.response.LoginResponse
+import com.example.autograde.data.api.response.PastTestDetailResponse
 import com.example.autograde.data.api.response.PastTestResponse
 import com.example.autograde.data.api.response.ProfileResponse
 import com.example.autograde.data.api.response.RegisterRequest
@@ -91,5 +92,9 @@ interface ApiService {
         @Body updateAnswer : UpdateAnswer
     ): Response<UpdateUserGradeResponse>
 
+    @GET("/api/pasttests/show/{testId}")
+    suspend fun showPastTestDetail(
+        @Path("testId") testId: String
+    ): Response<PastTestDetailResponse>
 }
 

@@ -15,6 +15,7 @@ import com.example.autograde.test.SubmitTestViewModel
 import com.example.autograde.test.TestViewModel
 import com.example.autograde.user_test.UserTestViewModel
 import com.example.autograde.view_created_test.CreatedTestViewModel
+import com.example.autograde.view_past_test.PastTestViewModel
 
 
 class ViewModelFactory(
@@ -51,6 +52,9 @@ class ViewModelFactory(
 
         if (modelClass.isAssignableFrom(UserTestViewModel::class.java)) {
             return UserTestViewModel(mainRespository) as T
+        }
+        if (modelClass.isAssignableFrom(PastTestViewModel::class.java)) {
+            return PastTestViewModel(mainRespository) as T
         }
 
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)

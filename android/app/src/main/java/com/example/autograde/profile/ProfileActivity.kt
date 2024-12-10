@@ -21,11 +21,13 @@ import com.example.autograde.data.api.response.Answer
 import com.example.autograde.data.api.response.TestsItem
 import com.example.autograde.data.di.ViewModelFactory
 import com.example.autograde.databinding.ActivityConfirmationBinding
+import com.example.autograde.databinding.ActivityPastTestDetailBinding
 import com.example.autograde.databinding.ProfileBinding
 import com.example.autograde.login.LoginViewModel
 import com.example.autograde.profile.adapter.YourCreatedTestAdapter
 import com.example.autograde.profile.adapter.YourPastTestAdapter
 import com.example.autograde.view_created_test.CreatedTestActivity
+import com.example.autograde.view_past_test.DetailPastTestActivity
 
 
 class ProfileActivity : AppCompatActivity() {
@@ -89,7 +91,7 @@ class ProfileActivity : AppCompatActivity() {
             updateUIForPastTest()
         }
 
-        profileViewModel.isLoading.observe (this) {
+        profileViewModel.isLoading.observe(this) {
             showLoading(it)
         }
 
@@ -288,8 +290,12 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun setListYourPastTest(test: List<TestsItem>) {
         if (!::yourPastTestAdapter.isInitialized) {
-            yourPastTestAdapter = YourPastTestAdapter {
-                // Tambahkan logika onClick di sini jika diperlukan
+            yourPastTestAdapter = YourPastTestAdapter { item ->
+                intent =
+                    Intent(this@ProfileActivity, DetailPastTestActivity::class.java)
+                intent.putExtra("TEST_ID", item.id)
+                startActivity(intent)
+
             }
             binding.recyclerViewPastTests.layoutManager = LinearLayoutManager(this)
             binding.recyclerViewPastTests.adapter = yourPastTestAdapter
@@ -299,7 +305,7 @@ class ProfileActivity : AppCompatActivity() {
         updateViewAllText()
     }
 
-    private fun showLoading(isLoading : Boolean) {
+    private fun showLoading(isLoading: Boolean) {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 

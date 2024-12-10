@@ -9,25 +9,25 @@ import com.example.autograde.data.api.response.TestsItem
 import com.example.autograde.databinding.ItemListYourCreatedTestBinding
 
 class YourPastTestAdapter (private val onItemClicked: (TestsItem) -> Unit) :
-    ListAdapter<TestsItem,  YourPastTestAdapter.YourCreatdTestViewHolder>(DiffCallback()) {
+    ListAdapter<TestsItem,  YourPastTestAdapter.YourPastTestViewHOlder>(DiffCallback()) {
 
-    class YourCreatdTestViewHolder(private val binding: ItemListYourCreatedTestBinding) :
+    class YourPastTestViewHOlder(private val binding: ItemListYourCreatedTestBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(test: TestsItem) {
             binding.tvTestTitle.text = test.testTitle
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): YourCreatdTestViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): YourPastTestViewHOlder {
         val binding = ItemListYourCreatedTestBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
         )
-        return YourCreatdTestViewHolder(binding)
+        return YourPastTestViewHOlder(binding)
     }
 
-    override fun onBindViewHolder(holder: YourCreatdTestViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: YourPastTestViewHOlder, position: Int) {
         val item = getItem(position)
         holder.bind(item)
         holder.itemView.setOnClickListener {
