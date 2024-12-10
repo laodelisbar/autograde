@@ -14,8 +14,7 @@
   "description": "",
   "dependencies": {
     "@google-cloud/storage": "^7.14.0",
-    "@tensorflow/tfjs": "^4.22.0",
-    "@tensorflow/tfjs-node": "^4.22.0",
+    "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.3",
@@ -31,7 +30,6 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-google-token": "^0.1.2",
     "sequelize": "^6.37.5",
-    "tokenizers": "^0.13.3",
     "uuid": "^11.0.3"
   },
   "devDependencies": {

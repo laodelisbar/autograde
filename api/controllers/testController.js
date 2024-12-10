@@ -1,4 +1,5 @@
 const { UserTests, Test, Answer, Question } = require('../models');
+const axios = require('axios');
 
 // Tambahkan test beserta questions
 exports.storeTest = async (req, res) => {
@@ -116,7 +117,13 @@ exports.showTest = async (req, res) => {
           attributes: { exclude: ['createdAt', 'updatedAt', 'testId'] }, // Exclude createdAt and updatedAt
         }
       ],
+      order: [
+        [{ model: UserTests, as: 'userTests' }, 'totalGrade', 'DESC'], // Sort by totalGrade in descending order
+        [{ model: UserTests, as: 'userTests' }, 'timeLeft', 'DESC'] // Sort by timeLeft in descending order
+      ],
     });
+
+    console.log('TEST: ',test.dataValues.userTests);
 
     const userTestCount = await UserTests.count({ where: { testId: id } });
     test.dataValues.userTestCount = userTestCount;
@@ -241,7 +248,7 @@ exports.updateAnswerGrade = async (req, res) => {
     // Update the total grade of the user test
     const userTest = await UserTests.findOne({ where: { id: answer.userTestId } });
     const answers = await Answer.findAll({ where: { userTestId: userTest.id } });
-    const totalGrade = answers.reduce((acc, answer) => acc + answer.grade, 0) / answers.length;
+    const totalGrade = (answers.reduce((acc, answer) => acc + answer.grade, 0) / answers.length) * 20;
     userTest.totalGrade = totalGrade;
     await userTest.save();
 
@@ -434,6 +441,9 @@ exports.submitTest = async (req, res) => {
 
     // Validasi setiap pertanyaan dan simpan jawabannya
     const results = [];
+    const input_premise = [];
+    const input_hypothesis = [];
+
     for (const question of questions) {
       const { questionId, answer } = question;
 
@@ -463,20 +473,45 @@ exports.submitTest = async (req, res) => {
         continue;
       }
 
-      //TODO: Berikan Jawaban hasil machine learning model
-      // Simpan jawaban baru
+      // Tambahkan input_premise dan input_hypothesis untuk API model
+      input_premise.push(existingQuestion.answerText);
+      input_hypothesis.push(answer);
+    }
+
+    // Kirim request ke API model
+    const apiBaseUrl = process.env.MODEL_BASE_URL || 'http://host.docker.internal:8000';
+    const apiUri = '/predict';
+    const requestBody = {
+      input_premise,
+      input_hypothesis,
+    };
+    const response = await axios.post(`${apiBaseUrl}${apiUri}`, requestBody);
+    const predictedGrades = response.data.predicted.map(grade => Math.min(Math.max(Math.round(grade * 5), 1), 5)); // Normalize to 1-5 scale
+    console.log('Predicted Grades:', predictedGrades);
+
+    // Simpan jawaban baru dengan grade yang diprediksi
+    for (let i = 0; i < questions.length; i++) {
+      const { questionId, answer } = questions[i];
+      const predictedGrade = predictedGrades[i];
+
       const newAnswer = await Answer.create({
         userTestId,
         questionId,
         answer: answer || null, // Jawaban bisa null jika tidak diisi
-        grade: 0, // Default grade 0, akan di-update saat penilaian
+        grade: predictedGrade || 0, // Default grade 0, akan di-update saat penilaian
       });
 
       results.push({
-        question: existingQuestion,
+        question: await Question.findOne({ where: { id: questionId } }),
         answer: newAnswer,
       });
     }
+
+    // Update the total grade of the user test
+    const answers = await Answer.findAll({ where: { userTestId: userTest.id } });
+    const totalGrade = (answers.reduce((acc, answer) => acc + answer.grade, 0) / answers.length) * 20;
+    userTest.totalGrade = totalGrade;
+    await userTest.save();
 
     return res.status(200).json({
       message: 'Proses pengiriman jawaban selesai.',

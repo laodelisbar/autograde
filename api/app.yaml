@@ -13,6 +13,7 @@ env_variables:
   GOOGLE_APPLICATION_CREDENTIALS: 'path_to_your_service_account_key.json'
   GOOGLE_CLIENT_ID: 'your-google-client-id'
   GOOGLE_CLIENT_SECRET: 'your-google-client-secret'
+  MODEL_BASE_URL: 'your-model-base-url'
 
 automatic_scaling:
   target_cpu_utilization: 0.9
