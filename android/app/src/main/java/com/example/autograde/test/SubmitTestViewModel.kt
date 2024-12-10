@@ -47,6 +47,7 @@ class SubmitTestViewModel (private val mainRepository: MainRepository) : ViewMod
                         body.results?.let { test ->
                             _resultItemResponse.postValue(listOf(ResultsItem()))
                             _submitTestResponse.postValue(body)
+                            _errorMessage.postValue(body.message ?: "Something wrong")
                         } ?: run {
                             _submitTestResponse.postValue(body)
                             _errorMessage.postValue("Gagal")

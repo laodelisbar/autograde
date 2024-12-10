@@ -28,7 +28,7 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
     fun getSession(): Flow<UserModel> {
         return dataStore.data.map { preferences ->
             val profilePictureUrl = preferences[PROFILE_PICTURE_KEY]?.takeIf { it.isNotBlank() }
-                ?: "android.resource://com.example.autograde/drawable/default_profile"
+                ?: "https://picsum.photos/200"
             UserModel(
                 preferences[USERNAME_KEY]?: "",
                 preferences[EMAIL_KEY] ?: "",

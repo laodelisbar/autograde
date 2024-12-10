@@ -51,8 +51,11 @@ class TestActivity : AppCompatActivity() {
     val timeLeft: LiveData<Int> get() = _timeLeft
 
 
-
     private val submitTestViewModel: SubmitTestViewModel by viewModels {
+        ViewModelFactory.getInstance(applicationContext)
+    }
+
+    private val testViewModel: TestViewModel by viewModels {
         ViewModelFactory.getInstance(applicationContext)
     }
 
@@ -66,7 +69,7 @@ class TestActivity : AppCompatActivity() {
         userAnswerDao = db.userAnswerDao()
 
 
-        // Inisialisasi adapter
+
         testAdapter = TestAdapter(
             { question, position ->
                 saveCurrentAnswer()
@@ -77,21 +80,15 @@ class TestActivity : AppCompatActivity() {
             },
             // Lambda untuk memeriksa apakah pertanyaan sudah dijawab
             { questionId ->
-                runBlocking {
-                    userAnswerDao.getAnswerByQuestionId(questionId) != null
-                }
+                testViewModel.isAnswered(questionId)
             },
             // Lambda untuk memeriksa apakah pertanyaan di-bookmark
             { questionId ->
-                runBlocking {
-                    userAnswerDao.isQuestionBookmarked(questionId)
-                }
+                testViewModel.isQuestionBookmarked(questionId)
             },
             // Lambda untuk mendapatkan isi jawaban
             { questionId ->
-                runBlocking {
-                    userAnswerDao.getAnswerByQuestionId(questionId)?.answer
-                }
+                testViewModel.getAnswerByQuestionId(questionId)
             }
         )
 
@@ -139,17 +136,15 @@ class TestActivity : AppCompatActivity() {
 
         binding.btnPrevious.text = getString(R.string.previous)
 
-        // Navigasi tombol next
+
         binding.btnNext.setOnClickListener {
             saveCurrentAnswer()
             if (currentQuestionIndex < testData?.questions?.size?.minus(1) ?: 0) {
                 currentQuestionIndex++
                 displayQuestion(currentQuestionIndex)
             } else {
-                saveCurrentAnswer()
                 showCustomDialog(this)
             }
-            saveCurrentAnswer()
         }
 
         // Navigasi tombol previous
@@ -159,7 +154,6 @@ class TestActivity : AppCompatActivity() {
                 currentQuestionIndex--
                 displayQuestion(currentQuestionIndex)
             }
-            saveCurrentAnswer()
         }
 
         binding.btnBookmark.setOnClickListener {
@@ -218,7 +212,7 @@ class TestActivity : AppCompatActivity() {
     }
 
 
-    private fun submitTest(timeLeft : Int) {
+    private fun submitTest(timeLeft: Int) {
         val testId = intent.getStringExtra("USER_TEST_ID")
         val testData: TestStart? = intent.getParcelableExtra("TEST_START_OBJECT")
 
@@ -342,12 +336,13 @@ class TestActivity : AppCompatActivity() {
     }
 
     private fun observeSubmitTestResponse() {
+        val testId = intent.getStringExtra("USER_TEST_ID")
         submitTestViewModel.resultItemResponse.observe(this) { result ->
+            deleteTestSession(testId)
+            deleteTestSession()
             if (result != null && result.isNotEmpty()) {
                 val answers = ArrayList<ResultsItem>()
                 answers.addAll(result)  // Memasukkan data ke answers
-
-                val testId = intent.getStringExtra("USER_TEST_ID")
 
                 submitTestViewModel.submitTestResponse.observe(this) { response ->
                     response.message?.let {
@@ -371,7 +366,8 @@ class TestActivity : AppCompatActivity() {
             } else {
                 submitTestViewModel.errorMessage.observe(this) { error ->
                     Toast.makeText(this@TestActivity, error, Toast.LENGTH_SHORT).show()
-
+                    deleteTestSession(testId)
+                    deleteTestSession()
                 }
             }
 
@@ -389,6 +385,14 @@ class TestActivity : AppCompatActivity() {
             Toast.makeText(this, "User Test ID tidak ditemukan!", Toast.LENGTH_SHORT).show()
         }
     }
+
+    private fun deleteTestSession() {
+        lifecycleScope.launch {
+            userAnswerDao.deleteAllAnswers()
+            binding.edInputAnswer.setText(null)
+        }
+    }
+
 
     private fun updateBookmarkedQuestion(isBookmark: Boolean) {
         if (isBookmark) {

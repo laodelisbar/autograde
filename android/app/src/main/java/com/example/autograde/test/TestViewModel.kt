@@ -1,33 +1,32 @@
 package com.example.autograde.test
 
-import android.app.Application
-import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.example.autograde.data.api.response.JoinTestResponse
 import com.example.autograde.data.api.response.StartTestResponse
 import com.example.autograde.data.api.response.TestRequest
 import com.example.autograde.data.api.response.TestRequestForGuest
 import com.example.autograde.data.api.response.TestStart
-import com.example.autograde.data.local.entity.UserAnswer
 import com.example.autograde.data.local.room.UserAnswerDao
-import com.example.autograde.data.local.room.UserAnswerDatabase
 import com.example.autograde.data.repository.MainRepository
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class TestViewModel(private val mainRepository: MainRepository) : ViewModel() {
+class TestViewModel(
+    private val mainRepository: MainRepository,
+    private val userAnswerDao: UserAnswerDao
+) : ViewModel() {
 
     private val _startTestResponse = MutableLiveData<StartTestResponse>()
-    val startTestResponse : LiveData<StartTestResponse> get() = _startTestResponse
+    val startTestResponse: LiveData<StartTestResponse> get() = _startTestResponse
 
     private val _testResponse = MutableLiveData<List<TestStart>>()
-    val testResponse : LiveData<List<TestStart>> get() = _testResponse
+    val testResponse: LiveData<List<TestStart>> get() = _testResponse
 
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
@@ -35,11 +34,8 @@ class TestViewModel(private val mainRepository: MainRepository) : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
-    private val _savedAnswer = MutableLiveData<UserAnswer>()
-    val savedAnswer : LiveData<UserAnswer> get() = _savedAnswer
 
-
-    fun startTestById(testId : String) {
+    fun startTestById(testId: String) {
         viewModelScope.launch {
             _isLoading.value = true
             try {
@@ -62,7 +58,8 @@ class TestViewModel(private val mainRepository: MainRepository) : ViewModel() {
                 } else {
                     val errorMessage = response.errorBody()?.string()?.let { errorBody ->
                         try {
-                            val errorResponse = Gson().fromJson(errorBody, JoinTestResponse::class.java)
+                            val errorResponse =
+                                Gson().fromJson(errorBody, JoinTestResponse::class.java)
                             errorResponse.message
                         } catch (e: Exception) {
                             "Terjadi kesalahan: ${response.message()}"
@@ -80,7 +77,7 @@ class TestViewModel(private val mainRepository: MainRepository) : ViewModel() {
         }
     }
 
-    fun startTestForGuest(testId : String, username : String) {
+    fun startTestForGuest(testId: String, username: String) {
         viewModelScope.launch {
             _isLoading.value = true
             try {
@@ -122,6 +119,25 @@ class TestViewModel(private val mainRepository: MainRepository) : ViewModel() {
         }
     }
 
+    fun getAnswerByQuestionId(questionId: String): LiveData<String?> {
+        return liveData {
+            emit(userAnswerDao.getAnswerByQuestionId(questionId)?.answer)
+        }
+    }
 
+    fun isQuestionBookmarked(questionId: String): LiveData<Boolean> {
+        return liveData {
+            emit(userAnswerDao.isQuestionBookmarked(questionId))
+        }
+    }
 
+    fun isAnswered(questionId: String): LiveData<Boolean> {
+        return liveData {
+            val answer = userAnswerDao.getAnswerByQuestionId(questionId)?.answer
+            emit(!answer.isNullOrBlank())
+        }
+    }
 }
+
+
+

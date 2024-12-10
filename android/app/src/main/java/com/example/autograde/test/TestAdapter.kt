@@ -1,8 +1,11 @@
 package com.example.autograde.test
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.autograde.R
 import com.example.autograde.data.api.response.StartQuestionsItem
@@ -10,9 +13,9 @@ import com.example.autograde.databinding.ItemNavNumberBinding
 
 class TestAdapter(
     private val onQuestionClick: (StartQuestionsItem, Int) -> Unit,
-    private val isAnsweredCheck: (String) -> Boolean,
-    private val isBookmarkedCheck: (String) -> Boolean,
-    private val getAnswerCheck: (String) -> String?
+    private val isAnsweredCheck: (String) -> LiveData<Boolean>, // Mengubah menjadi LiveData
+    private val isBookmarkedCheck: (String) -> LiveData<Boolean>, // Mengubah menjadi LiveData
+    private val getAnswerCheck: (String) -> LiveData<String?> // Mengubah menjadi LiveData
 ) : RecyclerView.Adapter<TestAdapter.ViewHolder>() {
 
     private val questions = mutableListOf<StartQuestionsItem>()
@@ -46,20 +49,24 @@ class TestAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val question = questions[position]
 
-        // Dapatkan jawaban untuk pengecekan
-        val answer = getAnswerCheck(question.id ?: "")
+        // Mengamati jawaban untuk pertanyaan ini
+        getAnswerCheck(question.id ?: "").observe(holder.itemView.context as LifecycleOwner) { answer ->
+            val isAnswered = !answer.isNullOrBlank()
 
-        // Periksa apakah jawaban benar-benar memiliki isi
-        val isAnswered = !answer.isNullOrBlank()
-        val isBookmarked = isBookmarkedCheck(question.id ?: "")
-
-        holder.bind(
-            question,
-            position,
-            isAnswered,
-            isBookmarked,
-            position == currentlyDisplayedQuestionIndex
-        )
+            // Mengamati bookmark status
+            isBookmarkedCheck(question.id ?: "").observe(holder.itemView.context as LifecycleOwner) { isBookmarked ->
+                // Mengamati status jawaban
+                isAnsweredCheck(question.id ?: "").observe(holder.itemView.context as LifecycleOwner) { isAnsweredStatus ->
+                    holder.bind(
+                        question,
+                        position,
+                        isAnsweredStatus,
+                        isBookmarked,
+                        position == currentlyDisplayedQuestionIndex
+                    )
+                }
+            }
+        }
     }
 
     override fun getItemCount(): Int = questions.size
@@ -74,7 +81,6 @@ class TestAdapter(
             isBookmarked: Boolean,
             isCurrentlyDisplayed: Boolean
         ) {
-
             val textColor = when {
                 isBookmarked && isCurrentlyDisplayed -> R.color.primary
                 isCurrentlyDisplayed -> R.color.white
@@ -93,13 +99,14 @@ class TestAdapter(
                 else -> R.drawable.bg_nav_number_inactive
             }
 
-
             binding.tvNumber.text = (position + 1).toString()
             binding.tvNumber.setTextColor(ContextCompat.getColor(binding.root.context, textColor))
             binding.root.setBackgroundResource(backgroundColor)
 
             binding.root.setOnClickListener {
-                onQuestionClick(question, position)
+                if (currentlyDisplayedQuestionIndex != position) {
+                    onQuestionClick(question, position)
+                }
             }
         }
     }

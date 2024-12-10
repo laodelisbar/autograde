@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.autograde.create_test.CreateTestViewModel
+import com.example.autograde.data.local.room.UserAnswerDao
+import com.example.autograde.data.local.room.UserAnswerDatabase
 import com.example.autograde.data.repository.MainRepository
 import com.example.autograde.data.pref.UserPreference
 import com.example.autograde.data.pref.dataStore
@@ -20,7 +22,8 @@ import com.example.autograde.view_past_test.PastTestViewModel
 
 class ViewModelFactory(
     private val mainRespository: MainRepository,
-    userPreference: UserPreference
+    userPreference: UserPreference,
+    private val userAnswerDao: UserAnswerDao
 ) : ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
@@ -35,7 +38,7 @@ class ViewModelFactory(
             return HomeViewModel(mainRespository) as T
         }
         if (modelClass.isAssignableFrom(TestViewModel::class.java)) {
-            return TestViewModel(mainRespository) as T
+            return TestViewModel(mainRespository, userAnswerDao) as T
         }
         if (modelClass.isAssignableFrom(SubmitTestViewModel::class.java)) {
             return SubmitTestViewModel(mainRespository) as T
@@ -68,7 +71,10 @@ class ViewModelFactory(
             instance ?: synchronized(this) {
                 val mainRepository = Injection.provideRepository(context)
                 val userPreference = UserPreference.getInstance(context.dataStore)
-                instance ?: ViewModelFactory(mainRepository, userPreference)
+                val db = UserAnswerDatabase.getInstance(context)
+                val userAnswerDao = db.userAnswerDao()
+
+                instance ?: ViewModelFactory(mainRepository, userPreference, userAnswerDao)
             }.also { instance = it }
     }
 }

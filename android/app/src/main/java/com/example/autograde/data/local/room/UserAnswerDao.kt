@@ -19,7 +19,6 @@ interface UserAnswerDao {
     @Query("SELECT MAX(sequence) FROM user_answers WHERE userTestId = :userTestId")
     suspend fun getMaxSequenceForUserTest(userTestId: String): Int?
 
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAnswer(answer: UserAnswer)
 
@@ -33,6 +32,9 @@ interface UserAnswerDao {
 
     @Query("DELETE FROM user_answers WHERE userTestId = :userTestId")
     suspend fun deleteAllAnswersByUserTestId(userTestId: String)
+
+    @Query("DELETE FROM user_answers")
+    suspend fun deleteAllAnswers()
 
     // Query untuk mendapatkan semua soal yang di-bookmark
     @Query("SELECT * FROM user_answers WHERE isBookmarked = 1")

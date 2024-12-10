@@ -208,7 +208,7 @@ class ProfileActivity : AppCompatActivity() {
                         .into(binding.imgViewProfile)
                 } else {
                     Glide.with(this)
-                        .load(R.drawable.default_profile)
+                        .load("https://picsum.photos/200")
                         .apply(RequestOptions.circleCropTransform())
                         .into(binding.imgViewProfile)
                 }
