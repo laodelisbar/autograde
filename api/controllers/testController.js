@@ -524,7 +524,7 @@ exports.submitTest = async (req, res) => {
 
     // Update the total grade of the user test
     const answers = await Answer.findAll({ where: { userTestId: userTest.id } });
-    const totalGrade = (answers.reduce((acc, answer) => acc + answer.grade, 0) / answers.length) * 20;
+    const totalGrade = Math.round((answers.reduce((acc, answer) => acc + answer.grade, 0) / answers.length) * 20);
     userTest.totalGrade = totalGrade;
     await userTest.save();
 
