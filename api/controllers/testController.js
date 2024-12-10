@@ -378,9 +378,9 @@ exports.startTest = async (req, res) => {
       // Jika sudah ada, kembalikan ID user_test dan detail tes
       return res.status(200).json({
         message: 'Tes sudah dimulai sebelumnya.',
-        userTestId: userTest.id,
-        timeLeft: userTest.timeLeft,
-        test,
+        // userTestId: userTest.id,
+        // timeLeft: userTest.timeLeft,
+        // test,
       });
     }
 
