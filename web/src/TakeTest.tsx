@@ -5,6 +5,8 @@ import { BiBookmark } from 'react-icons/bi';
 import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { submitTest } from '@/api';
 import { Loader2 } from 'lucide-react';
+import { AxiosError } from 'axios';
+import { toast } from "sonner";
 
 interface TakeTestProps {
   Test: any;
@@ -83,12 +85,13 @@ const TakeTest: React.FC<TakeTestProps> = ({ Test, userTestId, onTestSubmit }) =
       if (response.status === 200) {
         console.log('Test submitted:', response.data);
         onTestSubmit(response.data);
-      } else {
-        alert('Failed to submit test.');
       }
     } catch (error) {
-      console.error('Error submitting test:', error);
-      alert('An error occurred while submitting the test.');
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data.message, { duration: 1000 });
+      } else {
+        toast.error("An unknown error occurred.", { duration: 1000 });
+      }
     } finally {
       setIsLoading(false);
     }

@@ -12,6 +12,8 @@ import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, D
 import { Avatar, AvatarFallback, AvatarImage } from './components/ui/avatar';
 import { Loader2 } from 'lucide-react';
 import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
+import { AxiosError } from 'axios';
 
 interface GetTestProps {
   testId: string;
@@ -55,8 +57,11 @@ const GetTest: React.FC<GetTestProps> = ({ testId, goToHome, goToLogin, onTestSt
       const response = await startTest(requestData);
       onTestStart(response.data.test, response.data.userTestId);
     } catch (error) {
-      console.error(error);
-      alert('Failed to start test');
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data.message, { duration: 1000 });
+      } else {
+        toast.error("An unknown error occurred.", { duration: 1000 });
+      }
     } finally {
       setConfirmLoading(false);
     }
