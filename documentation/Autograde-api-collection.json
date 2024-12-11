@@ -19,7 +19,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"email\": \"sss@example.com\",\n  \"password\": \"password\",\n  \"username\": \"ssss\"\n}"
+					"raw": "{\n  \"email\": \"exampleuser@example.com\",\n  \"password\": \"password\",\n  \"username\": \"exampleuser\"\n}"
 				},
 				"url": {
 					"raw": "{{url}}/api/register",
@@ -59,7 +59,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"email\": \"patientone@gmail.com\",\n  \"password\": \"123456\"\n}"
+					"raw": "{\n  \"email\": \"exampleuser@gmail.com\",\n  \"password\": \"password\"\n}"
 				},
 				"url": {
 					"raw": "{{url}}/api/login",
@@ -127,7 +127,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"testTitle\": \"test Judul\",\n  \"testDuration\": 60,\n  \"questions\": [\n    {\n      \"questionText\": \"question text\",\n      \"answerText\": \"answer text\"\n    }\n  ]\n}"
+					"raw": "{\n  \"testTitle\": \"test Judul\",\n  \"testDuration\": 60,\n  \"questions\": [\n    {\n      \"questionText\": \"question text\",\n      \"answerText\": \"the offcamera\"\n    }\n  ]\n}"
 				},
 				"url": {
 					"raw": "{{url}}/api/tests/store",
@@ -261,7 +261,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"userTestId\": \"{{userTestId}}\",\n  \"questions\": [\n    {\n      \"questionId\": \"{{questionId}}\",\n      \"answer\": \"answer\"\n    }\n  ]\n}"
+					"raw": "{\n  \"userTestId\": \"{{userTestId}}\",\n  \"questions\": [\n    {\n      \"questionId\": \"{{questionId}}\",\n      \"answer\": \"the offcamera\"\n    }\n  ],\n  \"timeLeft\": 30\n}"
 				},
 				"url": {
 					"raw": "{{url}}/api/tests/submit",
@@ -365,46 +365,7 @@
 			"response": []
 		},
 		{
-			"name": "Google Login",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{url}}/api/auth/google",
-					"host": [
-						"{{url}}"
-					],
-					"path": [
-						"api",
-						"auth",
-						"google"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Google Callback",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{url}}/api/auth/google/callback",
-					"host": [
-						"{{url}}"
-					],
-					"path": [
-						"api",
-						"auth",
-						"google",
-						"callback"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Show Test",
+			"name": "Show Created Test",
 			"request": {
 				"method": "GET",
 				"header": [
@@ -429,7 +390,32 @@
 			"response": []
 		},
 		{
-			"name": "Get All Tests",
+			"name": "Show Past Test",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/api/pasttests/show/{{testId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"pasttests",
+						"show",
+						"{{testId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Created Tests",
 			"request": {
 				"method": "GET",
 				"header": [
@@ -452,6 +438,29 @@
 			"response": []
 		},
 		{
+			"name": "Get All Past Tests",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/api/pasttests",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"pasttests"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Update Answer Grade",
 			"request": {
 				"method": "POST",
@@ -467,7 +476,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"answerId\": \"{{answerId}}\",\n  \"grade\": 90\n}"
+					"raw": "{\n  \"answerId\": \"{{answerId}}\",\n  \"grade\": 5\n}"
 				},
 				"url": {
 					"raw": "{{url}}/api/tests/update-answer-grade",
@@ -551,7 +560,7 @@
 	"variable": [
 		{
 			"key": "url",
-			"value": "",
+			"value": "https://api-dot-autograde-442112.et.r.appspot.com",
 			"type": "string"
 		},
 		{
