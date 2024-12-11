@@ -126,7 +126,7 @@ For API reference, you can import [Autograde API Collection](/documentation/Auto
 ## Authors
 
 - [@yousran](https://github.com/Yousran)
-- [@radelweys](#)
+- [@radelweys](https://github.com/Radelweys)
 - [@laodelisbar](https://github.com/laodelisbar)
 - [@nurulfauziahdaud](https://github.com/nurulfauziahdaud)
 - [@nanashua](https://github.com/Nanashua)
