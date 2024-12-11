@@ -9,19 +9,33 @@ Autograde is an online test app where you can answer essay, or fillable question
 ## Screenshots
 **Android Application**
 - Home Page
+
 ![App Screenshot](/documentation/screenshot-apk-home.jpg)
+
 - Login Page
+
 ![App Screenshot](/documentation/screenshot-apk-login.jpg)
+
 - Profile Page
+
 ![App Screenshot](/documentation/screenshot-apk-profile.jpg)
+
 - Make Test
+
 ![App Screenshot](/documentation/screenshot-apk-make.jpg)
+
 - Join Test
+
 ![App Screenshot](/documentation/screenshot-apk-join.jpg)
+
 - Take Test
+
 ![App Screenshot](/documentation/screenshot-apk-take.jpg)
+
 - Test Result
+
 ![App Screenshot](/documentation/screenshot-apk-result.jpg)
+
 
 **Web Application**
 - Home Page
@@ -107,14 +121,14 @@ Start the server
 
 ## API Reference
 
-For API reference, you can import [Autograde API Collection](documentation/autograde-api-collection.json) using [Postman](https://www.postman.com/downloads/)
+For API reference, you can import [Autograde API Collection](/documentation/Autograde-api-collection.json) using [Postman](https://www.postman.com/downloads/)
 
 ## Authors
 
 - [@yousran](https://github.com/Yousran)
-- [@radelweys](https://github.com/Yousran)
+- [@radelweys](#)
 - [@laodelisbar](https://github.com/laodelisbar)
 - [@nurulfauziahdaud](https://github.com/nurulfauziahdaud)
 - [@nanashua](https://github.com/Nanashua)
 - [@felixanthony03](https://github.com/felixanthony03)
-- [@evalatifa](https://github.com/Nanashua)
+- [@evalatifa](#)
