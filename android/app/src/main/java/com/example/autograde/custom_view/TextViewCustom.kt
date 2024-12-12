@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
+import com.example.autograde.R
 
 
 class TextViewCustom @JvmOverloads constructor(

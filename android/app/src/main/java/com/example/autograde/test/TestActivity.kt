@@ -329,6 +329,7 @@ class TestActivity : AppCompatActivity() {
 
         fun showDialogLoading(isLoading: Boolean) {
             dialogBinding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            dialogBinding.btnContinue.isEnabled = !isLoading
         }
         submitTestViewModel.isLoading.observe(this) {
             showDialogLoading(it)

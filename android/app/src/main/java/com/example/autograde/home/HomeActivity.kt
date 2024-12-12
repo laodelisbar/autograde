@@ -2,7 +2,6 @@ package com.example.autograde.home
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -10,12 +9,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.example.autograde.main.MainActivity
 import com.example.autograde.R
 import com.example.autograde.create_test.CreateTestActivity
 import com.example.autograde.data.di.ViewModelFactory
 import com.example.autograde.data.pref.UserModel
 import com.example.autograde.databinding.ActivityHomeBinding
-import com.example.autograde.login.LoginActivity
 import com.example.autograde.login.LoginViewModel
 import com.example.autograde.profile.ProfileActivity
 import com.example.autograde.test.TestOverviewActivity
@@ -116,7 +115,7 @@ class HomeActivity : AppCompatActivity() {
     private fun observeLogin() {
         loginViewModel.getSession().observe(this) { user ->
             if (!user.isLogin) {
-                startActivity(Intent(this, HomeForGuestActivity::class.java))
+                startActivity(Intent(this, MainActivity::class.java))
                 finish()
             } else {
                 updateUI(user)

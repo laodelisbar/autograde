@@ -134,7 +134,7 @@ class TestViewModel(
     fun isAnswered(questionId: String): LiveData<Boolean> {
         return liveData {
             val answer = userAnswerDao.getAnswerByQuestionId(questionId)?.answer
-            emit(!answer.isNullOrBlank())
+            emit(!answer.isNullOrBlank() && !answer.isEmpty())
         }
     }
 }
