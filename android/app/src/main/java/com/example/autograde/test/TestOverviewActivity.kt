@@ -197,7 +197,7 @@ class TestOverviewActivity : AppCompatActivity() {
     private fun observeStartTestResponse() {
         testViewModel.startTestResponse.observe(this) { response ->
             response.message?.let {
-                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Test created", Toast.LENGTH_SHORT).show()
             }
 
         }

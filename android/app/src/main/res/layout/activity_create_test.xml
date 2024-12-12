@@ -87,6 +87,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/enter_title_test"
+                    android:textColorHint="@color/primary"
+                    android:textColor="@color/primary"
                     android:paddingStart="10dp"
                     android:textSize="14sp"
                     android:inputType="textPersonName" />
@@ -112,6 +114,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
+                    android:textColorHint="@color/primary"
+                    android:textColor="@color/primary"
                     android:hint="@string/enter_duration"
                     android:paddingStart="10dp"
                     android:textSize="14sp"/>

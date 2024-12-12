@@ -66,12 +66,12 @@ class CreatedTestActivity : AppCompatActivity() {
         if (testCreated != null && testCreated.test?.id != null) {
             val testId = testCreated.test.id
             createdTestViewModel.getTestById(testId)
+            Toast.makeText(this, "Test created", Toast.LENGTH_SHORT).show()
         }
         if (testIdDetail != null) {
             createdTestViewModel.getTestById(testIdDetail)
         } else {
             Log.e("CreatedTestActivity", "Test data is null")
-            Toast.makeText(this, "Gagal memuat data tes", Toast.LENGTH_SHORT).show()
         }
 
         observeTestResponse()
