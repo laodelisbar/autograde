@@ -188,7 +188,7 @@ class TestOverviewActivity : AppCompatActivity() {
                     finish()
                 }
             } else {
-                Toast.makeText(this, "Kode Test Tidak ditemukkan", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Test code not found", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -197,7 +197,7 @@ class TestOverviewActivity : AppCompatActivity() {
     private fun observeStartTestResponse() {
         testViewModel.startTestResponse.observe(this) { response ->
             response.message?.let {
-                Toast.makeText(this, "Test created", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
             }
 
         }
