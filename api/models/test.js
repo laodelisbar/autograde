@@ -6,11 +6,16 @@ const {
 module.exports = (sequelize, DataTypes) => {
   const Test = sequelize.define('Test', {
     id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      allowNull: false,
       primaryKey: true,
+      get() {
+        const rawValue = this.getDataValue('id');
+        return rawValue ? rawValue.toString().padStart(6, '0') : null;
+      }
     },
-    creator_id: {
+    creatorId: {
       type: DataTypes.UUID,
       allowNull: false,
       references: {
@@ -19,15 +24,15 @@ module.exports = (sequelize, DataTypes) => {
       },
       onDelete: 'CASCADE', // Hapus test jika user dihapus
     },
-    test_title: {
+    testTitle: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    test_duration: {
+    testDuration: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    accept_responses : {
+    acceptResponses : {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false,
@@ -37,15 +42,18 @@ module.exports = (sequelize, DataTypes) => {
   // Relasi dengan User
   Test.associate = (models) => {
     Test.belongsTo(models.User, {
-      foreignKey: 'creator_id',
+      foreignKey: 'creatorId',
       as: 'creator',
     });
     Test.hasMany(models.Question, {
-      foreignKey: 'test_id',
-      as: 'Questions',
+      foreignKey: 'testId',
+      as: 'questions',
+    });
+    Test.hasMany(models.UserTests, {
+      foreignKey: 'testId',
+      as: 'userTests',
     });
     
   };
-
   return Test;
 };

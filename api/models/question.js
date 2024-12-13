@@ -10,8 +10,8 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    test_id: {
-      type: DataTypes.UUID,
+    testId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: 'Tests', // Mengacu pada tabel Tests
@@ -19,11 +19,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       onDelete: 'CASCADE', // Hapus pertanyaan jika test dihapus
     },
-    question_text: {
+    questionText: {
       type: DataTypes.TEXT, // Menggunakan tipe data TEXT
       allowNull: false,
     },
-    answer_text: {
+    answerText: {
       type: DataTypes.TEXT, // Menggunakan tipe data TEXT
       allowNull: false,
     },
@@ -32,10 +32,9 @@ module.exports = (sequelize, DataTypes) => {
   // Relasi dengan Test
   Question.associate = (models) => {
     Question.belongsTo(models.Test, {
-      foreignKey: 'test_id',
+      foreignKey: 'testId',
       as: 'test',
     });
   };
-
   return Question;
 };

@@ -5,12 +5,16 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('Tests', {
       id: {
-        type: Sequelize.UUID,
-        defaultValue: Sequelize.UUIDV4,
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
         allowNull: false,
         primaryKey: true,
+        get() {
+          const rawValue = this.getDataValue('id');
+          return rawValue ? rawValue.toString().padStart(6, '0') : null;
+        }
       },
-      creator_id: {
+      creatorId: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
@@ -19,16 +23,16 @@ module.exports = {
         },
         onDelete: 'CASCADE', // Menghapus test jika pengguna dihapus
       },
-      accept_responses : {
+      acceptResponses : {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false,
       },
-      test_title: {
+      testTitle: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      test_duration: {
+      testDuration: {
         type: Sequelize.INTEGER,
         allowNull: false,
       },

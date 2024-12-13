@@ -1,77 +1,134 @@
-# AUTOGRADE
+
+![Logo](/documentation/Autograde%20Text%20Logo.png)
+
+## About Autograde
+
+Autograde is an online test app where you can answer essay, or fillable question and get your grade in realtime, without waiting for your educators to grade them manually. The current problem with online testing platforms is that essay responses often need to match answer keys exactly, and automated scoring doesn’t exist for subjective responses. This results in delayed feedback for students and fails to account for varied, yet valid, expressions of understanding. Our solution addresses a core pain point in online assessments, enabling students and educators to focus more on learning and less on administrative delays.
 
 
+## Screenshots
+**Android Application**
+- Home Page
 
-## Langkah-Langkah Pengembangan
+![App Screenshot](/documentation/screenshot-apk-home.jpg)
 
-Repository ini terdiri dari tiga folder utama:
-- `android`: untuk pengembangan aplikasi Android.
-- `web`: untuk pengembangan web.
-- `api`: untuk pengembangan API.
+- Login Page
 
-### Fork dan Clone Repository
+![App Screenshot](/documentation/screenshot-apk-login.jpg)
 
-**Fork Repository ini**
-   - Klik tombol **Fork** di pojok kanan atas halaman repository ini di GitHub, dan buat fork ke akun Anda.
+- Profile Page
 
-**Buat Folder Kosong untuk Clone**
-   - Di komputer lokal Anda, buat folder kosong di lokasi yang diinginkan untuk menyimpan repository ini.
+![App Screenshot](/documentation/screenshot-apk-profile.jpg)
 
-**Clone dengan Filter dan Sparse Checkout**
-   - Buka terminal atau command prompt, masuk ke folder kosong, dan jalankan:
-     ```bash
-     git clone --filter=blob:none --sparse <URL-fork-repo-Anda> .
-     ```
+- Make Test
 
-**Aktifkan Folder yang Ingin Diedit**
-   - Setelah selesai clone, pilih folder yang ingin Anda kerjakan dengan salah satu perintah berikut:
+![App Screenshot](/documentation/screenshot-apk-make.jpg)
 
-   - **Android**
-     ```bash
-     git sparse-checkout set android
-     ```
-   
-   - **API**
-     ```bash
-     git sparse-checkout set api
-     ```
-   
-   - **Web**
-     ```bash
-     git sparse-checkout set web
-     ```
+- Join Test
 
-### 2. Mulai Pengembangan
+![App Screenshot](/documentation/screenshot-apk-join.jpg)
 
-**Format Commit Message**
-   - Gunakan format berikut untuk pesan commit:
-     - `FEAT:` untuk penambahan fitur baru, contoh:
-       ```bash
-       git commit -m "FEAT: Menambahkan fitur login"
-       ```
-     - `FIX:` untuk memperbaiki bug, contoh:
-       ```bash
-       git commit -m "FIX: Memperbaiki bug validasi input"
-       ```
-   - Gunakan `TODO:` dalam komentar kode untuk menandai item yang masih perlu dikerjakan, contoh:
-     ```javascript
-     // TODO: Tambahkan validasi untuk kolom email
-     ```
+- Take Test
 
-### 3. Mengirimkan Pull Request (PR)
+![App Screenshot](/documentation/screenshot-apk-take.jpg)
 
-**Push Branch ke Fork Anda**
-   - Setelah selesai melakukan perubahan, push branch ke fork repository Anda di GitHub:
-     ```bash
-     git push origin main
-     ```
+- Test Result
 
-**Buat Pull Request**
-   - Buka halaman GitHub fork repository Anda. Akan ada opsi untuk membuat **Pull Request** (PR) ke repository utama.
-   - Klik **New Pull Request** dan isi deskripsi perubahan yang Anda lakukan.
+![App Screenshot](/documentation/screenshot-apk-result.jpg)
 
-**Update PR jika Diperlukan**
-   - Jika Anda membuat perubahan tambahan pada branch yang sama, cukup commit dan push kembali. PR akan otomatis diperbarui dengan perubahan tersebut.
 
-### Tips Sinkronisasi
-Pastikan branch Anda selalu up-to-date dengan branch utama di repository ini untuk mencegah konflik yang tidak diinginkan.
+**Web Application**
+- Home Page
+![App Screenshot](/documentation/screenshot-web-home.png)
+- Profile Page
+![App Screenshot](/documentation/screenshot-web-profile.png)
+- Make Test
+![App Screenshot](/documentation/screenshot-web-make.png)
+- Show Created Test
+![App Screenshot](/documentation/screenshot-web-show-created.png)
+- Join Test
+![App Screenshot](/documentation/screenshot-web-join.png)
+- Take Test
+![App Screenshot](/documentation/screenshot-web-take.png)
+- Test Result
+![App Screenshot](/documentation/screenshot-web-result.png)
+
+**Architecture Diagram**
+
+![App Screenshot](/documentation/Autograde-Architecture%20Diagram.png)
+## Contributing
+
+Contributions are always welcome!
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for ways to get started.
+## Installation
+
+- Download [android application](https://drive.google.com/drive/folders/1SHpjjBEskQdQjxk-VJ4Pd6QlR4yNNsgb)
+- OR
+- Open [web application](https://autograde-442112.et.r.appspot.com/)
+
+    
+## Run Locally
+
+Clone the project
+
+```bash
+  git clone https://github.com/Yousran/autograde.git
+```
+
+Go to the project directory
+
+```bash
+  cd autograde
+```
+Go to the service directory
+
+```bash
+  cd api
+```
+or
+```bash
+  cd web
+```
+or
+```bash
+  cd model
+```
+
+Open in editor
+```bash
+  code .
+```
+
+Open in docker devcontainer
+
+- Open command pallete using ```Ctrl+Shift+P```
+
+- Type and Choose ```Dev Containers: Reopen in container```
+
+Install dependencies
+
+```bash
+  npm install
+```
+
+Start the server
+
+```bash
+  npm run dev
+```
+
+
+## API Reference
+
+For API reference, you can import [Autograde API Collection](/documentation/Autograde-api-collection.json) using [Postman](https://www.postman.com/downloads/)
+
+## Authors
+
+- [@yousran](https://github.com/Yousran)
+- [@radelweys](https://github.com/Radelweys)
+- [@laodelisbar](https://github.com/laodelisbar)
+- [@nurulfauziahdaud](https://github.com/nurulfauziahdaud)
+- [@nanashua](https://github.com/Nanashua)
+- [@felixanthony03](https://github.com/felixanthony03)
+- [@evalatifa](#)

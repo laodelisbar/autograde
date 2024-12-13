@@ -10,8 +10,8 @@ module.exports = {
         allowNull: false,
         primaryKey: true,
       },
-      test_id: {
-        type: Sequelize.UUID,
+      testId: {
+        type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'Tests', // Nama tabel yang direferensikan (Tests)
@@ -19,11 +19,11 @@ module.exports = {
         },
         onDelete: 'CASCADE', // Menghapus pertanyaan jika test dihapus
       },
-      question_text: {
+      questionText: {
         type: Sequelize.TEXT, // Menggunakan tipe data TEXT
         allowNull: false,
       },
-      answer_text: {
+      answerText: {
         type: Sequelize.TEXT, // Menggunakan tipe data TEXT
         allowNull: false,
       },

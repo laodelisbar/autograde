@@ -1,0 +1,24 @@
+{
+    "name": "FastAPI Development",
+    "dockerComposeFile": "./compose-dev.yaml",
+    "service": "api",
+    "workspaceFolder": "/app",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "mhutchie.git-graph",
+                "zhuangtongfa.material-theme",
+                "github.vscode-github-actions",
+                "cweijan.vscode-mysql-client2",
+                "dbaeumer.vscode-eslint",
+                "liviuschera.noctis"
+            ],
+            "settings": {
+                "workbench.colorTheme": "Noctis Obscuro",
+                "python.pythonPath": "/usr/local/bin/python"
+            }
+        }
+    }
+}

@@ -1,0 +1,11 @@
+runtime: python311
+service: model
+
+instance_class: F4_1G
+
+automatic_scaling:
+  target_cpu_utilization: 0.9
+  min_instances: 1
+  max_instances: 3
+
+entrypoint: gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app

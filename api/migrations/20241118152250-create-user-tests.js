@@ -3,14 +3,14 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('User_tests', {
-      user_test_id: {
+    await queryInterface.createTable('UserTests', {
+      id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
         allowNull: false,
         primaryKey: true,
       },
-      user_id: {
+      userId: {
         type: Sequelize.UUID,
         allowNull: true,
         references: {
@@ -23,8 +23,8 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
-      test_id: {
-        type: Sequelize.UUID,
+      testId: {
+        type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'Tests',
@@ -32,15 +32,15 @@ module.exports = {
         },
         onDelete: 'CASCADE'
       },
-      time_left: {
+      timeLeft: {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-      total_grade: {
+      totalGrade: {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-      test_date: {
+      testDate: {
         type: Sequelize.DATE,
         allowNull: false,
       },
@@ -56,6 +56,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('User_tests');
+    await queryInterface.dropTable('UserTests');
   },
 };

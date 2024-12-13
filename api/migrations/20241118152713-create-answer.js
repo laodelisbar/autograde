@@ -10,16 +10,16 @@ module.exports = {
         allowNull: false,
         primaryKey: true,
       },
-      user_test_id: {
+      userTestId: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'User_tests', // Nama tabel yang direferensikan (User_tests)
-          key: 'user_test_id', // Kolom yang mengacu
+          model: 'UserTests', // Nama tabel yang direferensikan (User_tests)
+          key: 'id', // Kolom yang mengacu
         },
         onDelete: 'CASCADE', // Hapus jawaban jika user_test dihapus
       },
-      question_id: {
+      questionId: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {

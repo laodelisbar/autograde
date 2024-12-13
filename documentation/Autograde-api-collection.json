@@ -1,0 +1,595 @@
+{
+	"info": {
+		"_postman_id": "42483b18-59ea-4225-90e7-e4031b347f16",
+		"name": "API Collection",
+		"description": "Postman Collection for API routes",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39454505"
+	},
+	"item": [
+		{
+			"name": "Register User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"exampleuser@example.com\",\n  \"password\": \"password\",\n  \"username\": \"exampleuser\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/register",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"token\", jsonData.token);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"exampleuser@gmail.com\",\n  \"password\": \"password\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Profile",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/api/users/profile",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Store Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"testId\", jsonData.test.id);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"testTitle\": \"test Judul\",\n  \"testDuration\": 60,\n  \"questions\": [\n    {\n      \"questionText\": \"question text\",\n      \"answerText\": \"the offcamera\"\n    }\n  ]\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/tests/store",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"tests",
+						"store"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Accept Responses",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": \"{{testId}}\",\n  \"acceptResponses\": true\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/tests/accept-responses",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"tests",
+						"accept-responses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Test by ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/api/tests/{{testId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"tests",
+						"{{testId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Start Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"questionId\", jsonData.test.questions[0].id);",
+							"pm.environment.set(\"userTestId\", jsonData.userTestId);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"testId\": \"{{testId}}\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/tests/start",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"tests",
+						"start"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Submit Test",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"userTestId\": \"{{userTestId}}\",\n  \"questions\": [\n    {\n      \"questionId\": \"{{questionId}}\",\n      \"answer\": \"the offcamera\"\n    }\n  ],\n  \"timeLeft\": 30\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/tests/submit",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"tests",
+						"submit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"token\", \"\");"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "// Logout hanya akan menghapus jwt token dari client",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Start Test Without User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"questionId\", jsonData.test.questions[0].id);",
+							"pm.environment.set(\"userTestId\", jsonData.userTestId);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"testId\": \"{{testId}}\",\n  \"username\": \"barusaja\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/tests/start",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"tests",
+						"start"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Show Created Test",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/api/tests/show/{{testId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"tests",
+						"show",
+						"{{testId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Show Past Test",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/api/pasttests/show/{{testId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"pasttests",
+						"show",
+						"{{testId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Created Tests",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/api/tests",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"tests"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Past Tests",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/api/pasttests",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"pasttests"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Answer Grade",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"answerId\": \"{{answerId}}\",\n  \"grade\": 5\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/tests/update-answer-grade",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"tests",
+						"update-answer-grade"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Show User Test Details",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"userTestId\": \"{{userTestId}}\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/tests/show-user-test-details",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"tests",
+						"show-user-test-details"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"if (!pm.collectionVariables.get(\"url\")){\r",
+					"pm.collectionVariables.set(\"url\", pm.collectionVariables.get(\"host\")+':'+pm.collectionVariables.get(\"port\"));\r",
+					"}"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "https://api-dot-autograde-442112.et.r.appspot.com",
+			"type": "string"
+		},
+		{
+			"key": "host",
+			"value": "localhost"
+		},
+		{
+			"key": "port",
+			"value": "5000"
+		},
+		{
+			"key": "testId",
+			"value": "test-id"
+		},
+		{
+			"key": "userTestId",
+			"value": "user-test-id"
+		},
+		{
+			"key": "answerId",
+			"value": "answer-id"
+		},
+		{
+			"key": "questionId",
+			"value": "question-id"
+		},
+		{
+			"key": "token",
+			"value": ""
+		}
+	]
+}
